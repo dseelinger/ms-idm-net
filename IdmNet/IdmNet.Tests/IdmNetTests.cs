@@ -32,10 +32,14 @@ namespace IdmNet.Tests
             // Act
             //// TODO 002: Create IdmResource object
             //// TODO 001: Create SearchAsync method
-            //IEnumerable<IdmResource> result = await it.SearchAsync(criteria);
+            IEnumerable<IdmResource> result = await it.SearchAsync(criteria);
 
 
-
+            //var resultsAry = result.ToArray();
+            //resultsAry.Length.Should().BeGreaterOrEqualTo(42);
+            //resultsAry[0]["Name"].Count.Should().Be(1);
+            //resultsAry[0]["Name"][0].Should().Be("ActivityInformationConfiguration");
+            //resultsAry[resultsAry.Length - 1]["Name"][0].Should().Be("WorkflowInstance");
         }
 
         private static string GetEnv(string environmentVariableName)
