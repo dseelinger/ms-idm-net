@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.ServiceModel;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IdmNet.Tests
@@ -12,10 +14,10 @@ namespace IdmNet.Tests
         // TODO 001: Make this work
         [TestMethod]
         [TestCategory("Integration")]
-        public void It_can_get_all_ObjectTypeDescription()
+        public async Task It_can_get_all_ObjectTypeDescription()
         {
             // Arrange
-            var criteria = new SearchCriteria { Attributes = new[] { "Name" }, XPath = "/ObjectTypeDescription" };
+            var criteria = new SearchCriteria { Attributes = new[] { "DisplayName" }, XPath = "/ObjectTypeDescription" };
             var soapBinding = new IdmSoapBinding();
             var endpointAddress = new EndpointAddress(GetEnv("MIM_Enumeration_endpoint"));
             var credential = new NetworkCredential(
@@ -35,11 +37,11 @@ namespace IdmNet.Tests
             IEnumerable<IdmResource> result = await it.SearchAsync(criteria);
 
 
-            //var resultsAry = result.ToArray();
-            //resultsAry.Length.Should().BeGreaterOrEqualTo(42);
-            //resultsAry[0]["Name"].Count.Should().Be(1);
-            //resultsAry[0]["Name"][0].Should().Be("ActivityInformationConfiguration");
-            //resultsAry[resultsAry.Length - 1]["Name"][0].Should().Be("WorkflowInstance");
+            var resultsAry = result.ToArray();
+            Assert.IsTrue(resultsAry.Length > 42);
+            Assert.IsTrue(resultsAry[0].GetAttrValues("DisplayName").Count == 1);
+            Assert.AreEqual("Activity Information Configuration", resultsAry[0].DisplayName);
+            Assert.AreEqual("Workflow Instance", resultsAry[resultsAry.Length - 1].DisplayName);
         }
 
         private static string GetEnv(string environmentVariableName)

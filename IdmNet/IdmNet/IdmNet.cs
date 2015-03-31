@@ -111,14 +111,17 @@ namespace IdmNet
 
             foreach (XmlNode attribute in xmlNode.ChildNodes)
             {
-                string key = attribute.LocalName;
+                string name = attribute.LocalName;
                 string val = attribute.InnerText;
 
-                // TODO: Fix this for the "new" IdmResource
-                if (resource.ContainsKey(key))
-                    resource[key].Add(val);
+                if (val.StartsWith("urn:uuid:"))
+                    val = val.Substring(9);
+
+                var attr = resource.GetAttr(name);
+                if (attr != null)
+                    attr.Values.Add(val);
                 else
-                    resource.Add(key, new List<string> { val.Replace("urn:uuid:", "") });
+                    resource.Attributes.Add(new IdmAttribute{ Name = name, Value = val });
             }
             return resource;
         }

@@ -403,13 +403,7 @@ namespace IdmNet.Tests
 
             };
 
-            //var it = new IdmResource
-            //{
-            //    Attributes =
-            //        new List<IdmAttribute> { new IdmAttribute { Name = "MultiValuedReferenceIDs", Values = new List<string> { subObjectID1, subObjectID2, subObjectID3 } } }
-            //};
             var it = new IdmResource();
-
 
             it.SetMultiValuedAttrAsComplexObjects("MultiValuedReferenceIDs", out backingField, resources);
 
@@ -418,6 +412,24 @@ namespace IdmNet.Tests
         }
 
 
+        [TestMethod]
+        public void It_can_GettAttr_that_then_allows_modification_of_the_attr()
+        {
+            var it = new IdmResource
+            {
+                Attributes =
+                    new List<IdmAttribute> { new IdmAttribute { Name = "foo", Values = new List<string> { "foo", "bar" } } }
+            };
 
+            var attr = it.GetAttr("foo");
+
+            attr.Values.Add("bat");
+
+            var result = it.GetAttrValues("foo");
+
+            Assert.AreEqual("foo", result[0]);
+            Assert.AreEqual("bar", result[1]);
+            Assert.AreEqual("bat", result[2]);
+        }
     }
 }
