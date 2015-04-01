@@ -46,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IdmAttribute.cs" />
-    <Compile Include="IdmNet.cs" />
+    <Compile Include="IdmNetClient.cs" />
     <Compile Include="IdmResource.cs" />
     <Compile Include="IdmSoapBinding.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

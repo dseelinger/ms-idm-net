@@ -17,7 +17,6 @@ namespace IdmNet.Tests
         public async Task It_can_get_all_ObjectTypeDescription()
         {
             // Arrange
-            var criteria = new SearchCriteria { Attributes = new[] { "DisplayName" }, XPath = "/ObjectTypeDescription" };
             var soapBinding = new IdmSoapBinding();
             var endpointAddress = new EndpointAddress(GetEnv("MIM_Enumeration_endpoint"));
             var credential = new NetworkCredential(
@@ -29,11 +28,12 @@ namespace IdmNet.Tests
                 searchClient.ClientCredentials.Windows.ClientCredential = credential;
             else
                 Assert.Fail("Could not construct Idm Search Client");
-            var it = new IdmNet(searchClient);
+            var it = new IdmNetClient(searchClient);
 
             // Act
             //// TODO 002: Create IdmResource object
             //// TODO 001: Create SearchAsync method
+            var criteria = new SearchCriteria { Attributes = new[] { "DisplayName" }, XPath = "/ObjectTypeDescription" };
             IEnumerable<IdmResource> result = await it.SearchAsync(criteria);
 
 

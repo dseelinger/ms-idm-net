@@ -8,11 +8,11 @@ using System.Xml;
 
 namespace IdmNet
 {
-    public class IdmNet
+    public class IdmNetClient
     {
         private readonly SearchClient _searchClient;
 
-        public IdmNet(SearchClient searchClient)
+        public IdmNetClient(SearchClient searchClient)
         {
             _searchClient = searchClient;
         }
