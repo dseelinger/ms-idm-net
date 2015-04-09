@@ -30,6 +30,13 @@ namespace IdmNet
                 pullResponseObj = await Pull(criteria.PageSize, enumerationContext, results);
             } while (pullResponseObj.EndOfSequence == null);
 
+            // Kludge: sorting does not appear to work in the Enumeration endpoint
+            if (criteria.SortAttribute != "DisplayName" || (criteria.SortAttribute == "DisplayName" && criteria.SortDecending) )
+            {
+                // Kludge: this only works for DisplayName in reverse order
+                results.Sort((res1, res2) => String.Compare(res1.DisplayName.ToLower(), res2.DisplayName.ToLower(), StringComparison.Ordinal) * -1);
+            }
+
             return results;
         }
 
@@ -68,8 +75,6 @@ namespace IdmNet
             };
             return pullInfo;
         }
-
-
 
         private async Task<PullResponse> Pull(int pageSize, EnumerationContext enumerationContext, List<IdmResource> results)
         {
@@ -126,6 +131,10 @@ namespace IdmNet
             return resource;
         }
 
-
+        // TODO 001: Create Objects in FIM
+        //public Task<IdmResource> CreateAsync(IdmResource newUser)
+        //{
+        //    return null;
+        //}
     }
 }

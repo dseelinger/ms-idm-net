@@ -126,11 +126,12 @@ namespace IdmNet
             Dialect = "http://schemas.microsoft.com/2006/11/XPathFilterDialect";
         }
 
-        public Sorting(SortingAttribute attribute)
-            : this()
-        {
-            SortingAttribute = attribute;
-        }
+        // TODO 000: Implement sorting
+        //public Sorting(SortingAttribute attribute)
+        //    : this()
+        //{
+        //    SortingAttribute = attribute;
+        //}
 
         [XmlAttribute(AttributeName = "Dialect", DataType = "anyURI")]
         public string Dialect { get; set; }
