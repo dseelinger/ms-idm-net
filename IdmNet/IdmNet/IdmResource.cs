@@ -196,5 +196,10 @@ namespace IdmNet
             attrValues.AddRange(values.Select(r => r.ObjectID));
             backingField = values;
         }
+
+        public IdmAttribute this[string attributeName]
+        {
+            get { return GetAttr(attributeName); }
+        }
     }
 }

@@ -30,14 +30,28 @@ namespace IdmNet
                 pullResponseObj = await Pull(criteria.PageSize, enumerationContext, results);
             } while (pullResponseObj.EndOfSequence == null);
 
-            // Kludge: sorting does not appear to work in the Enumeration endpoint
-            if (criteria.SortAttribute != "DisplayName" || (criteria.SortAttribute == "DisplayName" && criteria.SortDecending) )
-            {
-                // Kludge: this only works for DisplayName in reverse order
-                results.Sort((res1, res2) => String.Compare(res1.DisplayName.ToLower(), res2.DisplayName.ToLower(), StringComparison.Ordinal) * -1);
-            }
+            Sort(results, criteria);
 
             return results;
+        }
+
+        private static void Sort(List<IdmResource> results, SearchCriteria criteria)
+        {
+            string attrName = criteria.SortAttribute;
+            if (attrName != null)
+            {
+                results.Sort(
+                    (res1, res2) =>
+                    {
+                        var negateIfNeeded = ((criteria.SortDecending) ? -1 : 1);
+                        var val1 = res1[attrName].Value ?? "";
+                        var val2 = res2[attrName].Value ?? "";
+                        var compareResult = String.Compare(val1.ToLower(), val2.ToLower(),
+                            StringComparison.Ordinal)*negateIfNeeded;
+                        return compareResult;
+                    }
+                    );
+            }
         }
 
         private async Task<PullInfo> EnumerateAndPreparePull(SearchCriteria criteria)

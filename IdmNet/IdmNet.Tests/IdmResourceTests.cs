@@ -431,5 +431,25 @@ namespace IdmNet.Tests
             Assert.AreEqual("bar", result[1]);
             Assert.AreEqual("bat", result[2]);
         }
+
+        [TestMethod]
+        public void It_can_retrieve_attributes_with_an_indexer()
+        {
+            var it = new IdmResource
+            {
+                Attributes =
+                    new List<IdmAttribute>
+                    {
+                        new IdmAttribute { Name = "foo1", Values = new List<string> { "foo1", "bar1" } },
+                        new IdmAttribute { Name = "foo2", Values = new List<string> { "foo2", "bar2" } },
+                        new IdmAttribute { Name = "foo3", Values = new List<string> { "foo3", "bar3" } },
+                        new IdmAttribute { Name = "foo4", Values = new List<string> { "foo4", "bar4" } },
+                        new IdmAttribute { Name = "foo5", Values = new List<string> { "foo5", "bar5" } }
+                    }
+            };
+
+            var result = it["foo"];
+        }
+
     }
 }
