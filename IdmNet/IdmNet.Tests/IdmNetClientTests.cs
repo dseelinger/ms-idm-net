@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace IdmNet.Tests
 {
     [TestClass]
-    public class IdmNetTests
+    public class IdmNetClientTests
     {
         [TestMethod]
         [TestCategory("Integration")]
@@ -145,9 +145,36 @@ namespace IdmNet.Tests
             Assert.AreEqual(newUser.DisplayName, searchArray[0].DisplayName);
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task It_throws_when_passing_a_null_resource_to_create()
+        {
+            // Arrange
+            var it = BuildClient();
+
+            // Act
+            IdmResource createResult = await it.CreateAsync(null);
+        }
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        [ExpectedException(typeof(Exception))]
+        public async Task It_throws_when_an_invalid_resource_is_passed()
+        {
+            // Arrange
+            var it = BuildClient();
+
+            // Act
+            var newUser = new IdmResource { };
+            IdmResource createResult = await it.CreateAsync(newUser);
+        }
 
 
-
+        // TODO 005: Implement Delete
+        // TODO 004: Implement User and Group
+        // TODO 003: Implement ObjectTypeDescription, AttributeTypeDescription, and Binding
+        // TODO 001: Implement Creation of Approvals
+        // TODO 000: Implement Attribute Endpoints on resources
 
 
         private static IdmNetClient BuildClient()

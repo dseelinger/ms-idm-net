@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 
+// Note: all these "models" are simply required for the SOAP calls to work.  They can't really be refactored in a nice way. 
 namespace IdmNet
 {
     [XmlRoot(ElementName = "AddRequest", Namespace = SoapConstants.DirectoryAccess, IsNullable = false)]
@@ -23,44 +25,63 @@ namespace IdmNet
     [XmlRoot(ElementName = "AttributeTypeAndValue", Namespace = SoapConstants.DirectoryAccess, IsNullable = false)]
     public class AttributeTypeAndValue
     {
+        private string _attrName;
+
         /// <summary>
         /// Don't set this directly - only use the constructor
         /// </summary>
         [XmlElement(ElementName = "AttributeType")]
-        public string AttributeName { get; set; }
+        public string AttributeName { get { return _attrName; }
+            set
+            {
+                if (String.IsNullOrWhiteSpace(value) || value.Any(Char.IsWhiteSpace) || !(Char.IsLetter(value[0])))
+                    throw new ArgumentException("Cannot be Null, Empty, or Whitespace", "value");
+
+                _attrName = value;
+            }
+        }
 
         /// <summary>
         /// Don't set this directly - only use the constructor
         /// </summary>
         [XmlAnyElement(Name = "AttributeValue")]
-        public object AttributeValue { get; set; }
+        public XmlElement AttributeValue { get; set; }
 
+
+        /// <summary>
+        /// Parameterless Constructor
+        /// </summary>
         public AttributeTypeAndValue()
         {
         }
 
+        /// <summary>
+        /// Create new AttributeTypeAndValue with an attribute name and value
+        /// </summary>
+        /// <param name="attributeName"></param>
+        /// <param name="attributeValue"></param>
         public AttributeTypeAndValue(string attributeName, string attributeValue)
         {
-            if (String.IsNullOrWhiteSpace(attributeName))
-                throw new ArgumentException("Cannot be Null, Empty, or Whitespace", "attributeName");
             AttributeName = attributeName;
 
+
+            SetAttributeValue(attributeName, attributeValue);
+        }
+
+        private void SetAttributeValue(string attributeName, string attributeValue)
+        {
             // Null attribute value = Remove attribute value from Identity Manager = ""
             if (attributeValue == null)
                 attributeValue = "";
 
-
             var xmlDoc = new XmlDocument();
 
-            var elementAttributeValue = xmlDoc.CreateElement("AttributeValue", SoapConstants.DirectoryAccess);
-            xmlDoc.AppendChild(elementAttributeValue);
+            AttributeValue = xmlDoc.CreateElement("AttributeValue", SoapConstants.DirectoryAccess);
+            xmlDoc.AppendChild(AttributeValue);
 
             var elementAttributeData = xmlDoc.CreateElement("rm", attributeName, SoapConstants.RmNamespace);
             elementAttributeData.InnerText = attributeValue;
-            elementAttributeValue.AppendChild(elementAttributeData);
-
-            // TODO 004: try this without cloning the node once it's working
-            AttributeValue = elementAttributeValue.CloneNode(true);
+            AttributeValue.AppendChild(elementAttributeData);
         }
     }
 
@@ -69,9 +90,6 @@ namespace IdmNet
     {
         [XmlElement(Namespace = SoapConstants.Addressing)]
         public EndpointReference EndpointReference { get; set; }
-
-        // TODO 005: see if this is really needed once it's working
-        public ResourceCreated() { }
     }
 
     [XmlRoot(Namespace = SoapConstants.Addressing)]
@@ -81,34 +99,17 @@ namespace IdmNet
         public string Address { get; set; }
 
         public ReferenceProperties ReferenceProperties { get; set; }
-
-        // TODO 006: see if this is really needed once it's working
-        public EndpointReference() { }
     }
 
     public class ReferenceProperties
     {
         [XmlElement(Namespace = SoapConstants.RmNamespace)]
         public ResourceReferenceProperty ResourceReferenceProperty { get; set; }
-
-        public ReferenceProperties()
-        {
-        }
     }
 
     public class ResourceReferenceProperty
     {
         [XmlText(Type = typeof (string))]
         public string Value { get; set; }
-
-        public ResourceReferenceProperty()
-            : this(null)
-        {
-        }
-
-        public ResourceReferenceProperty(string value)
-        {
-            Value = value;
-        }
     }
 }

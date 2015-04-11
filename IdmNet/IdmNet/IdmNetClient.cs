@@ -148,7 +148,6 @@ namespace IdmNet
         }
 
 
-        // TODO 007: Achieve complet code coverage for Create
         public async Task<IdmResource> CreateAsync(IdmResource resource)
         {
             if (resource == null)
