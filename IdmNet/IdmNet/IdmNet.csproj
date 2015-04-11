@@ -49,10 +49,12 @@
     <Compile Include="IdmNetClient.cs" />
     <Compile Include="IdmResource.cs" />
     <Compile Include="IdmSoapBinding.cs" />
+    <Compile Include="IdmUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchCriteria.cs" />
     <Compile Include="SoapConstants.cs" />
     <Compile Include="SoapEnumerationModels.cs" />
+    <Compile Include="SoapFactoryModels.cs" />
     <Compile Include="SoapXmlSerializer.cs" />
   </ItemGroup>
   <ItemGroup>

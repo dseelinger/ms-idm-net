@@ -60,6 +60,7 @@
     <Compile Include="IdmNetTests.cs" />
     <Compile Include="IdmResourceTests.cs" />
     <Compile Include="IdmAttributeTests.cs" />
+    <Compile Include="IntegrationEnviornmentTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IdmNet\IdmNet.csproj">

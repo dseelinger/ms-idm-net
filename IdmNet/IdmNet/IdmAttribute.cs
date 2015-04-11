@@ -15,7 +15,6 @@ namespace IdmNet
         [Required]
         public List<string> Values { get; set; }
 
-        // TODO 004: Test this code
         public string Value
         {
             get

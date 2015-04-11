@@ -10,11 +10,13 @@ namespace IdmNet
 {
     public class IdmNetClient
     {
-        private readonly SearchClient _searchClient;
+        private readonly SearchClient _search;
+        private readonly ResourceFactoryClient _factory;
 
-        public IdmNetClient(SearchClient searchClient)
+        public IdmNetClient(SearchClient search, ResourceFactoryClient factory)
         {
-            _searchClient = searchClient;
+            _search = search;
+            _factory = factory;
         }
 
         public async Task<IEnumerable<IdmResource>> SearchAsync(SearchCriteria criteria)
@@ -68,7 +70,7 @@ namespace IdmNet
                 },
                 new SoapXmlSerializer(typeof(Enumerate)));
             Trace.WriteLine(enumerateMessage);
-            var enumerateResponseMessage = await _searchClient.EnumerateAsync(enumerateMessage);
+            var enumerateResponseMessage = await _search.EnumerateAsync(enumerateMessage);
 
 
             // Check for enumerate fault
@@ -104,7 +106,7 @@ namespace IdmNet
                 },
                 new SoapXmlSerializer(typeof(Pull)));
 
-            var pullResponseMessage = await _searchClient.PullAsync(pullMessage);
+            var pullResponseMessage = await _search.PullAsync(pullMessage);
 
 
             // Check for Pull fault
@@ -145,10 +147,51 @@ namespace IdmNet
             return resource;
         }
 
-        // TODO 001: Create Objects in FIM
-        //public Task<IdmResource> CreateAsync(IdmResource newUser)
-        //{
-        //    return null;
-        //}
+
+        // TODO 007: Achieve complet code coverage for Create
+        public async Task<IdmResource> CreateAsync(IdmResource resource)
+        {
+            if (resource == null)
+                throw new ArgumentNullException("resource");
+
+            var createRequestMessage = BuildCreateRequestMessage(resource);
+
+            // Add the required header for the Create action
+            createRequestMessage.Headers.Add(MessageHeader.CreateHeader("IdentityManagementOperation", SoapConstants.DirectoryAccess, null, true));
+
+
+            Message addResponseMsg = await _factory.CreateAsync(createRequestMessage);
+
+            if (addResponseMsg.IsFault)
+                throw new Exception("Create Fault: " + addResponseMsg);
+
+            // Deserialize the Add response
+            ResourceCreated resourceCreatedObject = addResponseMsg.GetBody<ResourceCreated>(new SoapXmlSerializer(typeof(ResourceCreated)));
+
+            resource.ObjectID = resourceCreatedObject.EndpointReference.ReferenceProperties.ResourceReferenceProperty.Value;
+
+            if (resource.ObjectID.StartsWith("urn:uuid:"))
+                resource.ObjectID = resource.ObjectID.Substring(9);
+
+            return resource;
+        }
+
+        private static Message BuildCreateRequestMessage(IdmResource resource)
+        {
+            // Create the request object
+            var values = from attribute in resource.Attributes
+                from val in attribute.Values
+                select new AttributeTypeAndValue(attribute.Name, val);
+            var factoryRequest = new AddRequest {AttributeTypeAndValue = values.ToArray()};
+
+            // Create the SOAP message
+            var createRequestMessage = Message.CreateMessage(MessageVersion.Default,
+                SoapConstants.CreateAction,
+                factoryRequest,
+                new SoapXmlSerializer(typeof (AddRequest))
+                );
+
+            return createRequestMessage;
+        }
     }
 }

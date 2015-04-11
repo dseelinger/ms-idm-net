@@ -126,7 +126,11 @@ namespace IdmNet
             Dialect = "http://schemas.microsoft.com/2006/11/XPathFilterDialect";
         }
 
-        // TODO 000: Implement sorting
+        // TODO 003: Integration Test for Environment Variables
+        // TODO 002: Use EndpointIdentity.CreateSpnIdentity("FIMService/" + addressFQDN)));
+        // TODO 001: Change Environment Variables to have a base address instead of an enumeration endpoint
+        // TODO 000: Implement sorting when we get a reply
+        // TODO -001: Create Object
         //public Sorting(SortingAttribute attribute)
         //    : this()
         //{

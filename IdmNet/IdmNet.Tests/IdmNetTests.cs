@@ -6,6 +6,7 @@ using System.Net;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+// ReSharper disable PossibleNullReferenceException
 
 namespace IdmNet.Tests
 {
@@ -125,51 +126,56 @@ namespace IdmNet.Tests
 
 
 
-        //[TestMethod]
-        //[TestCategory("Integration")]
-        //public async Task It_can_create_objects_in_Identity_Manager()
-        //{
-        //    // Arrange
-        //    var it = BuildClient();
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task It_can_create_objects_in_Identity_Manager()
+        {
+            // Arrange
+            var it = BuildClient();
 
-        //    // Act
-        //    var newUser = new IdmResource{ObjectType = "Person", DisplayName = "Test User"};
-        //    IdmResource createResult = await it.CreateAsync(newUser);
+            // Act
+            var newUser = new IdmResource { ObjectType = "Person", DisplayName = "Test User" };
+            IdmResource createResult = await it.CreateAsync(newUser);
 
-        //    // assert
-        //    IEnumerable<IdmResource> searchResult =
-        //        await it.SearchAsync(new SearchCriteria {XPath = "/Person[ObjectId='" + createResult.ObjectID + "']"});
-        //    var searchArray = searchResult.ToArray();
-        //    Assert.AreEqual(newUser.DisplayName, createResult.DisplayName);
-        //    Assert.AreEqual(newUser.DisplayName, searchArray[0].DisplayName);
-        //}
+            // assert
+            IEnumerable<IdmResource> searchResult =
+                await it.SearchAsync(new SearchCriteria { XPath = "/Person[ObjectID='" + createResult.ObjectID + "']" });
+            var searchArray = searchResult.ToArray();
+            Assert.AreEqual(newUser.DisplayName, createResult.DisplayName);
+            Assert.AreEqual(newUser.DisplayName, searchArray[0].DisplayName);
+        }
+
+
+
+
+
 
         private static IdmNetClient BuildClient()
         {
+
             var soapBinding = new IdmSoapBinding();
-            var endpointAddress = new EndpointAddress(GetEnv("MIM_Enumeration_endpoint"));
+            string fqdn = IdmUtils.GetEnv("MIM_fqdn");
+            var endpointIdentity = EndpointIdentity.CreateSpnIdentity("FIMSERVICE/" + fqdn);
+            var enumerationPath = "http://" + fqdn + SoapConstants.EnumeratePortAndPath;
+            var factoryPath = "http://" + fqdn + SoapConstants.FactoryPortAndPath;
+
+            var enumerationEndpoint = new EndpointAddress(new Uri(enumerationPath), endpointIdentity);
+            var factoryEndpoint = new EndpointAddress(new Uri(factoryPath), endpointIdentity);
+
             var credential = new NetworkCredential(
                 GetEnv("MIM_username"),
                 GetEnv("MIM_pwd"),
-                GetEnv("MIM_domain"));
+                GetEnv("MIM_domain")); 
 
-            var searchClient = new SearchClient(soapBinding, endpointAddress);
-            if (searchClient.ClientCredentials != null)
-                searchClient.ClientCredentials.Windows.ClientCredential = credential;
-            else
-                Assert.Fail("Could not construct Idm Search Client");
-
-            //// TODO: Inject this, don't construct it here
-            //var factory = new ResourceFactoryClient("ServiceMultipleTokenBinding_ResourceFactory",
-            //    new EndpointAddress(new Uri(this.base_address + service_url),
-            //        EndpointIdentity.CreateSpnIdentity("FIMService/" + addressFQDN))); 
+            var searchClient = new SearchClient(soapBinding, enumerationEndpoint);
+            searchClient.ClientCredentials.Windows.ClientCredential = credential;
 
 
+            var factory = new ResourceFactoryClient(soapBinding, factoryEndpoint);
+            factory.ClientCredentials.Windows.ClientCredential = credential;
 
 
-
-
-            var it = new IdmNetClient(searchClient);
+            var it = new IdmNetClient(searchClient, factory);
             return it;
         }
 
