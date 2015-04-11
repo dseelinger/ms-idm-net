@@ -10,13 +10,15 @@ namespace IdmNet
 {
     public class IdmNetClient
     {
-        private readonly SearchClient _search;
-        private readonly ResourceFactoryClient _factory;
+        private readonly SearchClient _searchClient;
+        private readonly ResourceFactoryClient _factoryClient;
+        private readonly ResourceClient _resourceClient;
 
-        public IdmNetClient(SearchClient search, ResourceFactoryClient factory)
+        public IdmNetClient(SearchClient searchClient, ResourceFactoryClient factoryClient, ResourceClient resourceClient)
         {
-            _search = search;
-            _factory = factory;
+            _searchClient = searchClient;
+            _factoryClient = factoryClient;
+            _resourceClient = resourceClient;
         }
 
         public async Task<IEnumerable<IdmResource>> SearchAsync(SearchCriteria criteria)
@@ -70,7 +72,7 @@ namespace IdmNet
                 },
                 new SoapXmlSerializer(typeof(Enumerate)));
             Trace.WriteLine(enumerateMessage);
-            var enumerateResponseMessage = await _search.EnumerateAsync(enumerateMessage);
+            var enumerateResponseMessage = await _searchClient.EnumerateAsync(enumerateMessage);
 
 
             // Check for enumerate fault
@@ -106,7 +108,7 @@ namespace IdmNet
                 },
                 new SoapXmlSerializer(typeof(Pull)));
 
-            var pullResponseMessage = await _search.PullAsync(pullMessage);
+            var pullResponseMessage = await _searchClient.PullAsync(pullMessage);
 
 
             // Check for Pull fault
@@ -159,7 +161,7 @@ namespace IdmNet
             createRequestMessage.Headers.Add(MessageHeader.CreateHeader("IdentityManagementOperation", SoapConstants.DirectoryAccess, null, true));
 
 
-            Message addResponseMsg = await _factory.CreateAsync(createRequestMessage);
+            Message addResponseMsg = await _factoryClient.CreateAsync(createRequestMessage);
 
             if (addResponseMsg.IsFault)
                 throw new Exception("Create Fault: " + addResponseMsg);
@@ -191,6 +193,21 @@ namespace IdmNet
                 );
 
             return createRequestMessage;
+        }
+
+
+        public async Task DeleteAsync(string objectID)
+        {
+            if (String.IsNullOrWhiteSpace(objectID))
+                throw new ArgumentNullException("objectID");
+
+            Message deleteRequestMsg = Message.CreateMessage(MessageVersion.Default, SoapConstants.DeleteAction);
+
+            deleteRequestMsg.Headers.Add(MessageHeader.CreateHeader("ResourceReferenceProperty", SoapConstants.RmNamespace, objectID));
+
+            Message deleteResponseMsg = await _resourceClient.DeleteAsync(deleteRequestMsg);
+            if (deleteResponseMsg.IsFault)
+                throw new Exception("Delete Fault: " + deleteResponseMsg);
         }
     }
 }

@@ -170,39 +170,72 @@ namespace IdmNet.Tests
         }
 
 
-        // TODO 005: Implement Delete
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task It_can_delete_an_IdmResource()
+        {
+            // Arrange
+            var it = BuildClient();
+            IdmResource toDelete =
+                await it.CreateAsync(new IdmResource {ObjectType = "Person", DisplayName = "Test User"});
+
+            // Act
+            await it.DeleteAsync(toDelete.ObjectID);
+
+
+            // Assert
+            IEnumerable<IdmResource> searchResult =
+                await it.SearchAsync(new SearchCriteria { XPath = "/Person[ObjectID='" + toDelete.ObjectID + "']" });
+            Assert.AreEqual(0, searchResult.Count());
+        }
+
+
+        // TODO 005: Implement Update
         // TODO 004: Implement User and Group
         // TODO 003: Implement ObjectTypeDescription, AttributeTypeDescription, and Binding
         // TODO 001: Implement Creation of Approvals
         // TODO 000: Implement Attribute Endpoints on resources
 
 
+
+
+
+
         private static IdmNetClient BuildClient()
         {
-
             var soapBinding = new IdmSoapBinding();
             string fqdn = IdmUtils.GetEnv("MIM_fqdn");
             var endpointIdentity = EndpointIdentity.CreateSpnIdentity("FIMSERVICE/" + fqdn);
+
+
             var enumerationPath = "http://" + fqdn + SoapConstants.EnumeratePortAndPath;
             var factoryPath = "http://" + fqdn + SoapConstants.FactoryPortAndPath;
+            var resourcePath = "http://" + fqdn + SoapConstants.ResourcePortAndPath;
+            
 
             var enumerationEndpoint = new EndpointAddress(new Uri(enumerationPath), endpointIdentity);
             var factoryEndpoint = new EndpointAddress(new Uri(factoryPath), endpointIdentity);
-
-            var credential = new NetworkCredential(
-                GetEnv("MIM_username"),
-                GetEnv("MIM_pwd"),
-                GetEnv("MIM_domain")); 
+            var resourceEndpoint = new EndpointAddress(new Uri(resourcePath), endpointIdentity);
+            
 
             var searchClient = new SearchClient(soapBinding, enumerationEndpoint);
-            searchClient.ClientCredentials.Windows.ClientCredential = credential;
+            var factoryClient = new ResourceFactoryClient(soapBinding, factoryEndpoint);
+            var resourceClient = new ResourceClient(soapBinding, resourceEndpoint);
 
 
-            var factory = new ResourceFactoryClient(soapBinding, factoryEndpoint);
-            factory.ClientCredentials.Windows.ClientCredential = credential;
+
+            var credentials = new NetworkCredential(
+                GetEnv("MIM_username"),
+                GetEnv("MIM_pwd"),
+                GetEnv("MIM_domain"));
+
+            searchClient.ClientCredentials.Windows.ClientCredential = credentials;
+            factoryClient.ClientCredentials.Windows.ClientCredential = credentials;
+            resourceClient.ClientCredentials.Windows.ClientCredential = credentials;
 
 
-            var it = new IdmNetClient(searchClient, factory);
+            var it = new IdmNetClient(searchClient, factoryClient, resourceClient);
             return it;
         }
 
