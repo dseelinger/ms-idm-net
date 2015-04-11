@@ -19,13 +19,11 @@ namespace IdmNet.Tests
             string user = IdmUtils.GetEnv("MIM_username");
             string pwd = IdmUtils.GetEnv("MIM_pwd");
             string domain = IdmUtils.GetEnv("MIM_domain");
-            string enumeration = IdmUtils.GetEnv("MIM_Enumeration_endpoint");
             string fqdn = IdmUtils.GetEnv("MIM_fqdn");
 
             Assert.IsFalse(string.IsNullOrWhiteSpace(user));
             Assert.IsFalse(string.IsNullOrWhiteSpace(pwd));
             Assert.IsFalse(string.IsNullOrWhiteSpace(domain));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(enumeration));
             Assert.IsFalse(string.IsNullOrWhiteSpace(fqdn));
             Assert.IsFalse(fqdn.ToLower().StartsWith("http"));
         }

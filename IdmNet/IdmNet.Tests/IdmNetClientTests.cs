@@ -143,6 +143,9 @@ namespace IdmNet.Tests
             var searchArray = searchResult.ToArray();
             Assert.AreEqual(newUser.DisplayName, createResult.DisplayName);
             Assert.AreEqual(newUser.DisplayName, searchArray[0].DisplayName);
+
+            // afterwards
+            await it.DeleteAsync(createResult.ObjectID);
         }
 
         [TestMethod]
@@ -159,7 +162,7 @@ namespace IdmNet.Tests
         [TestMethod]
         [TestCategory("Integration")]
         [ExpectedException(typeof(Exception))]
-        public async Task It_throws_when_an_invalid_resource_is_passed()
+        public async Task It_throws_when_an_invalid_resource_is_passed_to_create()
         {
             // Arrange
             var it = BuildClient();
@@ -191,13 +194,35 @@ namespace IdmNet.Tests
         }
 
 
+        [TestMethod]
+        [TestCategory("Integration")]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task It_throws_when_attempting_to_delete_a_null_ObjectID()
+        {
+            // Arrange
+            var it = BuildClient();
+
+            // Act
+            await it.DeleteAsync(null);
+        }
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        [ExpectedException(typeof(Exception))]
+        public async Task It_throws_when_attempting_to_delete_a_bad_object_ID()
+        {
+            // Arrange
+            var it = BuildClient();
+
+            // Act
+            await it.DeleteAsync("bad object id");
+        }
+
         // TODO 005: Implement Update
         // TODO 004: Implement User and Group
         // TODO 003: Implement ObjectTypeDescription, AttributeTypeDescription, and Binding
         // TODO 001: Implement Creation of Approvals
         // TODO 000: Implement Attribute Endpoints on resources
-
-
 
 
 
