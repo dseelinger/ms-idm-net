@@ -4,7 +4,7 @@ using System.Xml;
 using System.Xml.Serialization;
 
 // Note: all these "models" are simply required for the SOAP calls to work.  They can't really be refactored in a nice way. 
-namespace IdmNet
+namespace IdmNet.SoapModels
 {
     [XmlRoot(ElementName = "AddRequest", Namespace = SoapConstants.DirectoryAccess, IsNullable = false)]
     public class AddRequest

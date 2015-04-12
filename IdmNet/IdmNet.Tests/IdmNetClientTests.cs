@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using IdmNet.SoapModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#pragma warning disable 4014
+
 // ReSharper disable PossibleNullReferenceException
 
 namespace IdmNet.Tests
@@ -22,7 +24,7 @@ namespace IdmNet.Tests
 
             // Act
             var criteria = new SearchCriteria { Attributes = new[] { "DisplayName" }, XPath = "/ObjectTypeDescription" };
-            IEnumerable<IdmResource> result = await it.SearchAsync(criteria);
+            IEnumerable<IdmResource> result = await it.GetAsync(criteria);
 
 
             var resultsAry = result.ToArray();
@@ -41,7 +43,7 @@ namespace IdmNet.Tests
 
             // Act
             var criteria = new SearchCriteria { Attributes = new[] { "UsageKeyword" }, XPath = "/BindingDescription" };
-            IEnumerable<IdmResource> result = await it.SearchAsync(criteria);
+            IEnumerable<IdmResource> result = await it.GetAsync(criteria);
 
 
             var resultsAry = result.ToArray();
@@ -58,7 +60,7 @@ namespace IdmNet.Tests
 
             // Act 1
             var criteria = new SearchCriteria { Attributes = new[] { "UsageKeyword" }, XPath = "/BindingDescription" };
-            IEnumerable<IdmResource> result = await it.SearchAsync(criteria);
+            IEnumerable<IdmResource> result = await it.GetAsync(criteria);
 
 
             var resultsAry = result.ToArray();
@@ -67,7 +69,7 @@ namespace IdmNet.Tests
 
             // Act 2
             var criteria2 = new SearchCriteria { Attributes = new[] { "DisplayName" }, XPath = "/ObjectTypeDescription" };
-            IEnumerable<IdmResource> result2 = await it.SearchAsync(criteria2);
+            IEnumerable<IdmResource> result2 = await it.GetAsync(criteria2);
 
 
             var resultsAry2 = result2.ToArray();
@@ -80,7 +82,7 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(SoapFaultException))]
         public async Task It_throws_for_get_when_bad_xpath_given()
         {
             // Arrange
@@ -88,12 +90,12 @@ namespace IdmNet.Tests
 
             // Act
             var criteria = new SearchCriteria { XPath = "<3#" };
-            await it.SearchAsync(criteria);
+            await it.GetAsync(criteria);
         }
 
         [TestMethod]
         [TestCategory("Integration")]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(SoapFaultException))]
         public async Task It_throws_when_unknown_xpath_given()
         {
             // Arrange
@@ -101,7 +103,7 @@ namespace IdmNet.Tests
 
             // Act
             var criteria = new SearchCriteria { XPath = "/foo" };
-            await it.SearchAsync(criteria);
+            await it.GetAsync(criteria);
         }
 
 
@@ -114,7 +116,7 @@ namespace IdmNet.Tests
 
             // Act
             var criteria = new SearchCriteria { Attributes = new[] { "DisplayName" }, XPath = "/ObjectTypeDescription", SortAttribute =  "DisplayName", SortDecending = true};
-            IEnumerable<IdmResource> result = await it.SearchAsync(criteria);
+            IEnumerable<IdmResource> result = await it.GetAsync(criteria);
 
 
             var resultsAry = result.ToArray();
@@ -135,11 +137,11 @@ namespace IdmNet.Tests
 
             // Act
             var newUser = new IdmResource { ObjectType = "Person", DisplayName = "Test User" };
-            IdmResource createResult = await it.CreateAsync(newUser);
+            IdmResource createResult = await it.PostAsync(newUser);
 
             // assert
             IEnumerable<IdmResource> searchResult =
-                await it.SearchAsync(new SearchCriteria { XPath = "/Person[ObjectID='" + createResult.ObjectID + "']" });
+                await it.GetAsync(new SearchCriteria { XPath = "/Person[ObjectID='" + createResult.ObjectID + "']" });
             var searchArray = searchResult.ToArray();
             Assert.AreEqual(newUser.DisplayName, createResult.DisplayName);
             Assert.AreEqual(newUser.DisplayName, searchArray[0].DisplayName);
@@ -156,20 +158,20 @@ namespace IdmNet.Tests
             var it = BuildClient();
 
             // Act
-            IdmResource createResult = await it.CreateAsync(null);
+            await it.PostAsync(null);
         }
 
         [TestMethod]
         [TestCategory("Integration")]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(SoapFaultException))]
         public async Task It_throws_when_an_invalid_resource_is_passed_to_create()
         {
             // Arrange
             var it = BuildClient();
 
             // Act
-            var newUser = new IdmResource { };
-            IdmResource createResult = await it.CreateAsync(newUser);
+            var newUser = new IdmResource();
+            await it.PostAsync(newUser);
         }
 
 
@@ -181,7 +183,7 @@ namespace IdmNet.Tests
             // Arrange
             var it = BuildClient();
             IdmResource toDelete =
-                await it.CreateAsync(new IdmResource {ObjectType = "Person", DisplayName = "Test User"});
+                await it.PostAsync(new IdmResource {ObjectType = "Person", DisplayName = "Test User"});
 
             // Act
             await it.DeleteAsync(toDelete.ObjectID);
@@ -189,7 +191,7 @@ namespace IdmNet.Tests
 
             // Assert
             IEnumerable<IdmResource> searchResult =
-                await it.SearchAsync(new SearchCriteria { XPath = "/Person[ObjectID='" + toDelete.ObjectID + "']" });
+                await it.GetAsync(new SearchCriteria { XPath = "/Person[ObjectID='" + toDelete.ObjectID + "']" });
             Assert.AreEqual(0, searchResult.Count());
         }
 
@@ -208,7 +210,7 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(SoapFaultException))]
         public async Task It_throws_when_attempting_to_delete_a_bad_object_ID()
         {
             // Arrange
@@ -218,12 +220,243 @@ namespace IdmNet.Tests
             await it.DeleteAsync("bad object id");
         }
 
-        // TODO 005: Implement Update
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        [ExpectedException(typeof(SoapFaultException))]
+        public async Task It_throws_when_Posting_a_value_to_a_single_valued_attribute()
+        {
+            // Arrange
+            const string attrName = "FirstName";
+            const string attrValue = "Testing";
+            var it = BuildClient();
+            IdmResource testResource = await CreateTestPerson(it);
+
+            // Act
+            try
+            {
+                await it.AddValueAsync(testResource.ObjectID, attrName, attrValue);
+            }
+            finally
+            {
+                // Afterwards
+                it.DeleteAsync(testResource.ObjectID);
+            }
+
+        }
+
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task It_can_PostAttributeValueAsync_to_a_multi_valued_attribute_that_already_has_one_or_more_values()
+        {
+            // Arrange
+            const string attrName = "SearchScopeContext";
+            const string attrValue = "FirstName";
+            var it = BuildClient();
+            IdmResource testResource = await CreateTestSearchScope(it);
+
+            // Act
+            try
+            {
+                await it.AddValueAsync(testResource.ObjectID, attrName, attrValue);
+
+                // Assert
+                var searchResult =
+                    await
+                        it.GetAsync(new SearchCriteria
+                        {
+                            XPath = "/SearchScopeConfiguration[ObjectID='" + testResource.ObjectID + "']",
+                            Attributes = new[] { "SearchScopeContext" }
+                        });
+                Assert.IsTrue(searchResult.First().GetAttrValues(attrName).Contains(attrValue));
+            }
+            finally 
+            {
+                // Afterwards
+                it.DeleteAsync(testResource.ObjectID);
+            }
+
+
+        }
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task It_can_PostAttributeValueAsync_to_a_not_present_multi_valued_attribute()
+        {
+            // Arrange
+            const string attrName = "ProxyAddressCollection";
+            const string attrValue = "joecool@nowhere.net";
+            var it = BuildClient();
+            IdmResource testResource = await CreateTestPerson(it);
+
+            // Act
+            try
+            {
+                await it.AddValueAsync(testResource.ObjectID, attrName, attrValue);
+
+                // Assert
+                var searchResult =
+                    await
+                        it.GetAsync(new SearchCriteria
+                        {
+                            XPath = "/Person[ObjectID='" + testResource.ObjectID + "']",
+                            Attributes = new[] { "ProxyAddressCollection" }
+                        });
+                Assert.IsTrue(searchResult.First().GetAttrValues(attrName).Contains(attrValue));
+            }
+            finally
+            {
+                // Afterwards
+                it.DeleteAsync(testResource.ObjectID);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task It_can_DeleteAttributeValueAsync_to_a_not_present_multi_valued_attribute()
+        {
+            // Arrange
+            const string attrName = "ProxyAddressCollection";
+            const string attrValue1 = "joecool@nowhere.net";
+            const string attrValue2 = "joecool@nowhere.lab";
+            var it = BuildClient();
+            IdmResource testResource = await CreateTestPerson(it);
+
+            try
+            {
+                await it.AddValueAsync(testResource.ObjectID, attrName, attrValue1);
+                await it.AddValueAsync(testResource.ObjectID, attrName, attrValue2);
+
+                // Act
+                await it.RemoveValueAsync(testResource.ObjectID, attrName, attrValue2);
+
+                // Assert
+                var searchResult =
+                    await
+                        it.GetAsync(new SearchCriteria
+                        {
+                            XPath = "/Person[ObjectID='" + testResource.ObjectID + "']",
+                            Attributes = new[] { "ProxyAddressCollection" }
+                        });
+                Assert.IsFalse(searchResult.First().GetAttrValues(attrName).Contains(attrValue2));
+            }
+            finally
+            {
+                // Afterwards
+                it.DeleteAsync(testResource.ObjectID);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task It_can_PutAttributeValueAsync_to_a_not_present_single_valued_attribute()
+        {
+            // Arrange
+            const string attrName = "FirstName";
+            const string attrValue1 = "TestFirstName";
+            var it = BuildClient();
+            IdmResource testResource = await CreateTestPerson(it);
+
+            try
+            {
+                // Act
+                await it.ReplaceValueAsync(testResource.ObjectID, attrName, attrValue1);
+
+
+                // Assert
+                var searchResult =
+                    await
+                        it.GetAsync(new SearchCriteria
+                        {
+                            XPath = "/Person[ObjectID='" + testResource.ObjectID + "']",
+                            Attributes = new[] { attrName }
+                        });
+                Assert.AreEqual(attrValue1, searchResult.First().GetAttrValue(attrName));
+            }
+            finally
+            {
+                // Afterwards
+                it.DeleteAsync(testResource.ObjectID);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task It_can_PutAttributeValueAsync_to_a_present_single_valued_attribute()
+        {
+            // Arrange
+            const string attrName = "FirstName";
+            const string attrValue1 = "TestFirstName1";
+            const string attrValue2 = "TestFirstName2";
+            var it = BuildClient();
+            IdmResource testResource = await CreateTestPerson(it);
+
+            try
+            {
+                // Act
+                await it.ReplaceValueAsync(testResource.ObjectID, attrName, attrValue1);
+                await it.ReplaceValueAsync(testResource.ObjectID, attrName, attrValue2);
+
+
+                // Assert
+                var searchResult =
+                    await
+                        it.GetAsync(new SearchCriteria
+                        {
+                            XPath = "/Person[ObjectID='" + testResource.ObjectID + "']",
+                            Attributes = new[] { attrName }
+                        });
+                Assert.AreEqual(attrValue2, searchResult.First().GetAttrValue(attrName));
+            }
+            finally
+            {
+                // Afterwards
+                it.DeleteAsync(testResource.ObjectID);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task It_can_PutAttributeValueAsync_with_a_null_value_to_a_present_single_valued_attribute()
+        {
+            // Arrange
+            const string attrName = "FirstName";
+            const string attrValue1 = "TestFirstName1";
+            const string attrValue2 = null;
+            var it = BuildClient();
+            IdmResource testResource = await CreateTestPerson(it);
+
+            try
+            {
+                // Act
+                await it.ReplaceValueAsync(testResource.ObjectID, attrName, attrValue1);
+                await it.ReplaceValueAsync(testResource.ObjectID, attrName, attrValue2);
+
+                // Assert
+                var searchResult =
+                    await
+                        it.GetAsync(new SearchCriteria
+                        {
+                            XPath = "/Person[ObjectID='" + testResource.ObjectID + "']",
+                            Attributes = new[] { attrName }
+                        });
+                Assert.IsNull(searchResult.First().GetAttrValue(attrName));
+            }
+            finally
+            {
+                // Afterwards
+                it.DeleteAsync(testResource.ObjectID);
+            }
+        }
+
+        
+        // TODO 005: Implement Update Whole Object
+
         // TODO 004: Implement User and Group
         // TODO 003: Implement ObjectTypeDescription, AttributeTypeDescription, and Binding
         // TODO 001: Implement Creation of Approvals
         // TODO 000: Implement Attribute Endpoints on resources
-
 
 
 
@@ -275,5 +508,22 @@ namespace IdmNet.Tests
             return environmentVariable;
         }
 
+        private static async Task<IdmResource> CreateTestPerson(IdmNetClient it)
+        {
+            return await it.PostAsync(new IdmResource { ObjectType = "Person", DisplayName = "Test User" });
+        }
+        private static async Task<IdmResource> CreateTestSearchScope(IdmNetClient it)
+        {
+            return await it.PostAsync(new IdmResource { Attributes = new List<IdmAttribute>
+            {
+                new IdmAttribute{Name = "ObjectType", Value = "SearchScopeConfiguration"},
+                new IdmAttribute{Name = "DisplayName", Value = "_TestSearchScope"},
+                new IdmAttribute{Name = "SearchScopeContext", Value = "DisplayName"},
+                new IdmAttribute{Name = "IsConfigurationType", Value = "true"},
+                new IdmAttribute{Name = "Order", Value = "1"},
+                new IdmAttribute{Name = "SearchScope", Value = "/Person"},
+                new IdmAttribute{Name = "UsageKeyword", Value = "foo"},
+            }});
+        }
     }
 }

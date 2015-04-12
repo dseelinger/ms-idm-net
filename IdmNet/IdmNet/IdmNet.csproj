@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -45,16 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SoapFaultException.cs" />
     <Compile Include="IdmAttribute.cs" />
     <Compile Include="IdmNetClient.cs" />
     <Compile Include="IdmResource.cs" />
-    <Compile Include="IdmSoapBinding.cs" />
+    <Compile Include="SoapModels\IdmSoapBinding.cs" />
     <Compile Include="IdmUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchCriteria.cs" />
     <Compile Include="SoapConstants.cs" />
-    <Compile Include="SoapEnumerationModels.cs" />
-    <Compile Include="SoapFactoryModels.cs" />
+    <Compile Include="SoapModels\SoapEnumerationModels.cs" />
+    <Compile Include="SoapModels\SoapFactoryModels.cs" />
+    <Compile Include="SoapModels\SoapResourceClientModels.cs" />
     <Compile Include="SoapXmlSerializer.cs" />
   </ItemGroup>
   <ItemGroup>

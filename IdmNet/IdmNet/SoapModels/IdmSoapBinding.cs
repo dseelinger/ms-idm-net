@@ -1,7 +1,7 @@
 ﻿using System.ServiceModel;
 using System.Xml;
 
-namespace IdmNet
+namespace IdmNet.SoapModels
 {
     public class IdmSoapBinding : WSHttpContextBinding
     {

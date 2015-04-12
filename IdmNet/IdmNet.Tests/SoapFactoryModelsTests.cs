@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ServiceModel.Configuration;
 using System.Xml;
+using IdmNet.SoapModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 // ReSharper disable ObjectCreationAsStatement
 

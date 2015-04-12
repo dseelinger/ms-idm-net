@@ -5,6 +5,7 @@ using System.Linq;
 using System.ServiceModel.Channels;
 using System.Threading.Tasks;
 using System.Xml;
+using IdmNet.SoapModels;
 
 namespace IdmNet
 {
@@ -21,7 +22,7 @@ namespace IdmNet
             _resourceClient = resourceClient;
         }
 
-        public async Task<IEnumerable<IdmResource>> SearchAsync(SearchCriteria criteria)
+        public async Task<IEnumerable<IdmResource>> GetAsync(SearchCriteria criteria)
         {
             var pullInfo = await EnumerateAndPreparePull(criteria);
 
@@ -42,20 +43,21 @@ namespace IdmNet
         private static void Sort(List<IdmResource> results, SearchCriteria criteria)
         {
             string attrName = criteria.SortAttribute;
-            if (attrName != null)
-            {
-                results.Sort(
-                    (res1, res2) =>
-                    {
-                        var negateIfNeeded = ((criteria.SortDecending) ? -1 : 1);
-                        var val1 = res1[attrName].Value ?? "";
-                        var val2 = res2[attrName].Value ?? "";
-                        var compareResult = String.Compare(val1.ToLower(), val2.ToLower(),
-                            StringComparison.Ordinal)*negateIfNeeded;
-                        return compareResult;
-                    }
-                    );
-            }
+            if (attrName == null)
+                return;
+
+            var negateIfNeeded = ((criteria.SortDecending) ? -1 : 1);
+
+            results.Sort((res1, res2) => CompareResult(res1, res2, attrName, negateIfNeeded));
+        }
+
+        private static int CompareResult(IdmResource res1, IdmResource res2, string attrName, int negateIfNeeded)
+        {
+            var val1 = res1[attrName].Value ?? "";
+            var val2 = res2[attrName].Value ?? "";
+            var compareResult = String.Compare(val1.ToLower(), val2.ToLower(),
+                StringComparison.Ordinal)*negateIfNeeded;
+            return compareResult;
         }
 
         private async Task<PullInfo> EnumerateAndPreparePull(SearchCriteria criteria)
@@ -77,7 +79,7 @@ namespace IdmNet
 
             // Check for enumerate fault
             if (enumerateResponseMessage.IsFault)
-                throw new Exception("Enumerate Fault: " + enumerateResponseMessage);
+                throw new SoapFaultException("Enumerate Fault: " + enumerateResponseMessage);
 
 
             // Prepare first Pull
@@ -113,7 +115,7 @@ namespace IdmNet
 
             // Check for Pull fault
             if (pullResponseMessage.IsFault)
-                throw new Exception("Pull Fault: " + pullResponseMessage);
+                throw new SoapFaultException("Pull Fault: " + pullResponseMessage);
 
 
             // Get Resources from Pull response
@@ -133,24 +135,28 @@ namespace IdmNet
             var resource = new IdmResource();
 
             foreach (XmlNode attribute in xmlNode.ChildNodes)
-            {
-                string name = attribute.LocalName;
-                string val = attribute.InnerText;
+                BuildAttribute(attribute, resource);
 
-                if (val.StartsWith("urn:uuid:"))
-                    val = val.Substring(9);
-
-                var attr = resource.GetAttr(name);
-                if (attr != null)
-                    attr.Values.Add(val);
-                else
-                    resource.Attributes.Add(new IdmAttribute{ Name = name, Value = val });
-            }
             return resource;
         }
 
+        private static void BuildAttribute(XmlNode attribute, IdmResource resource)
+        {
+            string name = attribute.LocalName;
+            string val = attribute.InnerText;
 
-        public async Task<IdmResource> CreateAsync(IdmResource resource)
+            if (val.StartsWith("urn:uuid:"))
+                val = val.Substring(9);
+
+            var attr = resource.GetAttr(name);
+            if (attr != null)
+                attr.Values.Add(val);
+            else
+                resource.Attributes.Add(new IdmAttribute {Name = name, Value = val});
+        }
+
+
+        public async Task<IdmResource> PostAsync(IdmResource resource)
         {
             if (resource == null)
                 throw new ArgumentNullException("resource");
@@ -164,7 +170,7 @@ namespace IdmNet
             Message addResponseMsg = await _factoryClient.CreateAsync(createRequestMessage);
 
             if (addResponseMsg.IsFault)
-                throw new Exception("Create Fault: " + addResponseMsg);
+                throw new SoapFaultException("Create Fault: " + addResponseMsg);
 
             // Deserialize the Add response
             ResourceCreated resourceCreatedObject = addResponseMsg.GetBody<ResourceCreated>(new SoapXmlSerializer(typeof(ResourceCreated)));
@@ -179,20 +185,30 @@ namespace IdmNet
 
         private static Message BuildCreateRequestMessage(IdmResource resource)
         {
-            // Create the request object
-            var values = from attribute in resource.Attributes
-                from val in attribute.Values
-                select new AttributeTypeAndValue(attribute.Name, val);
-            var factoryRequest = new AddRequest {AttributeTypeAndValue = values.ToArray()};
+            var factoryRequest = BuildFactoryRequest(resource);
 
-            // Create the SOAP message
+            var createRequestMessage = CreateSoapMessage(factoryRequest);
+
+            return createRequestMessage;
+        }
+
+        private static Message CreateSoapMessage(AddRequest factoryRequest)
+        {
             var createRequestMessage = Message.CreateMessage(MessageVersion.Default,
                 SoapConstants.CreateAction,
                 factoryRequest,
                 new SoapXmlSerializer(typeof (AddRequest))
                 );
-
             return createRequestMessage;
+        }
+
+        private static AddRequest BuildFactoryRequest(IdmResource resource)
+        {
+            var values = from attribute in resource.Attributes
+                from val in attribute.Values
+                select new AttributeTypeAndValue(attribute.Name, val);
+            var factoryRequest = new AddRequest {AttributeTypeAndValue = values.ToArray()};
+            return factoryRequest;
         }
 
 
@@ -207,7 +223,52 @@ namespace IdmNet
 
             Message deleteResponseMsg = await _resourceClient.DeleteAsync(deleteRequestMsg);
             if (deleteResponseMsg.IsFault)
-                throw new Exception("Delete Fault: " + deleteResponseMsg);
+                throw new SoapFaultException("Delete Fault: " + deleteResponseMsg);
+        }
+
+        public async Task AddValueAsync(string objectID, string attrName, string attrValue)
+        {
+            await BuildAndExecutePut(objectID, attrName, attrValue, ModeType.Add);
+        }
+
+        public async Task RemoveValueAsync(string objectID, string attrName, string attrValue)
+        {
+            await BuildAndExecutePut(objectID, attrName, attrValue, ModeType.Delete);
+        }
+
+        private async Task BuildAndExecutePut(string objectID, string attrName, string attrValue, ModeType modeType)
+        {
+            ModifyRequest modifyRequest = new ModifyRequest();
+            Change changeRemoveAttribute = new Change(modeType, attrName, attrValue);
+            modifyRequest.Change = new[] {changeRemoveAttribute};
+
+            await Put(objectID, modifyRequest);
+        }
+
+        private async Task Put(string objectID, ModifyRequest modifyRequest)
+        {
+            // Create the Put request messsage
+            Message putRequestMsg = Message.CreateMessage(MessageVersion.Default,
+                SoapConstants.PutAction,
+                modifyRequest,
+                new SoapXmlSerializer(typeof (ModifyRequest))
+                );
+
+            // Add the ResourceReferenceProperty header for the Put request
+            putRequestMsg.Headers.Add(MessageHeader.CreateHeader("ResourceReferenceProperty", SoapConstants.RmNamespace,
+                objectID));
+            putRequestMsg.Headers.Add(MessageHeader.CreateHeader("IdentityManagementOperation", SoapConstants.DirectoryAccess,
+                null, true));
+
+            Message putResponseMsg = await _resourceClient.PutAsync(putRequestMsg);
+
+            if (putResponseMsg.IsFault)
+                throw new SoapFaultException("Put Fault: " + putResponseMsg);
+        }
+
+        public async Task ReplaceValueAsync(string objectID, string attrName, string attrValue)
+        {
+            await BuildAndExecutePut(objectID, attrName, attrValue, ModeType.Replace);
         }
     }
 }
