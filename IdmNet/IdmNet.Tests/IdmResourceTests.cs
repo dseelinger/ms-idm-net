@@ -170,7 +170,7 @@ namespace IdmNet.Tests
             var it = new IdmResource { Attributes = new List<IdmAttribute> { new IdmAttribute { Name = "Creator", Value = creatorObjectID } } };
 
             // ReSharper disable once ExpressionIsAlwaysNull
-            var result = it.GetAttributeAsComplexObject(subResource, "Creator");
+            it.GetAttributeAsComplexObject(subResource, "Creator");
 
             Assert.AreEqual(creatorObjectID, it.Creator.ObjectID);
         }
@@ -196,7 +196,7 @@ namespace IdmNet.Tests
 
             var it = new IdmResource { Attributes = new List<IdmAttribute> { new IdmAttribute { Name = "Creator", Value = freshCreatorObjectID } } };
 
-            var result = it.GetAttributeAsComplexObject(creator, "Creator");
+            it.GetAttributeAsComplexObject(creator, "Creator");
 
             Assert.AreEqual(freshCreatorObjectID, it.Creator.ObjectID);
         }
@@ -232,17 +232,6 @@ namespace IdmNet.Tests
             It_can_get_Creator_when_the_attribute_has_a_refId_value()
         {
             var creatorObjectID = Guid.NewGuid().ToString("D");
-            var creator = new IdmResource
-            {
-                CreatedTime = DateTime.Now,
-                Description = "Test creator",
-                DisplayName = "Joe User",
-                ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
-                MVObjectID = Guid.NewGuid().ToString("D"),
-                ObjectID = creatorObjectID,
-                ObjectType = "Person",
-                ResourceTime = DateTime.Now
-            };
 
             var it = new IdmResource { Attributes = new List<IdmAttribute> { new IdmAttribute { Name = "Creator", Value = creatorObjectID } } };
 
@@ -359,6 +348,7 @@ namespace IdmNet.Tests
                     new List<IdmAttribute> { new IdmAttribute { Name = "MultiValuedReferenceIDs", Values = new List<string> { subObjectID1, subObjectID2, subObjectID3 } } }
             };
 
+            // ReSharper disable once ExpressionIsAlwaysNull
             var result = it.GetMultiValuedAttrAsComplexObjects("MultiValuedReferenceIDs", resources);
 
             Assert.AreEqual(subObjectID1, result[0].ObjectID);
@@ -373,9 +363,8 @@ namespace IdmNet.Tests
         {
             var subObjectID1 = Guid.NewGuid().ToString("D");
             var subObjectID2 = Guid.NewGuid().ToString("D");
-            var subObjectID3 = Guid.NewGuid().ToString("D");
 
-            List<IdmResource> backingField = null;
+            List<IdmResource> backingField;
             var resources = new List<IdmResource>
             {
                 new IdmResource
@@ -448,7 +437,10 @@ namespace IdmNet.Tests
                     }
             };
 
-            var result = it["foo"];
+            var result = it["foo1"];
+
+            Assert.AreEqual("foo1", result.Values[0]);
+            Assert.AreEqual("bar1", result.Values[1]);
         }
 
     }

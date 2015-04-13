@@ -28,8 +28,8 @@ namespace IdmNet.SoapModels
         {
         }
 
-        public Change(ModeType operation, string attributeType, string attributeValue)
-            : base(attributeType, attributeValue)
+        public Change(ModeType operation, string attrName, string attrValue)
+            : base(attrName, attrValue)
         {
             Operation = operation;
         }

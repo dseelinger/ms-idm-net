@@ -59,13 +59,13 @@ namespace IdmNet.SoapModels
         /// Create new AttributeTypeAndValue with an attribute name and value
         /// </summary>
         /// <param name="attributeName"></param>
-        /// <param name="attributeValue"></param>
-        public AttributeTypeAndValue(string attributeName, string attributeValue)
+        /// <param name="attrValue"></param>
+        public AttributeTypeAndValue(string attributeName, string attrValue)
         {
             AttributeName = attributeName;
 
 
-            SetAttributeValue(attributeName, attributeValue);
+            SetAttributeValue(attributeName, attrValue);
         }
 
         private void SetAttributeValue(string attributeName, string attributeValue)

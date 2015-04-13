@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.ServiceModel;
 using System.Threading.Tasks;
 using IdmNet.SoapModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 #pragma warning disable 4014
 
 // ReSharper disable PossibleNullReferenceException
@@ -20,7 +19,7 @@ namespace IdmNet.Tests
         public async Task It_can_get_all_ObjectTypeDescription()
         {
             // Arrange
-            var it = BuildClient(); 
+            var it = IdmNetClientFactory.BuildClient();
 
             // Act
             var criteria = new SearchCriteria { Attributes = new[] { "DisplayName" }, XPath = "/ObjectTypeDescription" };
@@ -39,7 +38,7 @@ namespace IdmNet.Tests
         public async Task It_can_get_objects_with_multi_valued_attributes()
         {
             // Arrange
-            var it = BuildClient();
+            var it = IdmNetClientFactory.BuildClient();
 
             // Act
             var criteria = new SearchCriteria { Attributes = new[] { "UsageKeyword" }, XPath = "/BindingDescription" };
@@ -56,7 +55,7 @@ namespace IdmNet.Tests
         public async Task It_can_perform_multiple_searches()
         {
             // Arrange
-            var it = BuildClient();
+            var it = IdmNetClientFactory.BuildClient();
 
             // Act 1
             var criteria = new SearchCriteria { Attributes = new[] { "UsageKeyword" }, XPath = "/BindingDescription" };
@@ -86,7 +85,7 @@ namespace IdmNet.Tests
         public async Task It_throws_for_get_when_bad_xpath_given()
         {
             // Arrange
-            var it = BuildClient();
+            var it = IdmNetClientFactory.BuildClient();
 
             // Act
             var criteria = new SearchCriteria { XPath = "<3#" };
@@ -99,7 +98,7 @@ namespace IdmNet.Tests
         public async Task It_throws_when_unknown_xpath_given()
         {
             // Arrange
-            var it = BuildClient();
+            var it = IdmNetClientFactory.BuildClient();
 
             // Act
             var criteria = new SearchCriteria { XPath = "/foo" };
@@ -112,7 +111,7 @@ namespace IdmNet.Tests
         public async Task It_can_sort_search_results()
         {
             // Arrange
-            var it = BuildClient();
+            var it = IdmNetClientFactory.BuildClient();
 
             // Act
             var criteria = new SearchCriteria { Attributes = new[] { "DisplayName" }, XPath = "/ObjectTypeDescription", SortAttribute =  "DisplayName", SortDecending = true};
@@ -133,7 +132,7 @@ namespace IdmNet.Tests
         public async Task It_can_create_objects_in_Identity_Manager()
         {
             // Arrange
-            var it = BuildClient();
+            var it = IdmNetClientFactory.BuildClient();
 
             // Act
             var newUser = new IdmResource { ObjectType = "Person", DisplayName = "Test User" };
@@ -155,7 +154,7 @@ namespace IdmNet.Tests
         public async Task It_throws_when_passing_a_null_resource_to_create()
         {
             // Arrange
-            var it = BuildClient();
+            var it = IdmNetClientFactory.BuildClient();
 
             // Act
             await it.PostAsync(null);
@@ -167,7 +166,7 @@ namespace IdmNet.Tests
         public async Task It_throws_when_an_invalid_resource_is_passed_to_create()
         {
             // Arrange
-            var it = BuildClient();
+            var it = IdmNetClientFactory.BuildClient();
 
             // Act
             var newUser = new IdmResource();
@@ -181,7 +180,7 @@ namespace IdmNet.Tests
         public async Task It_can_delete_an_IdmResource()
         {
             // Arrange
-            var it = BuildClient();
+            var it = IdmNetClientFactory.BuildClient();
             IdmResource toDelete =
                 await it.PostAsync(new IdmResource {ObjectType = "Person", DisplayName = "Test User"});
 
@@ -202,7 +201,7 @@ namespace IdmNet.Tests
         public async Task It_throws_when_attempting_to_delete_a_null_ObjectID()
         {
             // Arrange
-            var it = BuildClient();
+            var it = IdmNetClientFactory.BuildClient();
 
             // Act
             await it.DeleteAsync(null);
@@ -214,7 +213,7 @@ namespace IdmNet.Tests
         public async Task It_throws_when_attempting_to_delete_a_bad_object_ID()
         {
             // Arrange
-            var it = BuildClient();
+            var it = IdmNetClientFactory.BuildClient();
 
             // Act
             await it.DeleteAsync("bad object id");
@@ -229,7 +228,7 @@ namespace IdmNet.Tests
             // Arrange
             const string attrName = "FirstName";
             const string attrValue = "Testing";
-            var it = BuildClient();
+            var it = IdmNetClientFactory.BuildClient();
             IdmResource testResource = await CreateTestPerson(it);
 
             // Act
@@ -253,7 +252,7 @@ namespace IdmNet.Tests
             // Arrange
             const string attrName = "SearchScopeContext";
             const string attrValue = "FirstName";
-            var it = BuildClient();
+            var it = IdmNetClientFactory.BuildClient();
             IdmResource testResource = await CreateTestSearchScope(it);
 
             // Act
@@ -287,7 +286,7 @@ namespace IdmNet.Tests
             // Arrange
             const string attrName = "ProxyAddressCollection";
             const string attrValue = "joecool@nowhere.net";
-            var it = BuildClient();
+            var it = IdmNetClientFactory.BuildClient();
             IdmResource testResource = await CreateTestPerson(it);
 
             // Act
@@ -320,7 +319,7 @@ namespace IdmNet.Tests
             const string attrName = "ProxyAddressCollection";
             const string attrValue1 = "joecool@nowhere.net";
             const string attrValue2 = "joecool@nowhere.lab";
-            var it = BuildClient();
+            var it = IdmNetClientFactory.BuildClient();
             IdmResource testResource = await CreateTestPerson(it);
 
             try
@@ -355,7 +354,7 @@ namespace IdmNet.Tests
             // Arrange
             const string attrName = "FirstName";
             const string attrValue1 = "TestFirstName";
-            var it = BuildClient();
+            var it = IdmNetClientFactory.BuildClient();
             IdmResource testResource = await CreateTestPerson(it);
 
             try
@@ -389,7 +388,7 @@ namespace IdmNet.Tests
             const string attrName = "FirstName";
             const string attrValue1 = "TestFirstName1";
             const string attrValue2 = "TestFirstName2";
-            var it = BuildClient();
+            var it = IdmNetClientFactory.BuildClient();
             IdmResource testResource = await CreateTestPerson(it);
 
             try
@@ -424,7 +423,7 @@ namespace IdmNet.Tests
             const string attrName = "FirstName";
             const string attrValue1 = "TestFirstName1";
             const string attrValue2 = null;
-            var it = BuildClient();
+            var it = IdmNetClientFactory.BuildClient();
             IdmResource testResource = await CreateTestPerson(it);
 
             try
@@ -450,63 +449,54 @@ namespace IdmNet.Tests
             }
         }
 
-        
-        // TODO 005: Implement Update Whole Object
-
-        // TODO 004: Implement User and Group
-        // TODO 003: Implement ObjectTypeDescription, AttributeTypeDescription, and Binding
-        // TODO 001: Implement Creation of Approvals
-        // TODO 000: Implement Attribute Endpoints on resources
-
-
-
-        private static IdmNetClient BuildClient()
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task It_can_PutAsync_to_bactch_a_bunch_of_changes_together_for_a_single_object()
         {
-            var soapBinding = new IdmSoapBinding();
-            string fqdn = IdmUtils.GetEnv("MIM_fqdn");
-            var endpointIdentity = EndpointIdentity.CreateSpnIdentity("FIMSERVICE/" + fqdn);
-
-
-            var enumerationPath = "http://" + fqdn + SoapConstants.EnumeratePortAndPath;
-            var factoryPath = "http://" + fqdn + SoapConstants.FactoryPortAndPath;
-            var resourcePath = "http://" + fqdn + SoapConstants.ResourcePortAndPath;
-            
-
-            var enumerationEndpoint = new EndpointAddress(new Uri(enumerationPath), endpointIdentity);
-            var factoryEndpoint = new EndpointAddress(new Uri(factoryPath), endpointIdentity);
-            var resourceEndpoint = new EndpointAddress(new Uri(resourcePath), endpointIdentity);
-            
-
-            var searchClient = new SearchClient(soapBinding, enumerationEndpoint);
-            var factoryClient = new ResourceFactoryClient(soapBinding, factoryEndpoint);
-            var resourceClient = new ResourceClient(soapBinding, resourceEndpoint);
-
-
-
-            var credentials = new NetworkCredential(
-                GetEnv("MIM_username"),
-                GetEnv("MIM_pwd"),
-                GetEnv("MIM_domain"));
-
-            searchClient.ClientCredentials.Windows.ClientCredential = credentials;
-            factoryClient.ClientCredentials.Windows.ClientCredential = credentials;
-            resourceClient.ClientCredentials.Windows.ClientCredential = credentials;
-
-
-            var it = new IdmNetClient(searchClient, factoryClient, resourceClient);
-            return it;
-        }
-
-
-        private static string GetEnv(string environmentVariableName)
-        {
-            var environmentVariable = Environment.GetEnvironmentVariable(environmentVariableName);
-            if (environmentVariable == null)
+            // Arrange
+            var it = IdmNetClientFactory.BuildClient();
+            IdmResource testResource = await CreateTestPerson(it);
+            var changes1 = new[]
             {
-                throw new ApplicationException("Missing Environment Variable: " + environmentVariableName);
+                new Change(ModeType.Replace, "FirstName", "FirstNameTest"),
+                new Change(ModeType.Replace, "LastName", "LastNameTest"),
+                new Change(ModeType.Add, "ProxyAddressCollection", "joe@lab1.lab"),
+                new Change(ModeType.Add, "ProxyAddressCollection", "joe@lab2.lab"),
+            };
+
+            try
+            {
+                // Act
+                await it.PutAsync(testResource.ObjectID, changes1);
+
+                // Assert
+                var searchResult =
+                    await
+                        it.GetAsync(new SearchCriteria
+                        {
+                            XPath = "/Person[ObjectID='" + testResource.ObjectID + "']",
+                            Attributes = new[] { "FirstName", "LastName", "ProxyAddressCollection", }
+                        });
+                var modifiedResource1 = searchResult.First();
+                Assert.AreEqual("FirstNameTest", modifiedResource1.GetAttrValue("FirstName"));
+                Assert.AreEqual("LastNameTest", modifiedResource1.GetAttrValue("LastName"));
+                Assert.IsTrue(modifiedResource1.GetAttrValues("ProxyAddressCollection").Contains("joe@lab1.lab"));
+                Assert.IsTrue(modifiedResource1.GetAttrValues("ProxyAddressCollection").Contains("joe@lab2.lab"));
             }
-            return environmentVariable;
+            finally
+            {
+                // Afterwards
+                it.DeleteAsync(testResource.ObjectID);
+            }
         }
+
+        // TODO 005: XML Comments
+        // TODO 004: Implement Group
+        // TODO 003: Implement ObjectTypeDescription, AttributeTypeDescription, and Binding
+        // TODO 002: Implement the Resource client Get operation (as opposed to Enumerate+Pull)
+        // TODO 001: Implement Approvals
+        // TODO -999: Implement the STS endpoint
+
 
         private static async Task<IdmResource> CreateTestPerson(IdmNetClient it)
         {

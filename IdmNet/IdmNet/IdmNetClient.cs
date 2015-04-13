@@ -9,12 +9,33 @@ using IdmNet.SoapModels;
 
 namespace IdmNet
 {
+    /// <summary>
+    /// This is the primary class in the IdmNet assembly.  It is the .NET client used to perform CRUD operations on
+    /// objects/resources in the Identity Manager Service database.
+    /// </summary>
     public class IdmNetClient
     {
         private readonly SearchClient _searchClient;
         private readonly ResourceFactoryClient _factoryClient;
         private readonly ResourceClient _resourceClient;
 
+        /// <summary>
+        /// Primary constructor for the IdmNetClient.  Though this is public and can be called, the normal thing to
+        /// do is to use IdmNetClientFactory.BuildClient().  This is available in case you want to build the client
+        /// based on different assumptions made by the factory builder.  For example, if you wanted to use a different
+        /// client credentials mechanism, WCF binding, or endpoints
+        /// </summary>
+        /// <param name="searchClient">
+        /// This is the SOAP client used to connect to Identity Manager for search functionality (WS-Enumeration - 
+        /// Enumerate & Pull operations)
+        /// </param>
+        /// <param name="factoryClient">
+        /// This is the SOAP client used to create new objects/resources in Identity Manager (WS-Transfer - Create 
+        /// operation)
+        /// </param>
+        /// <param name="resourceClient">
+        /// This is the SOAP client used to modify existing objects/resources in Identity Manager 
+        /// </param>
         public IdmNetClient(SearchClient searchClient, ResourceFactoryClient factoryClient, ResourceClient resourceClient)
         {
             _searchClient = searchClient;
@@ -228,15 +249,15 @@ namespace IdmNet
 
         public async Task AddValueAsync(string objectID, string attrName, string attrValue)
         {
-            await BuildAndExecutePut(objectID, attrName, attrValue, ModeType.Add);
+            await PutAttribute(objectID, attrName, attrValue, ModeType.Add);
         }
 
         public async Task RemoveValueAsync(string objectID, string attrName, string attrValue)
         {
-            await BuildAndExecutePut(objectID, attrName, attrValue, ModeType.Delete);
+            await PutAttribute(objectID, attrName, attrValue, ModeType.Delete);
         }
 
-        private async Task BuildAndExecutePut(string objectID, string attrName, string attrValue, ModeType modeType)
+        private async Task PutAttribute(string objectID, string attrName, string attrValue, ModeType modeType)
         {
             ModifyRequest modifyRequest = new ModifyRequest();
             Change changeRemoveAttribute = new Change(modeType, attrName, attrValue);
@@ -268,7 +289,15 @@ namespace IdmNet
 
         public async Task ReplaceValueAsync(string objectID, string attrName, string attrValue)
         {
-            await BuildAndExecutePut(objectID, attrName, attrValue, ModeType.Replace);
+            await PutAttribute(objectID, attrName, attrValue, ModeType.Replace);
+        }
+
+
+        public async Task PutAsync(string objectID, Change[] changes)
+        {
+            ModifyRequest modifyRequest = new ModifyRequest {Change = changes};
+
+            await Put(objectID, modifyRequest);
         }
     }
 }
