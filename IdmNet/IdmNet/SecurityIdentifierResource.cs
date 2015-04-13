@@ -21,7 +21,7 @@ namespace IdmNet
 
         public IdmResource DomainConfiguration
         {
-            get { return GetAttributeAsComplexObject(_domainConfiguration, "DomainConfiguration"); }
+            get { return GetAttributeAsComplexObject("DomainConfiguration", _domainConfiguration); }
             set
             {
                 _domainConfiguration = value;

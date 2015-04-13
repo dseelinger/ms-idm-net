@@ -23,7 +23,7 @@ namespace IdmNet.Tests
 
             // Act
             var criteria = new SearchCriteria { Attributes = new[] { "DisplayName" }, XPath = "/ObjectTypeDescription" };
-            IEnumerable<IdmResource> result = await it.GetAsync(criteria);
+            IEnumerable<IdmResource> result = await it.SearchAsync(criteria);
 
 
             var resultsAry = result.ToArray();
@@ -42,7 +42,7 @@ namespace IdmNet.Tests
 
             // Act
             var criteria = new SearchCriteria { Attributes = new[] { "UsageKeyword" }, XPath = "/BindingDescription" };
-            IEnumerable<IdmResource> result = await it.GetAsync(criteria);
+            IEnumerable<IdmResource> result = await it.SearchAsync(criteria);
 
 
             var resultsAry = result.ToArray();
@@ -59,7 +59,7 @@ namespace IdmNet.Tests
 
             // Act 1
             var criteria = new SearchCriteria { Attributes = new[] { "UsageKeyword" }, XPath = "/BindingDescription" };
-            IEnumerable<IdmResource> result = await it.GetAsync(criteria);
+            IEnumerable<IdmResource> result = await it.SearchAsync(criteria);
 
 
             var resultsAry = result.ToArray();
@@ -68,7 +68,7 @@ namespace IdmNet.Tests
 
             // Act 2
             var criteria2 = new SearchCriteria { Attributes = new[] { "DisplayName" }, XPath = "/ObjectTypeDescription" };
-            IEnumerable<IdmResource> result2 = await it.GetAsync(criteria2);
+            IEnumerable<IdmResource> result2 = await it.SearchAsync(criteria2);
 
 
             var resultsAry2 = result2.ToArray();
@@ -89,7 +89,7 @@ namespace IdmNet.Tests
 
             // Act
             var criteria = new SearchCriteria { XPath = "<3#" };
-            await it.GetAsync(criteria);
+            await it.SearchAsync(criteria);
         }
 
         [TestMethod]
@@ -102,7 +102,7 @@ namespace IdmNet.Tests
 
             // Act
             var criteria = new SearchCriteria { XPath = "/foo" };
-            await it.GetAsync(criteria);
+            await it.SearchAsync(criteria);
         }
 
 
@@ -115,7 +115,7 @@ namespace IdmNet.Tests
 
             // Act
             var criteria = new SearchCriteria { Attributes = new[] { "DisplayName" }, XPath = "/ObjectTypeDescription", SortAttribute =  "DisplayName", SortDecending = true};
-            IEnumerable<IdmResource> result = await it.GetAsync(criteria);
+            IEnumerable<IdmResource> result = await it.SearchAsync(criteria);
 
 
             var resultsAry = result.ToArray();
@@ -140,7 +140,7 @@ namespace IdmNet.Tests
 
             // assert
             IEnumerable<IdmResource> searchResult =
-                await it.GetAsync(new SearchCriteria { XPath = "/Person[ObjectID='" + createResult.ObjectID + "']" });
+                await it.SearchAsync(new SearchCriteria { XPath = "/Person[ObjectID='" + createResult.ObjectID + "']" });
             var searchArray = searchResult.ToArray();
             Assert.AreEqual(newUser.DisplayName, createResult.DisplayName);
             Assert.AreEqual(newUser.DisplayName, searchArray[0].DisplayName);
@@ -190,7 +190,7 @@ namespace IdmNet.Tests
 
             // Assert
             IEnumerable<IdmResource> searchResult =
-                await it.GetAsync(new SearchCriteria { XPath = "/Person[ObjectID='" + toDelete.ObjectID + "']" });
+                await it.SearchAsync(new SearchCriteria { XPath = "/Person[ObjectID='" + toDelete.ObjectID + "']" });
             Assert.AreEqual(0, searchResult.Count());
         }
 
@@ -263,7 +263,7 @@ namespace IdmNet.Tests
                 // Assert
                 var searchResult =
                     await
-                        it.GetAsync(new SearchCriteria
+                        it.SearchAsync(new SearchCriteria
                         {
                             XPath = "/SearchScopeConfiguration[ObjectID='" + testResource.ObjectID + "']",
                             Attributes = new[] { "SearchScopeContext" }
@@ -297,7 +297,7 @@ namespace IdmNet.Tests
                 // Assert
                 var searchResult =
                     await
-                        it.GetAsync(new SearchCriteria
+                        it.SearchAsync(new SearchCriteria
                         {
                             XPath = "/Person[ObjectID='" + testResource.ObjectID + "']",
                             Attributes = new[] { "ProxyAddressCollection" }
@@ -333,7 +333,7 @@ namespace IdmNet.Tests
                 // Assert
                 var searchResult =
                     await
-                        it.GetAsync(new SearchCriteria
+                        it.SearchAsync(new SearchCriteria
                         {
                             XPath = "/Person[ObjectID='" + testResource.ObjectID + "']",
                             Attributes = new[] { "ProxyAddressCollection" }
@@ -366,7 +366,7 @@ namespace IdmNet.Tests
                 // Assert
                 var searchResult =
                     await
-                        it.GetAsync(new SearchCriteria
+                        it.SearchAsync(new SearchCriteria
                         {
                             XPath = "/Person[ObjectID='" + testResource.ObjectID + "']",
                             Attributes = new[] { attrName }
@@ -401,7 +401,7 @@ namespace IdmNet.Tests
                 // Assert
                 var searchResult =
                     await
-                        it.GetAsync(new SearchCriteria
+                        it.SearchAsync(new SearchCriteria
                         {
                             XPath = "/Person[ObjectID='" + testResource.ObjectID + "']",
                             Attributes = new[] { attrName }
@@ -435,7 +435,7 @@ namespace IdmNet.Tests
                 // Assert
                 var searchResult =
                     await
-                        it.GetAsync(new SearchCriteria
+                        it.SearchAsync(new SearchCriteria
                         {
                             XPath = "/Person[ObjectID='" + testResource.ObjectID + "']",
                             Attributes = new[] { attrName }
@@ -472,7 +472,7 @@ namespace IdmNet.Tests
                 // Assert
                 var searchResult =
                     await
-                        it.GetAsync(new SearchCriteria
+                        it.SearchAsync(new SearchCriteria
                         {
                             XPath = "/Person[ObjectID='" + testResource.ObjectID + "']",
                             Attributes = new[] { "FirstName", "LastName", "ProxyAddressCollection", }
@@ -490,8 +490,10 @@ namespace IdmNet.Tests
             }
         }
 
-        // TODO 005: XML Comments
-        // TODO 004: Implement Group
+        // TODO 006: Code coverage for new attributes in IdmResource
+        // TODO 005: XML Comments, starting with IdmUtils
+        // TODO 005: Implement User and integrate into IdmNetClient
+        // TODO 004: Implement Group and integrate into IdmNetClient
         // TODO 003: Implement ObjectTypeDescription, AttributeTypeDescription, and Binding
         // TODO 002: Implement the Resource client Get operation (as opposed to Enumerate+Pull)
         // TODO 001: Implement Approvals

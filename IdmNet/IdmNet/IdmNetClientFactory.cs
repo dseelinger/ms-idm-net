@@ -6,8 +6,15 @@ using IdmNet.SoapModels;
 
 namespace IdmNet
 {
+    /// <summary>
+    /// This class is used to help construct an IdmNet Client object
+    /// </summary>
     public class IdmNetClientFactory
     {
+        /// <summary>
+        /// Build and initialize an IdmNet Client object ready for use
+        /// </summary>
+        /// <returns>Newly initialized IdmNet Client</returns>
         public static IdmNetClient BuildClient()
         {
             var soapBinding = new IdmSoapBinding();

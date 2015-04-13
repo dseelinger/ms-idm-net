@@ -43,7 +43,12 @@ namespace IdmNet
             _resourceClient = resourceClient;
         }
 
-        public async Task<IEnumerable<IdmResource>> GetAsync(SearchCriteria criteria)
+        /// <summary>
+        /// Search the Identity Manager  (async await)
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<IdmResource>> SearchAsync(SearchCriteria criteria)
         {
             var pullInfo = await EnumerateAndPreparePull(criteria);
 
@@ -134,12 +139,9 @@ namespace IdmNet
             var pullResponseMessage = await _searchClient.PullAsync(pullMessage);
 
 
-            // Check for Pull fault
             if (pullResponseMessage.IsFault)
                 throw new SoapFaultException("Pull Fault: " + pullResponseMessage);
 
-
-            // Get Resources from Pull response
             var pullResponseObj = pullResponseMessage.GetBody<PullResponse>(new SoapXmlSerializer(typeof(PullResponse)));
             if (pullResponseObj.Items != null)
             {
@@ -176,7 +178,11 @@ namespace IdmNet
                 resource.Attributes.Add(new IdmAttribute {Name = name, Value = val});
         }
 
-
+        /// <summary>
+        /// Create Object/Resource in Identity Manager Service  (async await)
+        /// </summary>
+        /// <param name="resource">Resource to be created</param>
+        /// <returns>Resource with its newly assigned ObjectID</returns>
         public async Task<IdmResource> PostAsync(IdmResource resource)
         {
             if (resource == null)
@@ -232,7 +238,11 @@ namespace IdmNet
             return factoryRequest;
         }
 
-
+        /// <summary>
+        /// Delete an object in the Identity Manager service (async await)
+        /// </summary>
+        /// <param name="objectID">Resource ID for the object to be deleted</param>
+        /// <returns></returns>
         public async Task DeleteAsync(string objectID)
         {
             if (String.IsNullOrWhiteSpace(objectID))
@@ -247,11 +257,33 @@ namespace IdmNet
                 throw new SoapFaultException("Delete Fault: " + deleteResponseMsg);
         }
 
+        /// <summary>
+        /// Add a value to a multi-valued attribute in the Identity Manager service  (async await)
+        /// </summary>
+        /// <remarks>
+        /// While all attributes in an IdmResource are technically multi-valued, this method only works on attributes
+        /// that are marked as multi-valued in the Identity Manager service.
+        /// </remarks>
+        /// <param name="objectID">Resource ID for the object containing the multi-valued attribute</param>
+        /// <param name="attrName">Name of the Multi-Valued attribute to which a value will be added</param>
+        /// <param name="attrValue">Value to be added to the Multi-Valued attribute</param>
+        /// <returns>Task (async/await) of the asynchronous operation</returns>
         public async Task AddValueAsync(string objectID, string attrName, string attrValue)
         {
             await PutAttribute(objectID, attrName, attrValue, ModeType.Add);
         }
 
+        /// <summary>
+        /// Remove a value from a multi-valued attribute in the Identity Manager service (async await)
+        /// </summary>
+        /// <remarks>
+        /// While all attributes in an IdmResource are technically multi-valued, this method only works on attributes
+        /// that are marked as multi-valued in the Identity Manager service.
+        /// </remarks>
+        /// <param name="objectID">Resource ID for the object containing the multi-valued attribute</param>
+        /// <param name="attrName">Name of the Multi-Valued attribute from which a value will be removed</param>
+        /// <param name="attrValue">Value to be removed from the Multi-Valued attribute</param>
+        /// <returns>Task (async/await) of the asynchronous operation</returns>
         public async Task RemoveValueAsync(string objectID, string attrName, string attrValue)
         {
             await PutAttribute(objectID, attrName, attrValue, ModeType.Delete);
@@ -287,12 +319,30 @@ namespace IdmNet
                 throw new SoapFaultException("Put Fault: " + putResponseMsg);
         }
 
+        /// <summary>
+        /// Replace/Set the value for a single-valued attribute in the Identity Manager service (async await)
+        /// </summary>
+        /// <remarks>
+        /// While all attributes in an IdmResource are technically multi-valued, this method only works on attributes
+        /// that are marked as single-valued in the Identity Manager service.
+        /// </remarks>
+        /// <param name="objectID">Resource ID for the object containing the single-valued attribute</param>
+        /// <param name="attrName">Name of the Single-Valued attribute which will have its value set/replaced</param>
+        /// <param name="attrValue">Value to be set for the Single-Valued attribute</param>
+        /// <returns>Task (async/await) of the asynchronous operation</returns>
         public async Task ReplaceValueAsync(string objectID, string attrName, string attrValue)
         {
             await PutAttribute(objectID, attrName, attrValue, ModeType.Replace);
         }
 
-
+        /// <summary>
+        /// Make multiple changes to a particular Identity Manager service object/resource (async await)
+        /// </summary>
+        /// <param name="objectID">Resource ID for the object containing the attributes to be modified</param>
+        /// <param name="changes">
+        /// Set of changes (Multi-valued "Adds/Removes and Single-valued "Replaces" to be made for the single object
+        /// </param>
+        /// <returns>Task (async/await) of the asynchronous operation</returns>
         public async Task PutAsync(string objectID, Change[] changes)
         {
             ModifyRequest modifyRequest = new ModifyRequest {Change = changes};

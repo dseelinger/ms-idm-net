@@ -3,25 +3,41 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 
-// Note: all these "models" are simply required for the SOAP calls to work.  They can't really be refactored in a nice way. 
+
 namespace IdmNet.SoapModels
 {
+    /// <summary>
+    /// Yet another SOAP Model
+    /// Note: all these "models" are simply required for the SOAP calls to work.  They can't really be refactored in a nice way. 
+    /// </summary>
     [XmlRoot(ElementName = "AddRequest", Namespace = SoapConstants.DirectoryAccess, IsNullable = false)]
     public class AddRequest
     {
+        /// <summary>
+        /// Part of a SOAP model
+        /// </summary>
         [XmlAttribute(AttributeName = "Dialect", DataType = "anyURI")]
         public string Dialect { get; set; }
 
+        /// <summary>
+        /// Part of a SOAP model
+        /// </summary>
         [XmlElement(ElementName = "AttributeTypeAndValue", IsNullable = true)]
         public AttributeTypeAndValue[] AttributeTypeAndValue { get; set; }
 
+        /// <summary>
+        /// Part of a SOAP model
+        /// </summary>
         public AddRequest()
         {
             Dialect = SoapConstants.IdentityAttributeTypeDialect;
         }
     }
 
-    [XmlInclude(typeof(AttributeTypeAndValue))]
+    /// <summary>
+    /// Yet another SOAP Model
+    /// </summary>
+    [XmlInclude(typeof (AttributeTypeAndValue))]
     [XmlRoot(ElementName = "AttributeTypeAndValue", Namespace = SoapConstants.DirectoryAccess, IsNullable = false)]
     public class AttributeTypeAndValue
     {
@@ -31,7 +47,9 @@ namespace IdmNet.SoapModels
         /// Don't set this directly - only use the constructor
         /// </summary>
         [XmlElement(ElementName = "AttributeType")]
-        public string AttributeName { get { return _attrName; }
+        public string AttributeName
+        {
+            get { return _attrName; }
             set
             {
                 if (String.IsNullOrWhiteSpace(value) || value.Any(Char.IsWhiteSpace) || !(Char.IsLetter(value[0])))
@@ -85,30 +103,57 @@ namespace IdmNet.SoapModels
         }
     }
 
+    /// <summary>
+    /// Yet another SOAP Model
+    /// </summary>
     [XmlRoot(Namespace = SoapConstants.Transfer)]
     public class ResourceCreated
     {
+        /// <summary>
+        /// Part of a SOAP model
+        /// </summary>
         [XmlElement(Namespace = SoapConstants.Addressing)]
         public EndpointReference EndpointReference { get; set; }
     }
 
+    /// <summary>
+    /// Yet another SOAP Model
+    /// </summary>
     [XmlRoot(Namespace = SoapConstants.Addressing)]
     public class EndpointReference
     {
+        /// <summary>
+        /// Part of a SOAP model
+        /// </summary>
         [XmlElement(Namespace = SoapConstants.Addressing)]
         public string Address { get; set; }
 
+        /// <summary>
+        /// Part of a SOAP model
+        /// </summary>
         public ReferenceProperties ReferenceProperties { get; set; }
     }
 
+    /// <summary>
+    /// Yet another SOAP Model
+    /// </summary>
     public class ReferenceProperties
     {
+        /// <summary>
+        /// Part of a SOAP model
+        /// </summary>
         [XmlElement(Namespace = SoapConstants.RmNamespace)]
         public ResourceReferenceProperty ResourceReferenceProperty { get; set; }
     }
 
+    /// <summary>
+    /// Yet another SOAP Model
+    /// </summary>
     public class ResourceReferenceProperty
     {
+        /// <summary>
+        /// Part of a SOAP model
+        /// </summary>
         [XmlText(Type = typeof (string))]
         public string Value { get; set; }
     }

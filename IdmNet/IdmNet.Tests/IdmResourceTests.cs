@@ -170,7 +170,7 @@ namespace IdmNet.Tests
             var it = new IdmResource { Attributes = new List<IdmAttribute> { new IdmAttribute { Name = "Creator", Value = creatorObjectID } } };
 
             // ReSharper disable once ExpressionIsAlwaysNull
-            it.GetAttributeAsComplexObject(subResource, "Creator");
+            it.GetAttributeAsComplexObject("Creator", subResource);
 
             Assert.AreEqual(creatorObjectID, it.Creator.ObjectID);
         }
@@ -196,7 +196,7 @@ namespace IdmNet.Tests
 
             var it = new IdmResource { Attributes = new List<IdmAttribute> { new IdmAttribute { Name = "Creator", Value = freshCreatorObjectID } } };
 
-            it.GetAttributeAsComplexObject(creator, "Creator");
+            it.GetAttributeAsComplexObject("Creator", creator);
 
             Assert.AreEqual(freshCreatorObjectID, it.Creator.ObjectID);
         }
@@ -221,7 +221,7 @@ namespace IdmNet.Tests
 
             var it = new IdmResource { Attributes = new List<IdmAttribute> { new IdmAttribute { Name = "Creator", Value = freshCreatorObjectID } } };
 
-            var result = it.GetAttributeAsComplexObject(creator, "Creator");
+            var result = it.GetAttributeAsComplexObject("Creator", creator);
 
             Assert.AreEqual(freshCreatorObjectID, it.Creator.ObjectID);
             Assert.AreEqual("Joe User", result.DisplayName);
