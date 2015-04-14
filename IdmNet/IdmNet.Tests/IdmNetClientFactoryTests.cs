@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IdmNet.Tests
 {
@@ -12,5 +13,14 @@ namespace IdmNet.Tests
 
             Assert.IsNotNull(client);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void It_throws_when_an_environment_variable_is_missing()
+        {
+            IdmNetClientFactory.GetEnv("foo");
+        }
+
+
     }
 }

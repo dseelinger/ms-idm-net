@@ -24,6 +24,9 @@ namespace IdmNet.Tests
             Assert.IsNull(it.ExpirationTime);
             Assert.IsNull(it.MVObjectID);
             Assert.IsNull(it.ResourceTime);
+            Assert.IsNull(it.DetectedRulesList);
+            Assert.IsNull(it.ExpectedRulesList);
+            Assert.IsNull(it.Locale);
         }
 
         [TestMethod]
@@ -56,6 +59,9 @@ namespace IdmNet.Tests
             it.MVObjectID = "foo";
             Assert.AreEqual("foo", it.MVObjectID);
 
+            it.Locale = "foo";
+            Assert.AreEqual("foo", it.Locale);
+
             // and attributes
             it.SetAttrValue("foo", "bar");
             Assert.AreEqual("bar", it.GetAttrValue("foo"));
@@ -83,7 +89,7 @@ namespace IdmNet.Tests
         }
 
         [TestMethod]
-        public void It_should_be_able_to_set_Creator()
+        public void It_can_set_and_get_Creator()
         {
             var creator = new IdmResource
             {
@@ -102,6 +108,76 @@ namespace IdmNet.Tests
             it.Creator = creator;
 
             Assert.AreEqual("Test creator", it.Creator.Description);
+        }
+
+        [TestMethod]
+        public void It_can_set_and_get_DetectedRulesList()
+        {
+            var dre1 = new IdmResource
+            {
+                CreatedTime = DateTime.Now,
+                Description = "DRE Description1",
+                DisplayName = "DRE1",
+                ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
+                MVObjectID = Guid.NewGuid().ToString("D"),
+                ObjectID = Guid.NewGuid().ToString("D"),
+                ObjectType = "DetectedRuleEntry",
+                ResourceTime = DateTime.Now
+            };
+
+            var dre2 = new IdmResource
+            {
+                CreatedTime = DateTime.Now,
+                Description = "DRE Description2",
+                DisplayName = "DRE2",
+                ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
+                MVObjectID = Guid.NewGuid().ToString("D"),
+                ObjectID = Guid.NewGuid().ToString("D"),
+                ObjectType = "DetectedRuleEntry",
+                ResourceTime = DateTime.Now
+            };
+
+            var it = new IdmResource();
+
+            it.DetectedRulesList = new List<IdmResource> { dre1, dre2 };
+
+            Assert.AreEqual("DRE1", it.DetectedRulesList[0].DisplayName);
+            Assert.AreEqual("DRE2", it.DetectedRulesList[1].DisplayName);
+        }
+
+        [TestMethod]
+        public void It_can_set_and_get_ExpectedRulesList()
+        {
+            var ere1 = new IdmResource
+            {
+                CreatedTime = DateTime.Now,
+                Description = "ERE Description1",
+                DisplayName = "ERE1",
+                ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
+                MVObjectID = Guid.NewGuid().ToString("D"),
+                ObjectID = Guid.NewGuid().ToString("D"),
+                ObjectType = "ExpectedRuleEntry",
+                ResourceTime = DateTime.Now
+            };
+
+            var ere2 = new IdmResource
+            {
+                CreatedTime = DateTime.Now,
+                Description = "ERE Description2",
+                DisplayName = "ERE2",
+                ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
+                MVObjectID = Guid.NewGuid().ToString("D"),
+                ObjectID = Guid.NewGuid().ToString("D"),
+                ObjectType = "ExpectedRuleEntry",
+                ResourceTime = DateTime.Now
+            };
+
+            var it = new IdmResource();
+
+            it.ExpectedRulesList = new List<IdmResource> { ere1, ere2 };
+
+            Assert.AreEqual("ERE1", it.ExpectedRulesList[0].DisplayName);
+            Assert.AreEqual("ERE2", it.ExpectedRulesList[1].DisplayName);
         }
 
         [TestMethod]

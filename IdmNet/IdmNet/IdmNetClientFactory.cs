@@ -18,7 +18,7 @@ namespace IdmNet
         public static IdmNetClient BuildClient()
         {
             var soapBinding = new IdmSoapBinding();
-            string fqdn = IdmUtils.GetEnv("MIM_fqdn");
+            string fqdn = GetEnv("MIM_fqdn");
             var endpointIdentity = EndpointIdentity.CreateSpnIdentity("FIMSERVICE/" + fqdn);
 
 
@@ -53,7 +53,7 @@ namespace IdmNet
         }
 
 
-        private static string GetEnv(string environmentVariableName)
+        public static string GetEnv(string environmentVariableName)
         {
             var environmentVariable = Environment.GetEnvironmentVariable(environmentVariableName);
             if (environmentVariable == null)

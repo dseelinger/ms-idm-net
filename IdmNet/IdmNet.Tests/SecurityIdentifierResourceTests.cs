@@ -183,5 +183,20 @@ namespace IdmNet.Tests
             // Assert
             Assert.AreEqual(creator, it.Creator);
         }
+
+        [TestMethod]
+        public void It_may_be_without_a_creator()
+        {
+            // Arrange
+            var resource = new IdmResource();
+
+
+            // Act
+            var it = new SecurityIdentifierResource(resource);
+
+
+            // Assert
+            Assert.IsNull(it.Creator);
+        }
     }
 }

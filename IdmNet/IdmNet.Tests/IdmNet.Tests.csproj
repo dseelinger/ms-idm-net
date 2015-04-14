@@ -63,9 +63,9 @@
     <Compile Include="IdmNetClientTests.cs" />
     <Compile Include="IdmResourceTests.cs" />
     <Compile Include="IdmAttributeTests.cs" />
-    <Compile Include="IntegrationEnviornmentTests.cs" />
     <Compile Include="SoapFactoryModelsTests.cs" />
     <Compile Include="SecurityIdentifierResourceTests.cs" />
+    <Compile Include="SoapResourceClientModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IdmNet\IdmNet.csproj">

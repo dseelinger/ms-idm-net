@@ -5,15 +5,21 @@ using System.Xml.Serialization;
 
 namespace IdmNet
 {
+    /// <summary>
+    /// Class for serializing our SOAP messages for Identity Manager to consume
+    /// </summary>
     public class SoapXmlSerializer : XmlObjectSerializer
     {
         private readonly XmlSerializer _serializer;
 
+        /// <summary>
+        /// Build serilizer for specific type
+        /// </summary>
+        /// <param name="type">Type to serialize</param>
         public SoapXmlSerializer(Type type)
         {
             _serializer = new XmlSerializer(type);
         }
-
 
         public override bool IsStartObject(XmlDictionaryReader reader)
         {
