@@ -490,7 +490,6 @@ namespace IdmNet.Tests
             }
         }
 
-        // TODO 005: XML Comments, starting with IdmUtils
         // TODO 005: Implement User and integrate into IdmNetClient
         // TODO 004: Implement Group and integrate into IdmNetClient
         // TODO 003: Implement ObjectTypeDescription, AttributeTypeDescription, and Binding
