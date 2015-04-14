@@ -4,11 +4,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace IdmNet
 {
+    /// <summary>
+    /// Person object
+    /// </summary>
     public class Person : SecurityIdentifierResource
     {
         private Person _assistant;
         private Person _manager;
 
+        /// <summary>
+        /// For a Person object this can only be 'Person'
+        /// </summary>
         [Required]
         public override sealed string ObjectType
         {
@@ -21,18 +27,27 @@ namespace IdmNet
             }
         }
 
+        /// <summary>
+        /// (aka AD User Cannot Change Password) Will sync from AD to track whether the user is locked out from changing their AD password
+        /// </summary>
         public bool? AD_UserCannotChangePassword
         {
             get { return AttributeToBool("AD_UserCannotChangePassword"); }
             set { SetAttrValue("AD_UserCannotChangePassword", value.ToString()); }
         }
 
+        /// <summary>
+        /// Person's Address
+        /// </summary>
         public string Address
         {
             get { return GetAttrValue("Address"); }
             set { SetAttrValue("Address", value); }
         }
 
+        /// <summary>
+        /// Person's Assistance - reference to another person
+        /// </summary>
         public Person Assistant
         {
             get { return GetAttributeAsComplexObject("Assistant", _assistant); }
