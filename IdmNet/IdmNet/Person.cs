@@ -12,7 +12,42 @@ namespace IdmNet
     {
         private Person _assistant;
         private Person _manager;
+        private List<IdmResource> _authNLockoutRegistrationID;
+        private IdmResource _timeZone;
 
+
+        /// <summary>
+        /// Person's parmeterless constructor
+        /// </summary>
+        public Person()
+        {
+            ObjectType = ForcedObjType = "Person";
+        }
+
+        /// <summary>
+        /// Construct a Person from a SecurityIdentifierResource
+        /// </summary>
+        /// <param name="resource">base class</param>
+        public Person(SecurityIdentifierResource resource)
+            : base(resource)
+        {
+            ObjectType = ForcedObjType = "Person";
+            if (resource.DomainConfiguration == null)
+                return;
+            DomainConfiguration = resource.DomainConfiguration;
+        }
+
+        /// <summary>
+        /// Construct a Person from an IdMResource
+        /// </summary>
+        /// <param name="resource">base class</param>
+        public Person(IdmResource resource)
+            : base(resource)
+        {
+            ObjectType = ForcedObjType = "Person";
+        }
+
+        
         /// <summary>
         /// For a Person object this can only be 'Person'
         /// </summary>
@@ -33,7 +68,7 @@ namespace IdmNet
         /// </summary>
         public bool? AD_UserCannotChangePassword
         {
-            get { return GetAttr("AD_UserCannotChangePassword").ToBool(); }
+            get { return GetAttr("AD_UserCannotChangePassword") == null ? null : GetAttr("AD_UserCannotChangePassword").ToBool(); }
             set { SetAttrValue("AD_UserCannotChangePassword", value.ToString()); }
         }
 
@@ -118,7 +153,7 @@ namespace IdmNet
         /// </summary>
         public DateTime? EmployeeEndDate
         {
-            get { return GetAttr("EmployeeEndDate").ToDateTime(); }
+            get { return GetAttr("EmployeeEndDate") == null ? null : GetAttr("EmployeeEndDate").ToDateTime(); }
             set { SetAttrValue("EmployeeEndDate", value.ToString()); }
         }
 
@@ -136,7 +171,7 @@ namespace IdmNet
         /// </summary>
         public DateTime? EmployeeStartDate
         {
-            get { return GetAttr("EmployeeStartDate").ToDateTime(); }
+            get { return GetAttr("EmployeeStartDate") == null ? null : GetAttr("EmployeeStartDate").ToDateTime(); }
             set { SetAttrValue("EmployeeStartDate", value.ToString()); }
         }
 
@@ -168,15 +203,23 @@ namespace IdmNet
             set { SetAttrValue("FirstName", value); }
         }
 
-        ///// <summary>
-        ///// A Person's first name (givenName in AD)
-        ///// </summary>
-        //public int? FreezeCount
-        //{
-        //    get { return GetAttr("FreezeCount") != null ? GetAttr("FreezeCount").ToInt() : null ; }
-        //    set { SetAttrValue("FreezeCount", value); }
-        //}
+        /// <summary>
+        /// Tracks the number of times the user has unsuccessfully attempted to run an AuthN WF
+        /// </summary>
+        public int? FreezeCount
+        {
+            get { return GetAttr("FreezeCount") != null ? GetAttr("FreezeCount").ToInteger() : null; }
+            set { SetAttrValue("FreezeCount", value.ToString()); }
+        }
 
+        /// <summary>
+        /// Defines the amount of functionality that is disabled due to unsuccessful AuthN WF attempts
+        /// </summary>
+        public string FreezeLevel
+        {
+            get { return GetAttrValue("FreezeLevel"); }
+            set { SetAttrValue("FreezeLevel", value); }
+        }
 
 
         /// <summary>
@@ -197,6 +240,28 @@ namespace IdmNet
             set { SetAttrValue("LastName", value); }
         }
 
+
+        /// <summary>
+        /// The Last time the person attempted a reset (to be used in conjunction with Freeze Time and Freeze Level)
+        /// </summary>
+        public DateTime? LastResetAttemptTime
+        {
+            get { return GetAttr("LastResetAttemptTime") == null ? null : GetAttr("LastResetAttemptTime").ToDateTime(); }
+            set { SetAttrValue("LastResetAttemptTime", value.ToString()); }
+        }
+
+
+        /// <summary>
+        /// This is the list of gate registration ids used by the lockout gate
+        /// </summary>
+        public List<IdmResource> AuthNLockoutRegistrationID
+        {
+            get { return GetMultiValuedAttrAsComplexObjects("AuthNLockoutRegistrationID", _authNLockoutRegistrationID); }
+            set { SetMultiValuedAttrAsComplexObjects("AuthNLockoutRegistrationID", out _authNLockoutRegistrationID, value); }
+        }
+
+
+
         /// <summary>
         /// A Person's Country/Region
         /// </summary>
@@ -206,6 +271,9 @@ namespace IdmNet
             set { SetAttrValue("LoginName", value); }
         }
 
+        /// <summary>
+        /// A Person's Manager
+        /// </summary>
         public Person Manager
         {
             get { return GetAttributeAsComplexObject("Manager", _manager); }
@@ -216,54 +284,136 @@ namespace IdmNet
             }
         }
 
+        /// <summary>
+        /// The person's middle name
+        /// </summary>
         public string MiddleName
         {
             get { return GetAttrValue("MiddleName"); }
             set { SetAttrValue("MiddleName", value); }
         }
 
+        /// <summary>
+        /// The person's mobile phone number
+        /// </summary>
         public string MobilePhone
         {
             get { return GetAttrValue("MobilePhone"); }
             set { SetAttrValue("MobilePhone", value); }
         }
 
+        /// <summary>
+        /// The person's office location
+        /// </summary>
         public string OfficeLocation
         {
             get { return GetAttrValue("OfficeLocation"); }
             set { SetAttrValue("OfficeLocation", value); }
         }
 
+        /// <summary>
+        /// The person's office phone number
+        /// </summary>
         public string OfficePhone
         {
             get { return GetAttrValue("OfficePhone"); }
             set { SetAttrValue("OfficePhone", value); }
         }
 
+
+        /// <summary>
+        /// One-Time Password Email Address - Email address used to deliver a one-time password to the user.
+        /// </summary>
+        public string msidmOneTimePasswordEmailAddress
+        {
+            get { return GetAttrValue("msidmOneTimePasswordEmailAddress"); }
+            set { SetAttrValue("msidmOneTimePasswordEmailAddress", value); }
+        }
+
+        /// <summary>
+        /// One-Time Password Mobile Phone - Mobile phone number used to deliver a one-time password to the user.
+        /// </summary>
+        public string msidmOneTimePasswordMobilePhone
+        {
+            get { return GetAttrValue("msidmOneTimePasswordMobilePhone"); }
+            set { SetAttrValue("msidmOneTimePasswordMobilePhone", value); }
+        }
+
+        /// <summary>
+        /// A photograph of the person
+        /// </summary>
+        public byte[] Photo
+        {
+            get { return GetAttr("Photo") == null ? null : GetAttr("Photo").ToBinary(); }
+            set { SetAttrValue("Photo", Convert.ToBase64String(value)); }
+        }
+
+        /// <summary>
+        /// The person's postal/zip code
+        /// </summary>
         public string PostalCode
         {
             get { return GetAttrValue("PostalCode"); }
             set { SetAttrValue("PostalCode", value); }
         }
 
+        /// <summary>
+        /// List of alternate email addresses for the person (used by AD/Exchange)
+        /// </summary>
         public List<string> ProxyAddressCollection
         {
             get { return GetAttrValues("PostalCode"); }
             set { SetAttrValues("PostalCode", value); }
         }
 
-        public Person()
+
+        /// <summary>
+        /// True if the person has RAS Access Permission
+        /// </summary>
+        public bool? IsRASEnabled
         {
-            ObjectType = ForcedObjType = "Person";
+            get { return GetAttr("IsRASEnabled") == null ? null : GetAttr("IsRASEnabled").ToBool(); }
+            set { SetAttrValue("IsRASEnabled", value.ToString()); }
         }
 
-        public Person(SecurityIdentifierResource resource)
-            : base(resource)
+        /// <summary>
+        /// True if the person is registered for self-service password reset
+        /// </summary>
+        public bool? Register
         {
-            ObjectType = ForcedObjType = "Person";
-            if (resource.DomainConfiguration == null)
-                return;
-            DomainConfiguration = resource.DomainConfiguration;
+            get { return GetAttr("Register") == null ? null : GetAttr("Register").ToBool(); }
+            set { SetAttrValue("Register", value.ToString()); }
+        }
+
+        /// <summary>
+        /// Tracks if the user must register for SSPR
+        /// </summary>
+        public bool? RegistrationRequired
+        {
+            get { return GetAttr("RegistrationRequired") == null ? null : GetAttr("RegistrationRequired").ToBool(); }
+            set { SetAttrValue("RegistrationRequired", value.ToString()); }
+        }
+
+        /// <summary>
+        /// This attribute is used to trigger a password reset process.
+        /// </summary>
+        public string ResetPassword
+        {
+            get { return GetAttrValue("ResetPassword"); }
+            set { SetAttrValue("ResetPassword", value); }
+        }
+
+        /// <summary>
+        /// Reference tot he Domain Name configuration object for the resource (if any)
+        /// </summary>
+        public IdmResource TimeZone
+        {
+            get { return GetAttributeAsComplexObject("TimeZone", _timeZone); }
+            set
+            {
+                _timeZone = value;
+                SetAttrValue("TimeZone", value.ObjectID);
+            }
         }
     }
 }

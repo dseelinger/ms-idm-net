@@ -505,5 +505,66 @@ namespace IdmNet.Tests
             Assert.AreEqual("bar1", result.Values[1]);
         }
 
+        [TestMethod]
+        public void It_can_SettAttrValue_nullable_null_value_and_come_back_as_null_as_either_Value_or_ToInt()
+        {
+            var it = new IdmResource();
+
+            it.SetAttrValue("foo", null);
+
+            var result1 = it.GetAttrValue("foo");
+            var result2 = it.GetAttr("foo").ToInteger();
+            var result3 = it.GetAttr("foo").ToDateTime();
+            var result4 = it.GetAttr("foo").ToBinary();
+            var result5 = it.GetAttr("foo").ToBool();
+
+            Assert.IsNull(result1);
+            Assert.IsNull(result2);
+            Assert.IsNull(result3);
+            Assert.IsNull(result4);
+            Assert.IsNull(result5);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException), "Complex objects must have ObjectID")]
+        public void
+            It_can_throws_when_you_call_GetMultiValuedAttrAsComplexObjects_but_some_of_the_backing_fields_do_not_have_an_ObjectID()
+        {
+            var subObjectID1 = Guid.NewGuid().ToString("D");
+
+            var resources = new List<IdmResource>
+            {
+                new IdmResource
+                {
+                    CreatedTime = DateTime.Now,
+                    Description = "Test resource",
+                    DisplayName = "sub resource 1",
+                    ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
+                    MVObjectID = Guid.NewGuid().ToString("D"),
+                    ObjectID = subObjectID1,
+                    ObjectType = "Resource",
+                    ResourceTime = DateTime.Now
+                },
+                new IdmResource
+                {
+                    CreatedTime = DateTime.Now,
+                    Description = "Test resource",
+                    DisplayName = "sub resource 2",
+                    ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
+                    MVObjectID = Guid.NewGuid().ToString("D"),
+                    ObjectType = "Resource",
+                    ResourceTime = DateTime.Now
+                }
+            };
+
+            var it = new IdmResource();
+
+            it.SetMultiValuedAttrAsComplexObjects("foo", out resources, resources);
+        }
+
+
     }
 }
+
+
+//SetAttrValue

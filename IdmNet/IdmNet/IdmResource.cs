@@ -297,6 +297,9 @@ namespace IdmNet
         public void SetMultiValuedAttrAsComplexObjects<T>(string attrName, out List<T> backingField, List<T> values)
             where T : IdmResource, new()
         {
+            if (values.Any(r => r.ObjectID == null))
+                throw new ArgumentException("Complex objects must have ObjectID");
+
             if (GetAttr(attrName) == null)
                 Attributes.Add(new IdmAttribute()
                 {

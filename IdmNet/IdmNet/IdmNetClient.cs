@@ -6,6 +6,7 @@ using System.ServiceModel.Channels;
 using System.Threading.Tasks;
 using System.Xml;
 using IdmNet.SoapModels;
+// ReSharper disable InconsistentNaming
 
 namespace IdmNet
 {
