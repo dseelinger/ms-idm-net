@@ -124,7 +124,7 @@ namespace IdmNet
         }
 
         /// <summary>
-        /// Convert the Value (string) of an attribute to a binary value (byte[]], if the attribute is defined as 
+        /// Convert the Value (string) of an attribute to a binary value (byte[]), if the attribute is defined as 
         /// binary in Identity Manager
         /// </summary>
         /// <returns>Single (or first) binary value of the attribute or null if the attribute is "not present"
@@ -152,6 +152,43 @@ namespace IdmNet
             if (results.Count == 0)
                 return null;
             return results;
+        }
+
+        /// <summary>
+        /// Convert the Value (string) of an attribute to a integer value if the attribute is defined as such in
+        /// Identity Manager
+        /// </summary>
+        /// <returns>
+        /// Single (or first) integer value of the attribute or null if there are no values for the attribute
+        /// </returns>
+        public int? ToInteger()
+        {
+            int? nullable = new int?();
+            string attrValue = Value;
+            if (attrValue != null)
+                nullable = int.Parse(attrValue);
+            return nullable;
+        }
+
+        //public List<DateTime> ToDateTimes()
+        //{
+        //}
+
+        public List<int> ToIntegers()
+        {
+            var integers = new List<int>();
+            foreach (var value in Values)
+            {
+                var intValue = new int();
+                string attrValue = value;
+                if (attrValue != null)
+                    intValue = int.Parse(attrValue);
+                integers.Add(intValue);
+            }
+
+            if (integers.Count == 0)
+                return null;
+            return integers;
         }
     }
 }

@@ -490,8 +490,6 @@ namespace IdmNet.Tests
             }
         }
 
-        // TODO 007: Implement IdmResource.AttributeToInt
-        // TODO 006: Implement IdmResource.AttributeToBinary
         // TODO 005: Implement User and integrate into IdmNetClient
         // TODO 004: Implement Group and integrate into IdmNetClient
         // TODO 003: Implement ObjectTypeDescription, AttributeTypeDescription, and Binding

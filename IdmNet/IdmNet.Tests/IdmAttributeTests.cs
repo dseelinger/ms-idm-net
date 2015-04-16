@@ -183,5 +183,44 @@ namespace IdmNet.Tests
 
             Assert.IsNull(result);
         }
+
+
+
+        [TestMethod]
+        public void It_can_convert_the_value_to_Integer()
+        {
+            var stringRepresentation = @"123";
+
+            var it = new IdmAttribute { Name = "foo", Values = new List<string> { stringRepresentation } };
+            int? result = it.ToInteger();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(123, result);
+        }
+
+        [TestMethod]
+        public void It_can_convert_multi_values_to_Integers()
+        {
+            var stringRepresentation0 = @"123";
+            var stringRepresentation1 = @"456";
+            var stringRepresentation2 = @"789";
+
+            var it = new IdmAttribute { Name = "foo", Values = new List<string> { stringRepresentation0, stringRepresentation1, stringRepresentation2 } };
+            List<int> result = it.ToIntegers();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(123, result[0]);
+            Assert.AreEqual(456, result[1]);
+            Assert.AreEqual(789, result[2]);
+        }
+
+        [TestMethod]
+        public void It_returns_null_when_no_values_are_not_present()
+        {
+            var it = new IdmAttribute { Name = "foo" };
+            var result = it.ToIntegers();
+
+            Assert.IsNull(result);
+        }
     }
 }
