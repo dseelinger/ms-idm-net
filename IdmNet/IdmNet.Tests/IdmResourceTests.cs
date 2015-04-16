@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 // ReSharper disable UseObjectOrCollectionInitializer
 // ReSharper disable PossibleInvalidOperationException
+// ReSharper disable InconsistentNaming
 
 namespace IdmNet.Tests
 {
@@ -85,7 +86,6 @@ namespace IdmNet.Tests
 
             it.ResourceTime = testTime;
             Assert.AreEqual(testTime, it.ResourceTime);
-
         }
 
         [TestMethod]
@@ -220,20 +220,6 @@ namespace IdmNet.Tests
 
             Assert.AreEqual("fiz", result[0]);
             Assert.AreEqual("buz", result[1]);
-        }
-
-        [TestMethod]
-        public void It_can_convert_one_of_its_attributes_to_bool()
-        {
-            var it = new IdmResource
-            {
-                Attributes =
-                    new List<IdmAttribute> {new IdmAttribute {Name = "foo", Values = new List<string> {"true"}}}
-            };
-
-            var result = it.AttributeToBool("foo");
-
-            Assert.IsTrue(result.Value);
         }
 
         [TestMethod]

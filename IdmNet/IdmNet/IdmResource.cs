@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+// ReSharper disable InconsistentNaming
 
 namespace IdmNet
 {
@@ -49,7 +50,7 @@ namespace IdmNet
         /// </summary>
         public DateTime? CreatedTime
         {
-            get { return AttributeToDateTime("CreatedTime"); }
+            get { return GetAttr("CreatedTime") != null ? GetAttr("CreatedTime").ToDateTime() : null; }
             set { SetAttrValue("CreatedTime", value.ToString()); }
         }
 
@@ -74,7 +75,7 @@ namespace IdmNet
         /// </summary>
         public DateTime? DeletedTime
         {
-            get { return AttributeToDateTime("DeletedTime"); }
+            get { return GetAttr("DeletedTime") != null ? GetAttr("DeletedTime").ToDateTime() : null; }
             set { SetAttrValue("DeletedTime", value.ToString()); }
         }
 
@@ -124,7 +125,7 @@ namespace IdmNet
         /// </summary>
         public DateTime? ExpirationTime
         {
-            get { return AttributeToDateTime("ExpirationTime"); }
+            get { return GetAttr("ExpirationTime") != null ? GetAttr("ExpirationTime").ToDateTime() : null; }
             set { SetAttrValue("ExpirationTime", value.ToString()); }
         }
 
@@ -152,7 +153,7 @@ namespace IdmNet
         /// </summary>
         public DateTime? ResourceTime
         {
-            get { return AttributeToDateTime("ResourceTime"); }
+            get { return GetAttr("ResourceTime") != null ? GetAttr("ResourceTime").ToDateTime() : null; }
             set { SetAttrValue("ResourceTime", value.ToString()); }
         }
 
@@ -231,40 +232,6 @@ namespace IdmNet
                 Name = attrName,
                 Values = values
             });
-        }
-
-        /// <summary>
-        /// Convert the Value (string) of an attribute to DateTime, if the attribute is defined as a DateTime object
-        /// in Identity Manager
-        /// </summary>
-        /// <param name="attrName">Name of the attribute to retrieve</param>
-        /// <returns>Single (or first) DateTime value of the named attribute or null if the attribute is "not present"
-        /// in the Identity Manager resource</returns>
-        public DateTime? AttributeToDateTime(string attrName)
-        {
-            DateTime? nullable = new DateTime?();
-            string attrValue = GetAttrValue(attrName);
-            if (attrValue != null)
-                nullable = DateTime.Parse(attrValue);
-            return nullable;
-        }
-
-        /// <summary>
-        /// Convert the Value (string) of an attribute to boolean, if the attribute is defined as a boolean
-        /// in Identity Manager
-        /// </summary>
-        /// <param name="attrName">Name of the attribute to retrieve</param>
-        /// <returns>
-        /// Boolean value of the named attribute  or null if the attribute is "not present" in the Identity Manager 
-        /// resource (and booleans may not be multi-valued attributes in Identity Manager)
-        /// </returns>
-        public bool? AttributeToBool(string attrName)
-        {
-            bool? nullable = new bool?();
-            string attrValue = GetAttrValue(attrName);
-            if (attrValue != null)
-                nullable = bool.Parse(attrValue);
-            return nullable;
         }
 
         /// <summary>
