@@ -11,7 +11,7 @@
         }
 
         /// <summary>
-        /// Required. (Binary|Boolean|DateTime|Integer|Reference|String|Text)
+        /// (Binary|Boolean|DateTime|Integer|Reference|String|Text)
         /// </summary>
         public string DataType 
         {

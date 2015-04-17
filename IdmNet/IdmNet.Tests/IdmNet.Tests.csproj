@@ -61,6 +61,7 @@
     <Compile Include="IdmNetClientFactoryTests.cs" />
     <Compile Include="Models\AttributeTypeDescriptionTests.cs" />
     <Compile Include="Models\KeywordedResourceTests.cs" />
+    <Compile Include="Models\BindingDescriptionTests.cs" />
     <Compile Include="SoapFaultExceptionTests.cs" />
     <Compile Include="IdmSoapBindingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

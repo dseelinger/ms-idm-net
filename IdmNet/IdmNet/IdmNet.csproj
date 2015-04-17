@@ -51,6 +51,7 @@
     <Compile Include="IdmNetClientFactory.cs" />
     <Compile Include="Models\AttributeInfoResource.cs" />
     <Compile Include="Models\AttributeTypeDescription.cs" />
+    <Compile Include="Models\BindingDescription.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\KeywordedResource.cs" />
     <Compile Include="Models\ObjectTypeDescription.cs" />
