@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+
 // ReSharper disable InconsistentNaming
 
-namespace IdmNet
+namespace IdmNet.Models
 {
     /// <summary>
     /// Person object
@@ -32,19 +33,19 @@ namespace IdmNet
             : base(resource)
         {
             ObjectType = ForcedObjType = "Person";
-            if (resource.DomainConfiguration == null)
-                return;
-            DomainConfiguration = resource.DomainConfiguration;
+            InitFromSecurityIdentifierResource(resource);
         }
 
         /// <summary>
         /// Construct a Person from an IdMResource
         /// </summary>
         /// <param name="resource">base class</param>
-        public Person(IdmResource resource)
-            : base(resource)
+        public Person(IdmResource resource) : base(resource)
         {
             ObjectType = ForcedObjType = "Person";
+            var identifierResource = resource as SecurityIdentifierResource;
+            if (identifierResource != null)
+                InitFromSecurityIdentifierResource(identifierResource);
         }
 
         
@@ -68,7 +69,7 @@ namespace IdmNet
         /// </summary>
         public bool? AD_UserCannotChangePassword
         {
-            get { return GetAttr("AD_UserCannotChangePassword") == null ? null : GetAttr("AD_UserCannotChangePassword").ToBool(); }
+            get { return AttrToBool("AD_UserCannotChangePassword"); }
             set { SetAttrValue("AD_UserCannotChangePassword", value.ToString()); }
         }
 
@@ -86,7 +87,7 @@ namespace IdmNet
         /// </summary>
         public Person Assistant
         {
-            get { return GetAttributeAsComplexObject("Assistant", _assistant); }
+            get { return GetAttr("Assistant", _assistant); }
             set
             {
                 _assistant = value;
@@ -208,7 +209,7 @@ namespace IdmNet
         /// </summary>
         public int? FreezeCount
         {
-            get { return GetAttr("FreezeCount") != null ? GetAttr("FreezeCount").ToInteger() : null; }
+            get { return AttrToInteger("FreezeCount"); }
             set { SetAttrValue("FreezeCount", value.ToString()); }
         }
 
@@ -256,8 +257,8 @@ namespace IdmNet
         /// </summary>
         public List<IdmResource> AuthNLockoutRegistrationID
         {
-            get { return GetMultiValuedAttrAsComplexObjects("AuthNLockoutRegistrationID", _authNLockoutRegistrationID); }
-            set { SetMultiValuedAttrAsComplexObjects("AuthNLockoutRegistrationID", out _authNLockoutRegistrationID, value); }
+            get { return GetMultiValuedAttr("AuthNLockoutRegistrationID", _authNLockoutRegistrationID); }
+            set { SetMultiValuedAttr("AuthNLockoutRegistrationID", out _authNLockoutRegistrationID, value); }
         }
 
 
@@ -276,7 +277,7 @@ namespace IdmNet
         /// </summary>
         public Person Manager
         {
-            get { return GetAttributeAsComplexObject("Manager", _manager); }
+            get { return GetAttr("Manager", _manager); }
             set
             {
                 _manager = value;
@@ -408,7 +409,7 @@ namespace IdmNet
         /// </summary>
         public IdmResource TimeZone
         {
-            get { return GetAttributeAsComplexObject("TimeZone", _timeZone); }
+            get { return GetAttr("TimeZone", _timeZone); }
             set
             {
                 _timeZone = value;

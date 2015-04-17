@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using IdmNet.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 // ReSharper disable UseObjectOrCollectionInitializer
 // ReSharper disable PossibleInvalidOperationException
@@ -91,7 +92,7 @@ namespace IdmNet.Tests
         [TestMethod]
         public void It_can_set_and_get_Creator()
         {
-            var creator = new IdmResource
+            var creator = new Person
             {
                 CreatedTime = DateTime.Now,
                 Description = "Test creator",
@@ -232,7 +233,7 @@ namespace IdmNet.Tests
             var it = new IdmResource { Attributes = new List<IdmAttribute> { new IdmAttribute { Name = "Creator", Value = creatorObjectID } } };
 
             // ReSharper disable once ExpressionIsAlwaysNull
-            it.GetAttributeAsComplexObject("Creator", subResource);
+            it.GetAttr("Creator", subResource);
 
             Assert.AreEqual(creatorObjectID, it.Creator.ObjectID);
         }
@@ -258,7 +259,7 @@ namespace IdmNet.Tests
 
             var it = new IdmResource { Attributes = new List<IdmAttribute> { new IdmAttribute { Name = "Creator", Value = freshCreatorObjectID } } };
 
-            it.GetAttributeAsComplexObject("Creator", creator);
+            it.GetAttr("Creator", creator);
 
             Assert.AreEqual(freshCreatorObjectID, it.Creator.ObjectID);
         }
@@ -283,7 +284,7 @@ namespace IdmNet.Tests
 
             var it = new IdmResource { Attributes = new List<IdmAttribute> { new IdmAttribute { Name = "Creator", Value = freshCreatorObjectID } } };
 
-            var result = it.GetAttributeAsComplexObject("Creator", creator);
+            var result = it.GetAttr("Creator", creator);
 
             Assert.AreEqual(freshCreatorObjectID, it.Creator.ObjectID);
             Assert.AreEqual("Joe User", result.DisplayName);
@@ -340,7 +341,7 @@ namespace IdmNet.Tests
                     new List<IdmAttribute> { new IdmAttribute { Name = "MultiValuedReferenceIDs", Values = new List<string> { subObjectID1, subObjectID2 } } }
             };
 
-            var result = it.GetMultiValuedAttrAsComplexObjects("MultiValuedReferenceIDs", resources);
+            var result = it.GetMultiValuedAttr("MultiValuedReferenceIDs", resources);
 
             Assert.AreEqual("sub resource 1", result[0].DisplayName);
             Assert.AreEqual("sub resource 2", result[1].DisplayName);
@@ -387,7 +388,7 @@ namespace IdmNet.Tests
                     new List<IdmAttribute> { new IdmAttribute { Name = "MultiValuedReferenceIDs", Values = new List<string> { subObjectID1, subObjectID2, subObjectID3 } } }
             };
 
-            var result = it.GetMultiValuedAttrAsComplexObjects("MultiValuedReferenceIDs", resources);
+            var result = it.GetMultiValuedAttr("MultiValuedReferenceIDs", resources);
 
             Assert.AreEqual("sub resource 1", result[0].DisplayName);
             Assert.AreEqual("sub resource 2", result[1].DisplayName);
@@ -411,7 +412,7 @@ namespace IdmNet.Tests
             };
 
             // ReSharper disable once ExpressionIsAlwaysNull
-            var result = it.GetMultiValuedAttrAsComplexObjects("MultiValuedReferenceIDs", resources);
+            var result = it.GetMultiValuedAttr("MultiValuedReferenceIDs", resources);
 
             Assert.AreEqual(subObjectID1, result[0].ObjectID);
             Assert.AreEqual(subObjectID2, result[1].ObjectID);
@@ -456,7 +457,7 @@ namespace IdmNet.Tests
 
             var it = new IdmResource();
 
-            it.SetMultiValuedAttrAsComplexObjects("MultiValuedReferenceIDs", out backingField, resources);
+            it.SetMultiValuedAttr("MultiValuedReferenceIDs", out backingField, resources);
 
             Assert.AreEqual("sub resource 1", backingField[0].DisplayName);
             Assert.AreEqual("sub resource 2", backingField[1].DisplayName);
@@ -559,7 +560,7 @@ namespace IdmNet.Tests
 
             var it = new IdmResource();
 
-            it.SetMultiValuedAttrAsComplexObjects("foo", out resources, resources);
+            it.SetMultiValuedAttr("foo", out resources, resources);
         }
 
 

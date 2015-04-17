@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdmNet.Models;
 using IdmNet.SoapModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -490,7 +491,6 @@ namespace IdmNet.Tests
             }
         }
 
-        // TODO 005: Implement User and integrate into IdmNetClient
         // TODO 004: Implement Group and integrate into IdmNetClient
         // TODO 003: Implement ObjectTypeDescription, AttributeTypeDescription, and Binding
         // TODO 002: Implement the Resource client Get operation (as opposed to Enumerate+Pull)
@@ -502,6 +502,7 @@ namespace IdmNet.Tests
         {
             return await it.PostAsync(new IdmResource { ObjectType = "Person", DisplayName = "Test User" });
         }
+
         private static async Task<IdmResource> CreateTestSearchScope(IdmNetClient it)
         {
             return await it.PostAsync(new IdmResource { Attributes = new List<IdmAttribute>

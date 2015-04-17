@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace IdmNet
+namespace IdmNet.Models
 {
     /// <summary>
     /// Represents an individual Identity Manager resource's attribute and value
@@ -170,10 +170,12 @@ namespace IdmNet
             return nullable;
         }
 
-        //public List<DateTime> ToDateTimes()
-        //{
-        //}
-
+        /// <summary>
+        /// Convert the Values (strings) of an multi-valued attribute to integers, if the attribute is defined as 
+        /// integer in Identity Manager
+        /// </summary>
+        /// <returns>List of integer values of the attribute or null if the attribute is "not present" in the Identity 
+        /// Manager resource</returns>
         public List<int> ToIntegers()
         {
             var integers = new List<int>();

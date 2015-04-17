@@ -5,6 +5,7 @@ using System.Linq;
 using System.ServiceModel.Channels;
 using System.Threading.Tasks;
 using System.Xml;
+using IdmNet.Models;
 using IdmNet.SoapModels;
 // ReSharper disable InconsistentNaming
 

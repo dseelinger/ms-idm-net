@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using IdmNet.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 // ReSharper disable UseObjectOrCollectionInitializer
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+// ReSharper disable InconsistentNaming
 
-namespace IdmNet
+namespace IdmNet.Models
 {
     /// <summary>
     /// Base class for Person and Group
@@ -9,6 +10,14 @@ namespace IdmNet
     {
         protected string ForcedObjType = "Resource";
         private IdmResource _domainConfiguration;
+
+
+        protected void InitFromSecurityIdentifierResource(SecurityIdentifierResource resource)
+        {
+            if (resource.DomainConfiguration != null)
+                DomainConfiguration = resource.DomainConfiguration;
+        }
+
 
         /// <summary>
         /// (aka Account Name) Account name for the resource
@@ -33,7 +42,7 @@ namespace IdmNet
         /// </summary>
         public IdmResource DomainConfiguration
         {
-            get { return GetAttributeAsComplexObject("DomainConfiguration", _domainConfiguration); }
+            get { return GetAttr("DomainConfiguration", _domainConfiguration); }
             set
             {
                 _domainConfiguration = value;

@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+
 // ReSharper disable InconsistentNaming
 
-namespace IdmNet
+namespace IdmNet.Models
 {
     /// <summary>
     /// Model to represents a basic resource in the Identity Manager Resource
     /// </summary>
     public class IdmResource
     {
-        private IdmResource _creator;
+        private Person _creator;
         private List<IdmResource> _detectedRulesList;
         private List<IdmResource> _expectedRulesList;
 
@@ -50,7 +51,7 @@ namespace IdmNet
         /// </summary>
         public DateTime? CreatedTime
         {
-            get { return GetAttr("CreatedTime") != null ? GetAttr("CreatedTime").ToDateTime() : null; }
+            get { return AttrToDateTime("CreatedTime"); }
             set { SetAttrValue("CreatedTime", value.ToString()); }
         }
 
@@ -59,9 +60,9 @@ namespace IdmNet
         /// service database. This attribute is assigned its value by the FIM service. It cannot be modified by any 
         /// user.
         /// </summary>
-        public IdmResource Creator
+        public Person Creator
         {
-            get { return GetAttributeAsComplexObject("Creator", _creator); }
+            get { return GetAttr("Creator", _creator); }
             set
             {
                 _creator = value;
@@ -75,7 +76,7 @@ namespace IdmNet
         /// </summary>
         public DateTime? DeletedTime
         {
-            get { return GetAttr("DeletedTime") != null ? GetAttr("DeletedTime").ToDateTime() : null; }
+            get { return AttrToDateTime("DeletedTime"); }
             set { SetAttrValue("DeletedTime", value.ToString()); }
         }
 
@@ -93,8 +94,8 @@ namespace IdmNet
         /// </summary>
         public List<IdmResource> DetectedRulesList
         {
-            get { return GetMultiValuedAttrAsComplexObjects("DetectedRulesList", _detectedRulesList); }
-            set { SetMultiValuedAttrAsComplexObjects("DetectedRulesList", out _detectedRulesList, value); }
+            get { return GetMultiValuedAttr("DetectedRulesList", _detectedRulesList); }
+            set { SetMultiValuedAttr("DetectedRulesList", out _detectedRulesList, value); }
         }
 
 
@@ -114,8 +115,8 @@ namespace IdmNet
         /// </summary>
         public List<IdmResource> ExpectedRulesList
         {
-            get { return GetMultiValuedAttrAsComplexObjects("ExpectedRulesList", _expectedRulesList); }
-            set { SetMultiValuedAttrAsComplexObjects("ExpectedRulesList", out _expectedRulesList, value); }
+            get { return GetMultiValuedAttr("ExpectedRulesList", _expectedRulesList); }
+            set { SetMultiValuedAttr("ExpectedRulesList", out _expectedRulesList, value); }
         }
 
         /// <summary>
@@ -125,7 +126,7 @@ namespace IdmNet
         /// </summary>
         public DateTime? ExpirationTime
         {
-            get { return GetAttr("ExpirationTime") != null ? GetAttr("ExpirationTime").ToDateTime() : null; }
+            get { return AttrToDateTime("ExpirationTime"); }
             set { SetAttrValue("ExpirationTime", value.ToString()); }
         }
 
@@ -153,7 +154,7 @@ namespace IdmNet
         /// </summary>
         public DateTime? ResourceTime
         {
-            get { return GetAttr("ResourceTime") != null ? GetAttr("ResourceTime").ToDateTime() : null; }
+            get { return AttrToDateTime("ResourceTime"); }
             set { SetAttrValue("ResourceTime", value.ToString()); }
         }
 
@@ -241,7 +242,7 @@ namespace IdmNet
         /// <param name="attrName">Name of the single-valued attribute to retrieve</param>
         /// <param name="backingField">Object that contains the representation for the reference type</param>
         /// <returns>Strongly-typed single value for the Attribute</returns>
-        public T GetAttributeAsComplexObject<T>(string attrName, T backingField) where T : IdmResource, new()
+        public T GetAttr<T>(string attrName, T backingField) where T : IdmResource, new()
         {
             T obj = backingField;
             string attrValue = GetAttrValue(attrName);
@@ -261,7 +262,7 @@ namespace IdmNet
         /// <param name="attrName">Name of the multi-valued attribute to retrieve</param>
         /// <param name="backingField">List of objects that contains the available representations for the references</param>
         /// <returns>Strongly-typed list of values for the Attribute</returns>
-        public List<T> GetMultiValuedAttrAsComplexObjects<T>(string attrName, List<T> backingField) where T : IdmResource, new()
+        public List<T> GetMultiValuedAttr<T>(string attrName, List<T> backingField) where T : IdmResource, new()
         {
             List<T> list = backingField;
             List<string> attrValues = GetAttrValues(attrName);
@@ -294,7 +295,7 @@ namespace IdmNet
         /// <param name="attrName">Name of the multi-valued attribute to set</param>
         /// <param name="backingField">List of objects that will contain the representations for the references</param>
         /// <param name="values">List of objects that contains the representations for the references</param>
-        public void SetMultiValuedAttrAsComplexObjects<T>(string attrName, out List<T> backingField, List<T> values)
+        public void SetMultiValuedAttr<T>(string attrName, out List<T> backingField, List<T> values)
             where T : IdmResource, new()
         {
             if (values.Any(r => r.ObjectID == null))
@@ -320,5 +321,26 @@ namespace IdmNet
         {
             get { return GetAttr(attributeName); }
         }
+
+
+
+
+        protected DateTime? AttrToDateTime(string attrName)
+        {
+            return GetAttr(attrName) != null ? GetAttr(attrName).ToDateTime() : null;
+        }
+
+        protected bool? AttrToBool(string attrName)
+        {
+            return GetAttr(attrName) == null ? null : GetAttr(attrName).ToBool();
+        }
+
+        protected int? AttrToInteger(string attrName)
+        {
+            return GetAttr(attrName) == null ? null : GetAttr(attrName).ToInteger();
+        }
+
+
+
     }
 }

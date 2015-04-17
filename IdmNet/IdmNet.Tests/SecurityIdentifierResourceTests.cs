@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using IdmNet.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 // ReSharper disable UseObjectOrCollectionInitializer
 
@@ -119,7 +120,7 @@ namespace IdmNet.Tests
             resource.SetAttrValues("SIDHistory", new List<string> { "Test SIDHistory1", "Test SIDHistory2", "Test SIDHistory3" });
             resource.SetAttrValue("DomainConfiguration", domainCOnfig);
 
-            var creator = new IdmResource
+            var creator = new Person
             {
                 CreatedTime = DateTime.Now,
                 Description = "Test creator",
@@ -162,7 +163,7 @@ namespace IdmNet.Tests
         {
             // Arrange
             var resource = new IdmResource();
-            var creator = new IdmResource
+            var creator = new Person
             {
                 CreatedTime = DateTime.Now,
                 Description = "Test creator",
