@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using IdmNet.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -20,7 +19,7 @@ namespace IdmNet.Tests
         }
 
         [TestMethod]
-        public void It_has_a_constructor_that_takes_a_SecurityIdentifierResource_without_a_domain_configuration()
+        public void It_has_a_constructor_that_takes_the_lowes_possible_base_class()
         {
             var baseClass = new KeywordedResource{ Name = "Test Name"};
             var it = new AttributeInfoResource(baseClass);
@@ -77,7 +76,5 @@ namespace IdmNet.Tests
             Assert.AreEqual(true, it.Localizable);
             Assert.AreEqual("Test StringRegEx", it.StringRegex);
         }
-
-
     }
 }

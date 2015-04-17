@@ -29,7 +29,7 @@
         }
 
         /// <summary>
-        /// (aka AD User Cannot Change Password) Will sync from AD to track whether the user is locked out from changing their AD password
+        /// A true indicates this attribute can be localized.  Only allowed for String DataTypes
         /// </summary>
         public bool? Localizable 
         {
@@ -38,7 +38,7 @@
         }
 
         /// <summary>
-        /// A predicate defining a subset of the resources.
+        ///  String Regular Expression - This is a .Net Regex pattern that defines what string values are allowed.
         /// </summary>
         public string StringRegex 
         {

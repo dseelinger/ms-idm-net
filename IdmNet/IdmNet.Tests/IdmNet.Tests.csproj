@@ -59,6 +59,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="IdmNetClientFactoryTests.cs" />
+    <Compile Include="Models\AttributeTypeDescriptionTests.cs" />
     <Compile Include="Models\KeywordedResourceTests.cs" />
     <Compile Include="SoapFaultExceptionTests.cs" />
     <Compile Include="IdmSoapBindingTests.cs" />
