@@ -29,7 +29,7 @@ namespace IdmNet
         /// </summary>
         /// <param name="searchClient">
         /// This is the SOAP client used to connect to Identity Manager for search functionality (WS-Enumeration - 
-        /// Enumerate & Pull operations)
+        /// Enumerate and Pull operations)
         /// </param>
         /// <param name="factoryClient">
         /// This is the SOAP client used to create new objects/resources in Identity Manager (WS-Transfer - Create 

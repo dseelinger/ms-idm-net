@@ -1,11 +1,21 @@
 ﻿namespace IdmNet.Models
 {
+    /// <summary>
+    /// Instatntiate just for testing - holds attributes common to AttributeTypeDescription and BindingDescription
+    /// </summary>
     public class AttributeInfoResource : KeywordedResource
     {
+        /// <summary>
+        /// Parameterless CTOR
+        /// </summary>
         public AttributeInfoResource()
         {
         }
 
+        /// <summary>
+        /// Base CTOR
+        /// </summary>
+        /// <param name="resource">Base class</param>
         public AttributeInfoResource(IdmResource resource) : base(resource)
         {
         }

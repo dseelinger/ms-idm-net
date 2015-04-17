@@ -491,7 +491,6 @@ namespace IdmNet.Tests
             }
         }
 
-        // TODO 003: Implement ObjectTypeDescription, AttributeTypeDescription, and Binding
         // TODO 002: Implement the Resource client Get operation (as opposed to Enumerate+Pull)
         // TODO 001: Implement Approvals
         // TODO -999: Implement the STS endpoint

@@ -1,14 +1,24 @@
 ﻿namespace IdmNet.Models
 {
+    /// <summary>
+    ///  Binding Description - This resource describes the relationship between a resource type and an attribute type.
+    /// </summary>
     public class BindingDescription : AttributeInfoResource
     {
         private AttributeTypeDescription _boundAttributeType;
         private ObjectTypeDescription _boundObjectType;
 
+        /// <summary>
+        /// Parameterless CTOR
+        /// </summary>
         public BindingDescription()
         {
         }
 
+        /// <summary>
+        /// Base CTOR
+        /// </summary>
+        /// <param name="idmResource">base class</param>
         public BindingDescription(IdmResource idmResource) : base(idmResource)
         {
         }

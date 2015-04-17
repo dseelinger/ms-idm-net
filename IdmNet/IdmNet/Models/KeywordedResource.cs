@@ -2,18 +2,28 @@
 
 namespace IdmNet.Models
 {
+    /// <summary>
+    /// Instatiate just for tests - holds attributes common among several classes: Name and UsageKeyword
+    /// </summary>
     public class KeywordedResource : IdmResource
     {
+        /// <summary>
+        /// Parameterless CTOR
+        /// </summary>
         public KeywordedResource()
         {
         }
 
-        public KeywordedResource(IdmResource other)
+        /// <summary>
+        /// Base CTOR
+        /// </summary>
+        /// <param name="baseClass">Base class</param>
+        public KeywordedResource(IdmResource baseClass)
         {
-            Attributes = other.Attributes;
-            if (other.Creator == null)
+            Attributes = baseClass.Attributes;
+            if (baseClass.Creator == null)
                 return;
-            Creator = other.Creator;
+            Creator = baseClass.Creator;
         }
 
         /// <summary>
@@ -34,6 +44,10 @@ namespace IdmNet.Models
             set { SetAttrValues("UsageKeyword", value); }
         }
 
+        /// <summary>
+        /// Clone attributes from another object into this one.
+        /// </summary>
+        /// <param name="other">Other resource</param>
         public virtual void CloneFrom(IdmResource other)
         {
             Attributes = other.Attributes;

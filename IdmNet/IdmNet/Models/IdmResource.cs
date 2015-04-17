@@ -324,23 +324,34 @@ namespace IdmNet.Models
 
 
 
-
+        /// <summary>
+        /// Convert the named attribute to a DateTime value
+        /// </summary>
+        /// <param name="attrName">Attribute Name</param>
+        /// <returns>DateTime value (Nullable)</returns>
         protected DateTime? AttrToDateTime(string attrName)
         {
             return GetAttr(attrName) != null ? GetAttr(attrName).ToDateTime() : null;
         }
 
+        /// <summary>
+        /// Convert the named attribute to a Boolean value
+        /// </summary>
+        /// <param name="attrName">Attribute Name</param>
+        /// <returns>Boolean value (Nullable)</returns>
         protected bool? AttrToBool(string attrName)
         {
             return GetAttr(attrName) == null ? null : GetAttr(attrName).ToBool();
         }
 
+        /// <summary>
+        /// Convert the named attribute to an Integer value
+        /// </summary>
+        /// <param name="attrName">Attribute Name</param>
+        /// <returns>Integer value (Nullable)</returns>
         protected int? AttrToInteger(string attrName)
         {
             return GetAttr(attrName) == null ? null : GetAttr(attrName).ToInteger();
         }
-
-
-
     }
 }

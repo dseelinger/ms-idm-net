@@ -1,11 +1,21 @@
 ﻿namespace IdmNet.Models
 {
+    /// <summary>
+    /// Attribute Type Description - This describes an attribute type
+    /// </summary>
     public class AttributeTypeDescription : AttributeInfoResource
     {
+        /// <summary>
+        /// Parameterless CTOR
+        /// </summary>
         public AttributeTypeDescription()
         {
         }
 
+        /// <summary>
+        /// Base CTOR
+        /// </summary>
+        /// <param name="idmResource">base class</param>
         public AttributeTypeDescription(IdmResource idmResource) : base(idmResource)
         {
         }

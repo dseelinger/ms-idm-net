@@ -53,6 +53,11 @@ namespace IdmNet
         }
 
 
+        /// <summary>
+        /// Get an environment variable
+        /// </summary>
+        /// <param name="environmentVariableName">Name of the environment variable</param>
+        /// <returns>Environment variable value</returns>
         public static string GetEnv(string environmentVariableName)
         {
             var environmentVariable = Environment.GetEnvironmentVariable(environmentVariableName);

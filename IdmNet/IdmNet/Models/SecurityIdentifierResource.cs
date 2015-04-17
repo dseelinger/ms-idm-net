@@ -8,6 +8,9 @@ namespace IdmNet.Models
     /// </summary>
     public class SecurityIdentifierResource : IdmResource
     {
+        /// <summary>
+        /// Object type which this object is forced to use
+        /// </summary>
         protected string ForcedObjType = "Resource";
         private IdmResource _domainConfiguration;
 
