@@ -21,7 +21,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <DocumentationFile>bin\Debug\IdmNet.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -48,7 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IdmNetClientFactory.cs" />
+    <Compile Include="Models\AttributeInfoResource.cs" />
     <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\KeywordedResource.cs" />
+    <Compile Include="Models\ObjectTypeDescription.cs" />
     <Compile Include="Models\Person.cs" />
     <Compile Include="Models\SecurityIdentifierResource.cs" />
     <Compile Include="SoapFaultException.cs" />

@@ -33,7 +33,7 @@ namespace IdmNet.Models
             : base(resource)
         {
             ObjectType = ForcedObjType = "Person";
-            InitFromSecurityIdentifierResource(resource);
+            Clone(resource);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace IdmNet.Models
             ObjectType = ForcedObjType = "Person";
             var identifierResource = resource as SecurityIdentifierResource;
             if (identifierResource != null)
-                InitFromSecurityIdentifierResource(identifierResource);
+                Clone(identifierResource);
         }
 
         

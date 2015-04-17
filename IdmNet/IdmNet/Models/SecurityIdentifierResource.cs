@@ -11,8 +11,30 @@ namespace IdmNet.Models
         protected string ForcedObjType = "Resource";
         private IdmResource _domainConfiguration;
 
+        /// <summary>
+        /// Default/parameterless constructor
+        /// </summary>
+        public SecurityIdentifierResource()
+        {
+        }
 
-        protected void InitFromSecurityIdentifierResource(SecurityIdentifierResource resource)
+        /// <summary>
+        /// Create a Security Identifier Resource from a plain resource object
+        /// </summary>
+        /// <param name="resource"></param>
+        public SecurityIdentifierResource(IdmResource resource)
+        {
+            Attributes = resource.Attributes;
+            if (resource.Creator == null)
+                return;
+            Creator = resource.Creator;
+        }
+
+        /// <summary>
+        /// Create a new SecurityIdentifier resource from another
+        /// </summary>
+        /// <param name="resource"></param>
+        protected void Clone(SecurityIdentifierResource resource)
         {
             if (resource.DomainConfiguration != null)
                 DomainConfiguration = resource.DomainConfiguration;
@@ -86,23 +108,5 @@ namespace IdmNet.Models
             set { SetAttrValues("SIDHistory", value); }
         }
 
-        /// <summary>
-        /// Default/parameterless constructor
-        /// </summary>
-        public SecurityIdentifierResource()
-        {
-        }
-
-        /// <summary>
-        /// Create a Security Identifier Resource from a plain resource object
-        /// </summary>
-        /// <param name="resource"></param>
-        public SecurityIdentifierResource(IdmResource resource)
-        {
-            Attributes = resource.Attributes;
-            if (resource.Creator == null)
-                return;
-            Creator = resource.Creator;
-        }
     }
 }

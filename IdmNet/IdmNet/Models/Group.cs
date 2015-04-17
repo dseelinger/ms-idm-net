@@ -31,7 +31,7 @@ namespace IdmNet.Models
             : base(resource)
         {
             ObjectType = ForcedObjType = "Group";
-            InitFromSecurityIdentifierResource(resource);
+            Clone(resource);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace IdmNet.Models
             ObjectType = ForcedObjType = "Group";
             var identifierResource = resource as SecurityIdentifierResource;
             if (identifierResource != null)
-                InitFromSecurityIdentifierResource(identifierResource);
+                Clone(identifierResource);
         }
 
 

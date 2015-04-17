@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using IdmNet.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 // ReSharper disable ObjectCreationAsStatement
 // ReSharper disable UseObjectOrCollectionInitializer
 
-namespace IdmNet.Tests
+namespace IdmNet.Tests.Models
 {
     [TestClass]
     public class GroupTests
