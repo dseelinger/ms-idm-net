@@ -77,15 +77,13 @@ namespace IdmNet.Tests
             var it = new IdmResource();
 
             it.CreatedTime = testTime;
-            Assert.AreEqual(testTime, it.CreatedTime);
-
             it.DeletedTime = testTime;
-            Assert.AreEqual(testTime, it.DeletedTime);
-
             it.ExpirationTime = testTime;
-            Assert.AreEqual(testTime, it.ExpirationTime);
-
             it.ResourceTime = testTime;
+
+            Assert.AreEqual(testTime, it.CreatedTime);
+            Assert.AreEqual(testTime, it.DeletedTime);
+            Assert.AreEqual(testTime, it.ExpirationTime);
             Assert.AreEqual(testTime, it.ResourceTime);
         }
 

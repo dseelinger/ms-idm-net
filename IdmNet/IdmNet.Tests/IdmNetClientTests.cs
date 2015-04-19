@@ -354,14 +354,14 @@ namespace IdmNet.Tests
         {
             // Arrange
             const string attrName = "FirstName";
-            const string attrValue1 = "TestFirstName";
+            const string attrValue = "TestFirstName";
             var it = IdmNetClientFactory.BuildClient();
             IdmResource testResource = await CreateTestPerson(it);
 
             try
             {
                 // Act
-                await it.ReplaceValueAsync(testResource.ObjectID, attrName, attrValue1);
+                await it.ReplaceValueAsync(testResource.ObjectID, attrName, attrValue);
 
 
                 // Assert
@@ -372,7 +372,7 @@ namespace IdmNet.Tests
                             XPath = "/Person[ObjectID='" + testResource.ObjectID + "']",
                             Attributes = new[] { attrName }
                         });
-                Assert.AreEqual(attrValue1, searchResult.First().GetAttrValue(attrName));
+                Assert.AreEqual(attrValue, searchResult.First().GetAttrValue(attrName));
             }
             finally
             {
@@ -385,45 +385,18 @@ namespace IdmNet.Tests
         [TestCategory("Integration")]
         public async Task It_can_PutAttributeValueAsync_to_a_present_single_valued_attribute()
         {
-            // Arrange
-            const string attrName = "FirstName";
-            const string attrValue1 = "TestFirstName1";
-            const string attrValue2 = "TestFirstName2";
-            var it = IdmNetClientFactory.BuildClient();
-            IdmResource testResource = await CreateTestPerson(it);
-
-            try
-            {
-                // Act
-                await it.ReplaceValueAsync(testResource.ObjectID, attrName, attrValue1);
-                await it.ReplaceValueAsync(testResource.ObjectID, attrName, attrValue2);
-
-
-                // Assert
-                var searchResult =
-                    await
-                        it.SearchAsync(new SearchCriteria
-                        {
-                            XPath = "/Person[ObjectID='" + testResource.ObjectID + "']",
-                            Attributes = new[] { attrName }
-                        });
-                Assert.AreEqual(attrValue2, searchResult.First().GetAttrValue(attrName));
-            }
-            finally
-            {
-                // Afterwards
-                it.DeleteAsync(testResource.ObjectID);
-            }
+            await AssertReplaceOk("FirstName", "TestFirstName1", "TestFirstName2");
         }
 
         [TestMethod]
         [TestCategory("Integration")]
         public async Task It_can_PutAttributeValueAsync_with_a_null_value_to_a_present_single_valued_attribute()
         {
-            // Arrange
-            const string attrName = "FirstName";
-            const string attrValue1 = "TestFirstName1";
-            const string attrValue2 = null;
+            await AssertReplaceOk("FirstName", "TestFirstName1", null);
+        }
+
+        private static async Task AssertReplaceOk(string attrName, string attrValue1, string attrValue2)
+        {
             var it = IdmNetClientFactory.BuildClient();
             IdmResource testResource = await CreateTestPerson(it);
 
@@ -439,9 +412,9 @@ namespace IdmNet.Tests
                         it.SearchAsync(new SearchCriteria
                         {
                             XPath = "/Person[ObjectID='" + testResource.ObjectID + "']",
-                            Attributes = new[] { attrName }
+                            Attributes = new[] {attrName}
                         });
-                Assert.IsNull(searchResult.First().GetAttrValue(attrName));
+                Assert.AreEqual(attrValue2, searchResult.First().GetAttrValue(attrName));
             }
             finally
             {

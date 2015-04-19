@@ -140,14 +140,7 @@ namespace IdmNet.Tests.Models
 
 
             // Assert
-            Assert.AreEqual(createdTime, it.CreatedTime);
-            Assert.AreEqual(description, it.Description);
-            Assert.AreEqual(displayName, it.DisplayName);
-            Assert.AreEqual(expirationTime, it.ExpirationTime);
-            Assert.AreEqual(mvObjectID, it.MVObjectID);
-            Assert.AreEqual(objectID, it.ObjectID);
-            Assert.AreEqual(objectType, it.ObjectType);
-            Assert.AreEqual(resourceTime, it.ResourceTime);
+            TestUtils.AssertIdmResourceOk(createdTime, it, description, displayName, expirationTime, mvObjectID, objectID, objectType, resourceTime);
             Assert.AreEqual(name, it.Name);
             Assert.AreEqual(usageKeywords[0], it.UsageKeyword[0]);
             Assert.AreEqual(usageKeywords[1], it.UsageKeyword[1]);

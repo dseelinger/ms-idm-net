@@ -74,6 +74,7 @@
     <Compile Include="Models\PersonTests.cs" />
     <Compile Include="Models\GroupTests.cs" />
     <Compile Include="AttributeInfoResourceTests.cs" />
+    <Compile Include="TestUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IdmNet\IdmNet.csproj">
