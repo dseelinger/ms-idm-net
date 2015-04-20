@@ -71,7 +71,7 @@ namespace IdmNet.Models
             set
             {
                 _domainConfiguration = value;
-                SetAttrValue("DomainConfiguration", value.ObjectID);
+                SetAttrValue("DomainConfiguration", ObjectIdOrNull(value));
             }
         }
 

@@ -210,5 +210,44 @@ namespace IdmNet.Tests.Models
 
             Assert.AreEqual("Assistant1",it.DisplayedOwner.Assistant.DisplayName);
         }
+
+
+        [TestMethod]
+        public void
+            It_can_set_complex_properties_to_null()
+        {
+            // Arrange
+            var it = new Group
+            {
+                DisplayedOwner = new Person { DisplayName = "foo" },
+                Owner = new List<Person>
+                {
+                    new Person { DisplayName = "person1", ObjectID = "person1"},
+                    new Person { DisplayName = "person2", ObjectID = "person2" },
+                },
+                ComputedMember = new List<SecurityIdentifierResource>
+                {
+                    new Person { DisplayName = "person3", ObjectID = "person3"},
+                    new Person { DisplayName = "person4", ObjectID = "person4" },
+                },
+                ExplicitMember = new List<SecurityIdentifierResource>
+                {
+                    new Person { DisplayName = "person5", ObjectID = "person5"},
+                    new Person { DisplayName = "person6", ObjectID = "person6" },
+                }
+            };
+
+            // Act
+            it.DisplayedOwner = null;
+            it.Owner = null;
+            it.ComputedMember = null;
+            it.ExplicitMember = null;
+
+            // Assert
+            Assert.IsNull(it.DisplayedOwner);
+            Assert.IsNull(it.Owner);
+            Assert.IsNull(it.ComputedMember);
+            Assert.IsNull(it.ExplicitMember);
+        }
     }
 }

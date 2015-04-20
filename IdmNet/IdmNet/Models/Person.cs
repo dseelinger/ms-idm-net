@@ -91,7 +91,7 @@ namespace IdmNet.Models
             set
             {
                 _assistant = value;
-                SetAttrValue("Assistant", value.ObjectID);
+                SetAttrValue("Assistant", ObjectIdOrNull(value));
             }
         }
 
@@ -281,7 +281,7 @@ namespace IdmNet.Models
             set
             {
                 _manager = value;
-                SetAttrValue("Manager", value.ObjectID);
+                SetAttrValue("Manager", ObjectIdOrNull(value));
             }
         }
 
@@ -413,7 +413,7 @@ namespace IdmNet.Models
             set
             {
                 _timeZone = value;
-                SetAttrValue("TimeZone", value.ObjectID);
+                SetAttrValue("TimeZone", ObjectIdOrNull(value));
             }
         }
     }

@@ -41,7 +41,7 @@
             set
             {
                 _boundAttributeType = value;
-                SetAttrValue("BoundAttributeType", value.ObjectID);
+                SetAttrValue("BoundAttributeType", ObjectIdOrNull(value));
             }
         }
 
@@ -54,7 +54,7 @@
             set
             {
                 _boundObjectType = value;
-                SetAttrValue("BoundObjectType", value.ObjectID);
+                SetAttrValue("BoundObjectType", ObjectIdOrNull(value));
             }
         }
 

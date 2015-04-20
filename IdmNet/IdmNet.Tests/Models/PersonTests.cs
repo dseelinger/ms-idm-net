@@ -294,5 +294,35 @@ namespace IdmNet.Tests
 
             Assert.AreEqual("foo1", it.TimeZone.DisplayName);
         }
+
+
+        [TestMethod]
+        public void It_can_set_complex_properties_to_null()
+        {
+            // Arrange
+            var it = new Person
+            {
+                Assistant = new Person { DisplayName = "foo" },
+                Manager = new Person { DisplayName = "foo" },
+                TimeZone = new Person { DisplayName = "foo" },
+                AuthNLockoutRegistrationID = new List<IdmResource>
+                {
+                    new IdmResource {DisplayName = "res1", ObjectID = "res1"},
+                    new IdmResource {DisplayName = "res2", ObjectID = "res2"},
+                }
+            };
+
+            // Act
+            it.Assistant = null;
+            it.Manager = null;
+            it.TimeZone = null;
+            it.AuthNLockoutRegistrationID = null;
+
+            // Assert
+            Assert.IsNull(it.Assistant);
+            Assert.IsNull(it.Manager);
+            Assert.IsNull(it.TimeZone);
+            Assert.IsNull(it.AuthNLockoutRegistrationID);
+        }
     }
 }

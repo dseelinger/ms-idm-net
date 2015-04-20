@@ -101,7 +101,7 @@ namespace IdmNet.Models
             set
             {
                 _displayedOwner = value;
-                SetAttrValue("DisplayedOwner", value.ObjectID);
+                SetAttrValue("DisplayedOwner", ObjectIdOrNull(value));
             }
         }
 

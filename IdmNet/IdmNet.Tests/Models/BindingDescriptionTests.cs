@@ -50,5 +50,24 @@ namespace IdmNet.Tests.Models
             Assert.AreEqual("Test AttributeTypeDescription", it.BoundAttributeType.DisplayName);
             Assert.AreEqual("Test BoundObjectType", it.BoundObjectType.DisplayName);
         }
+
+        [TestMethod]
+        public void
+            It_can_set_complex_properties_to_null()
+        {
+            // Arrange
+            var it = new BindingDescription
+            {
+                BoundAttributeType = new AttributeTypeDescription { DisplayName = "foo" },
+                BoundObjectType = new ObjectTypeDescription() { DisplayName = "bar" },
+            };
+
+            // Act
+            it.BoundAttributeType = null;
+            it.BoundObjectType = null;
+
+            // Assert
+            Assert.IsNull(it.BoundAttributeType);
+        }
     }
 }

@@ -66,7 +66,7 @@ namespace IdmNet.Models
             set
             {
                 _creator = value;
-                SetAttrValue("Creator", value.ObjectID);
+                SetAttrValue("Creator", ObjectIdOrNull(value));
             }
         }
 
@@ -298,6 +298,17 @@ namespace IdmNet.Models
         public void SetMultiValuedAttr<T>(string attrName, out List<T> backingField, List<T> values)
             where T : IdmResource, new()
         {
+            if (values == null)
+            {
+                backingField = null;
+                var attr = GetAttr(attrName);
+                if (attr != null)
+                {
+                    Attributes.Remove(attr);
+                }
+                return;
+            }
+
             if (values.Any(r => r.ObjectID == null))
                 throw new ArgumentException("Complex objects must have ObjectID");
 
@@ -353,5 +364,17 @@ namespace IdmNet.Models
         {
             return GetAttr(attrName) == null ? null : GetAttr(attrName).ToInteger();
         }
+
+        /// <summary>
+        /// Returns the ObjectID of the resource or NULL if the resource value is null
+        /// </summary>
+        /// <param name="value">The IdmResource</param>
+        /// <returns>The resource's ObjectID or null if the resource itself is null</returns>
+        protected static string ObjectIdOrNull(IdmResource value)
+        {
+            return value == null ? null : value.ObjectID;
+        }
+
+
     }
 }

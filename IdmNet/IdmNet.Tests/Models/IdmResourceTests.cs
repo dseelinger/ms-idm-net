@@ -527,7 +527,7 @@ namespace IdmNet.Tests
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), "Complex objects must have ObjectID")]
         public void
-            It_can_throws_when_you_call_GetMultiValuedAttrAsComplexObjects_but_some_of_the_backing_fields_do_not_have_an_ObjectID()
+            It_throws_when_you_call_GetMultiValuedAttrAsComplexObjects_but_some_of_the_backing_fields_do_not_have_an_ObjectID()
         {
             var subObjectID1 = Guid.NewGuid().ToString("D");
 
@@ -559,6 +559,39 @@ namespace IdmNet.Tests
             var it = new IdmResource();
 
             it.SetMultiValuedAttr("foo", out resources, resources);
+        }
+
+        [TestMethod]
+        public void
+            It_can_set_complex_properties_to_null()
+        {
+            // Arrange
+            var it = new IdmResource
+            {
+                Creator = new Person {DisplayName = "foo"},
+                DetectedRulesList =
+                    new List<IdmResource>
+                    {
+                        new IdmResource {DisplayName = "bar", ObjectID = "bar"},
+                        new IdmResource {DisplayName = "bat", ObjectID = "bat"}
+                    },
+                ExpectedRulesList = 
+                    new List<IdmResource>
+                    {
+                        new IdmResource {DisplayName = "fiz", ObjectID = "fiz"},
+                        new IdmResource {DisplayName = "buz", ObjectID = "buz"}
+                    },
+            };
+
+            // Act
+            it.Creator = null;
+            it.DetectedRulesList = null;
+            it.ExpectedRulesList = null;
+
+            // Assert
+            Assert.IsNull(it.Creator);
+            Assert.IsNull(it.DetectedRulesList);
+            Assert.IsNull(it.ExpectedRulesList);
         }
 
 

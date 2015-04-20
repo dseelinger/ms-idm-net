@@ -194,5 +194,24 @@ namespace IdmNet.Tests.Models
             // Assert
             Assert.IsNull(it.Creator);
         }
+
+        [TestMethod]
+        public void It_can_set_complex_properties_to_null()
+        {
+            // Arrange
+            var it = new SecurityIdentifierResource
+            {
+                DomainConfiguration = new IdmResource { DisplayName = "foo" },
+            };
+
+            // Act
+            it.DomainConfiguration = null;
+
+            // Assert
+            Assert.IsNull(it.DomainConfiguration);
+        }
+
+        //private IdmResource _domainConfiguration;
+
     }
 }
