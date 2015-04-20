@@ -20,7 +20,7 @@ namespace IdmNet.Models
         public string Name { get; set; }
 
         /// <summary>
-        /// List ov values for this attribute
+        /// List of values for this attribute
         /// </summary>
         [DataMember]
         [Required]

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel.Channels;
 using System.Threading.Tasks;
 using IdmNet.Models;
 using IdmNet.SoapModels;
@@ -186,10 +187,11 @@ namespace IdmNet.Tests
                 await it.PostAsync(new IdmResource {ObjectType = "Person", DisplayName = "Test User"});
 
             // Act
-            await it.DeleteAsync(toDelete.ObjectID);
+            Message result = await it.DeleteAsync(toDelete.ObjectID);
 
 
             // Assert
+            Assert.IsFalse(result.IsFault);
             IEnumerable<IdmResource> searchResult =
                 await it.SearchAsync(new SearchCriteria { XPath = "/Person[ObjectID='" + toDelete.ObjectID + "']" });
             Assert.AreEqual(0, searchResult.Count());
@@ -235,7 +237,9 @@ namespace IdmNet.Tests
             // Act
             try
             {
-                await it.AddValueAsync(testResource.ObjectID, attrName, attrValue);
+                Message result = await it.AddValueAsync(testResource.ObjectID, attrName, attrValue);
+
+                Assert.IsFalse(result.IsFault);
             }
             finally
             {
@@ -329,9 +333,10 @@ namespace IdmNet.Tests
                 await it.AddValueAsync(testResource.ObjectID, attrName, attrValue2);
 
                 // Act
-                await it.RemoveValueAsync(testResource.ObjectID, attrName, attrValue2);
+                Message result = await it.RemoveValueAsync(testResource.ObjectID, attrName, attrValue2);
 
                 // Assert
+                Assert.IsFalse(result.IsFault);
                 var searchResult =
                     await
                         it.SearchAsync(new SearchCriteria
@@ -361,10 +366,10 @@ namespace IdmNet.Tests
             try
             {
                 // Act
-                await it.ReplaceValueAsync(testResource.ObjectID, attrName, attrValue);
-
+                Message result = await it.ReplaceValueAsync(testResource.ObjectID, attrName, attrValue);
 
                 // Assert
+                Assert.IsFalse(result.IsFault);
                 var searchResult =
                     await
                         it.SearchAsync(new SearchCriteria
@@ -395,37 +400,9 @@ namespace IdmNet.Tests
             await AssertReplaceOk("FirstName", "TestFirstName1", null);
         }
 
-        private static async Task AssertReplaceOk(string attrName, string attrValue1, string attrValue2)
-        {
-            var it = IdmNetClientFactory.BuildClient();
-            IdmResource testResource = await CreateTestPerson(it);
-
-            try
-            {
-                // Act
-                await it.ReplaceValueAsync(testResource.ObjectID, attrName, attrValue1);
-                await it.ReplaceValueAsync(testResource.ObjectID, attrName, attrValue2);
-
-                // Assert
-                var searchResult =
-                    await
-                        it.SearchAsync(new SearchCriteria
-                        {
-                            XPath = "/Person[ObjectID='" + testResource.ObjectID + "']",
-                            Attributes = new[] {attrName}
-                        });
-                Assert.AreEqual(attrValue2, searchResult.First().GetAttrValue(attrName));
-            }
-            finally
-            {
-                // Afterwards
-                it.DeleteAsync(testResource.ObjectID);
-            }
-        }
-
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_PutAsync_to_bactch_a_bunch_of_changes_together_for_a_single_object()
+        public async Task It_can_PutAsync_to_batch_a_bunch_of_changes_together_for_a_single_object()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -441,9 +418,10 @@ namespace IdmNet.Tests
             try
             {
                 // Act
-                await it.PutAsync(testResource.ObjectID, changes1);
+                Message result = await it.ChangeMultipleAttrbutes(testResource.ObjectID, changes1);
 
                 // Assert
+                Assert.IsFalse(result.IsFault);
                 var searchResult =
                     await
                         it.SearchAsync(new SearchCriteria
@@ -464,6 +442,7 @@ namespace IdmNet.Tests
             }
         }
 
+        // TODO 003: Remove the async void methods from IdmNetClient
         // TODO 002: Implement the Resource client Get operation (as opposed to Enumerate+Pull)
         // TODO 001: Implement Approvals
         // TODO -999: Implement the STS endpoint
@@ -486,6 +465,34 @@ namespace IdmNet.Tests
                 new IdmAttribute{Name = "SearchScope", Value = "/Person"},
                 new IdmAttribute{Name = "UsageKeyword", Value = "foo"},
             }});
+        }
+
+        private static async Task AssertReplaceOk(string attrName, string attrValue1, string attrValue2)
+        {
+            var it = IdmNetClientFactory.BuildClient();
+            IdmResource testResource = await CreateTestPerson(it);
+
+            try
+            {
+                // Act
+                await it.ReplaceValueAsync(testResource.ObjectID, attrName, attrValue1);
+                await it.ReplaceValueAsync(testResource.ObjectID, attrName, attrValue2);
+
+                // Assert
+                var searchResult =
+                    await
+                        it.SearchAsync(new SearchCriteria
+                        {
+                            XPath = "/Person[ObjectID='" + testResource.ObjectID + "']",
+                            Attributes = new[] { attrName }
+                        });
+                Assert.AreEqual(attrValue2, searchResult.First().GetAttrValue(attrName));
+            }
+            finally
+            {
+                // Afterwards
+                it.DeleteAsync(testResource.ObjectID);
+            }
         }
     }
 }

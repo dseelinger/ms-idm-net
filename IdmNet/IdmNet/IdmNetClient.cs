@@ -245,7 +245,7 @@ namespace IdmNet
         /// </summary>
         /// <param name="objectID">Resource ID for the object to be deleted</param>
         /// <returns></returns>
-        public async Task DeleteAsync(string objectID)
+        public async Task<Message> DeleteAsync(string objectID)
         {
             if (String.IsNullOrWhiteSpace(objectID))
                 throw new ArgumentNullException("objectID");
@@ -257,6 +257,8 @@ namespace IdmNet
             Message deleteResponseMsg = await _resourceClient.DeleteAsync(deleteRequestMsg);
             if (deleteResponseMsg.IsFault)
                 throw new SoapFaultException("Delete Fault: " + deleteResponseMsg);
+
+            return deleteResponseMsg;
         }
 
         /// <summary>
@@ -270,9 +272,9 @@ namespace IdmNet
         /// <param name="attrName">Name of the Multi-Valued attribute to which a value will be added</param>
         /// <param name="attrValue">Value to be added to the Multi-Valued attribute</param>
         /// <returns>Task (async/await) of the asynchronous operation</returns>
-        public async Task AddValueAsync(string objectID, string attrName, string attrValue)
+        public async Task<Message> AddValueAsync(string objectID, string attrName, string attrValue)
         {
-            await PutAttribute(objectID, attrName, attrValue, ModeType.Add);
+            return await PutAttribute(objectID, attrName, attrValue, ModeType.Add);
         }
 
         /// <summary>
@@ -286,21 +288,21 @@ namespace IdmNet
         /// <param name="attrName">Name of the Multi-Valued attribute from which a value will be removed</param>
         /// <param name="attrValue">Value to be removed from the Multi-Valued attribute</param>
         /// <returns>Task (async/await) of the asynchronous operation</returns>
-        public async Task RemoveValueAsync(string objectID, string attrName, string attrValue)
+        public async Task<Message> RemoveValueAsync(string objectID, string attrName, string attrValue)
         {
-            await PutAttribute(objectID, attrName, attrValue, ModeType.Delete);
+            return await PutAttribute(objectID, attrName, attrValue, ModeType.Delete);
         }
 
-        private async Task PutAttribute(string objectID, string attrName, string attrValue, ModeType modeType)
+        private async Task<Message> PutAttribute(string objectID, string attrName, string attrValue, ModeType modeType)
         {
             ModifyRequest modifyRequest = new ModifyRequest();
             Change changeRemoveAttribute = new Change(modeType, attrName, attrValue);
             modifyRequest.Change = new[] {changeRemoveAttribute};
 
-            await Put(objectID, modifyRequest);
+            return await PutAsync(objectID, modifyRequest);
         }
 
-        private async Task Put(string objectID, ModifyRequest modifyRequest)
+        private async Task<Message> PutAsync(string objectID, ModifyRequest modifyRequest)
         {
             // Create the Put request messsage
             Message putRequestMsg = Message.CreateMessage(MessageVersion.Default,
@@ -319,6 +321,8 @@ namespace IdmNet
 
             if (putResponseMsg.IsFault)
                 throw new SoapFaultException("Put Fault: " + putResponseMsg);
+
+            return putResponseMsg;
         }
 
         /// <summary>
@@ -332,9 +336,9 @@ namespace IdmNet
         /// <param name="attrName">Name of the Single-Valued attribute which will have its value set/replaced</param>
         /// <param name="attrValue">Value to be set for the Single-Valued attribute</param>
         /// <returns>Task (async/await) of the asynchronous operation</returns>
-        public async Task ReplaceValueAsync(string objectID, string attrName, string attrValue)
+        public async Task<Message> ReplaceValueAsync(string objectID, string attrName, string attrValue)
         {
-            await PutAttribute(objectID, attrName, attrValue, ModeType.Replace);
+            return await PutAttribute(objectID, attrName, attrValue, ModeType.Replace);
         }
 
         /// <summary>
@@ -345,11 +349,11 @@ namespace IdmNet
         /// Set of changes (Multi-valued "Adds/Removes and Single-valued "Replaces" to be made for the single object
         /// </param>
         /// <returns>Task (async/await) of the asynchronous operation</returns>
-        public async Task PutAsync(string objectID, Change[] changes)
+        public async Task<Message> ChangeMultipleAttrbutes(string objectID, Change[] changes)
         {
             ModifyRequest modifyRequest = new ModifyRequest {Change = changes};
 
-            await Put(objectID, modifyRequest);
+            return await PutAsync(objectID, modifyRequest);
         }
     }
 }
