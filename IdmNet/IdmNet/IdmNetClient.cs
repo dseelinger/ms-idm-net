@@ -351,9 +351,61 @@ namespace IdmNet
         /// <returns>Task (async/await) of the asynchronous operation</returns>
         public async Task<Message> ChangeMultipleAttrbutes(string objectID, Change[] changes)
         {
-            ModifyRequest modifyRequest = new ModifyRequest {Change = changes};
+            var modifyRequest = new ModifyRequest {Change = changes};
 
             return await PutAsync(objectID, modifyRequest);
         }
+
+        /// <summary>
+        /// Get an object by its ID from Identity Manager (async await)
+        /// </summary>
+        /// <param name="objectID">Resource ID for the object to retrieve</param>
+        /// <param name="attributes"></param>
+        /// <returns>Resource matching ObjectID</returns>
+        public async Task<IdmResource> GetAsync(string objectID, string[] attributes)
+        {
+            if (String.IsNullOrWhiteSpace(objectID))
+                throw new ArgumentNullException("objectID");
+
+            var attrList = new List<string>(attributes);
+            if (!attrList.Contains("ObjectID"))
+                attrList.Add("ObjectID");
+            if (!attrList.Contains("ObjectType"))
+                attrList.Add("ObjectType");
+
+            attributes = attrList.ToArray();
+
+            var getRequest = new BaseObjectSearchRequest {Expressions = attributes};
+
+            // Create the Get request message
+            Message getRequestMsg = Message.CreateMessage(MessageVersion.Default,
+                SoapConstants.GetAction,
+                getRequest,
+                new SoapXmlSerializer(typeof(BaseObjectSearchRequest))
+            );
+
+            // Add the required headers for the Get request
+            getRequestMsg.Headers.Add(MessageHeader.CreateHeader("ResourceReferenceProperty", SoapConstants.RmNamespace,
+                objectID));
+            getRequestMsg.Headers.Add(MessageHeader.CreateHeader("IdentityManagementOperation",
+                SoapConstants.DirectoryAccess, null, true));
+
+            Message getResponseMsg = await _resourceClient.GetAsync(getRequestMsg);
+
+            if (getResponseMsg.IsFault)
+                throw new SoapFaultException("Get Fault: " + getResponseMsg);
+
+            BaseObjectSearchResponse getResponseObj =
+                getResponseMsg.GetBody<BaseObjectSearchResponse>(new SoapXmlSerializer(typeof (BaseObjectSearchResponse)));
+
+            var resource = new IdmResource();
+
+            foreach (XmlNode partialAttribute in getResponseObj.Results)
+                foreach (XmlNode attribute in partialAttribute.ChildNodes)
+                    BuildAttribute(attribute, resource);
+
+            return resource;
+        }
+
     }
 }

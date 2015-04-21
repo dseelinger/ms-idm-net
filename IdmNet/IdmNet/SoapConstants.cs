@@ -71,5 +71,10 @@
         /// Constant for serializing Identity Manager objects - not for normal use.
         /// </summary>
         public const string Addressing = "http://schemas.xmlsoap.org/ws/2004/08/addressing";
+
+        /// <summary>
+        /// Constant for serializing Identity Manager objects - not for normal use.
+        /// </summary>
+        public const string GetAction = "http://schemas.xmlsoap.org/ws/2004/09/transfer/Get";
     }
 }

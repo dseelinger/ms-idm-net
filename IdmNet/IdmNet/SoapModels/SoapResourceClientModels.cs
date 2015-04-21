@@ -80,4 +80,37 @@ namespace IdmNet.SoapModels
         /// </summary>
         [XmlEnum(Name = "Delete")] Delete
     }
+
+    /// <summary>
+    /// Soap model
+    /// </summary>
+    [XmlRoot(Namespace = SoapConstants.DirectoryAccess)]
+    public class BaseObjectSearchRequest
+    {
+        /// <summary>
+        /// Part of a soap model
+        /// </summary>
+        [XmlAttribute]
+        public string Dialect = "http://schemas.microsoft.com/2006/11/ResourceManagement/Dialect/IdentityAttributeType-20080602";
+
+        /// <summary>
+        /// Part of a soap model
+        /// </summary>
+        [XmlElement(ElementName = "AttributeType")]
+        public string[] Expressions { get; set; }
+    }
+
+    /// <summary>
+    /// Soap model
+    /// </summary>
+    [XmlRoot(Namespace = SoapConstants.DirectoryAccess, IsNullable = false)]
+    public class BaseObjectSearchResponse
+    {
+        /// <summary>
+        /// Part of a soap model
+        /// </summary>
+        [XmlAnyElement(Name = "PartialAttribute")]
+        public object[] Results { get; set; }
+    }
+
 }

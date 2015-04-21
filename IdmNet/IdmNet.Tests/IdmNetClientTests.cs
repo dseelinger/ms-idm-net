@@ -442,7 +442,30 @@ namespace IdmNet.Tests
             }
         }
 
-        // TODO 005: Implement the Resource client Get operation (as opposed to Enumerate+Pull)
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task It_can_GetAsync_by_ID()
+        {
+            // Arrange
+            var it = IdmNetClientFactory.BuildClient();
+            var newUser = new IdmResource { ObjectType = "Person", DisplayName = "Test User" };
+            IdmResource createResult = await it.PostAsync(newUser);
+            var attributes = new[] { "DisplayName", "ObjectID" };
+
+            // Act
+            IdmResource result = await it.GetAsync(createResult.ObjectID, attributes);
+
+            // assert
+            Assert.AreEqual(createResult.ObjectID, result.ObjectID);
+            Assert.AreEqual("Person", result.ObjectType);
+            Assert.AreEqual("Test User", result.DisplayName);
+
+            // afterwards
+            await it.DeleteAsync(createResult.ObjectID);
+        }
+
+        // TODO 006: Implement the Resource client Get operation (as opposed to Enumerate+Pull)
+        // TODO 005: Rename "Expressions" to "AttributeType"
         // TODO 004: Get Count
         // TODO 004: Paging
         // TODO 003: Implement GetSchema(string objectTypeName)
