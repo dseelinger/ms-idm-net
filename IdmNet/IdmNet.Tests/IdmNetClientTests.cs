@@ -442,7 +442,11 @@ namespace IdmNet.Tests
             }
         }
 
-        // TODO 002: Implement the Resource client Get operation (as opposed to Enumerate+Pull)
+        // TODO 005: Implement the Resource client Get operation (as opposed to Enumerate+Pull)
+        // TODO 004: Get Count
+        // TODO 004: Paging
+        // TODO 003: Implement GetSchema(string objectTypeName)
+        // TODO 002: Implement Select *
         // TODO 001: Implement Approvals
         // TODO -999: Implement the STS endpoint
 
