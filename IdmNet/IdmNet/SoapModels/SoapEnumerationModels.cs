@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
+using IdmNet.Models;
 
 namespace IdmNet.SoapModels
 {
@@ -23,9 +23,10 @@ namespace IdmNet.SoapModels
         /// current "state" of the query - what object to start with (in case of paging, sorting, which fields to 
         /// populate, etc.)
         /// </summary>
-        public EnumerationContext EnumerationContext
+        [XmlElement(ElementName = "EnumerationContext", Namespace = SoapConstants.RmNamespace)]
+        public PagingContext PagingContext
         {
-            get { return EnumerateResponse.EnumerationContext; }
+            get { return EnumerateResponse.PagingContext; }
         }
     }
 
@@ -43,6 +44,10 @@ namespace IdmNet.SoapModels
         {
         }
 
+        /// <summary>
+        /// Set a filter to a particular XPath query
+        /// </summary>
+        /// <param name="query"></param>
         public Filter(string query)
         {
             Query = query;
@@ -90,7 +95,8 @@ namespace IdmNet.SoapModels
     /// <summary>
     /// Context for the next pull
     /// </summary>
-    public class EnumerationContext
+    [XmlRoot(ElementName = "EnumerationContext", IsNullable = false, Namespace = SoapConstants.EnumerationNamespace)]
+    public class PagingContext
     {
         /// <summary>
         /// Current location in the search
@@ -152,7 +158,8 @@ namespace IdmNet.SoapModels
         /// <summary>
         /// Current context of the enumeration
         /// </summary>
-        public EnumerationContext EnumerationContext { get; set; }
+        [XmlElement(ElementName = "EnumerationContext")]
+        public PagingContext PagingContext { get; set; }
 
         /// <summary>
         /// Contains the count of records returned in the search
@@ -177,7 +184,8 @@ namespace IdmNet.SoapModels
         /// <summary>
         /// Context for the next PULL
         /// </summary>
-        public EnumerationContext EnumerationContext { get; set; }
+        [XmlElement(ElementName = "EnumerationContext")]
+        public PagingContext PagingContext { get; set; }
 
         /// <summary>
         /// Number of elements to retrieve
@@ -193,9 +201,14 @@ namespace IdmNet.SoapModels
     /// <summary>
     /// Response from the Pull operation
     /// </summary>
-    [XmlRoot(Namespace = SoapConstants.EnumerationNamespace)]
-    public class PullResponse
+    //[XmlRoot(Namespace = SoapConstants.EnumerationNamespace)]
+    [XmlRoot(ElementName = "PullResponse", IsNullable = false, Namespace = SoapConstants.EnumerationNamespace)]
+    public class PagedSearchResults
     {
+        public PagedSearchResults()
+        {
+            Results = new List<IdmResource>();
+        }
         /// <summary>
         /// If no more items, TRUE
         /// </summary>
@@ -204,12 +217,16 @@ namespace IdmNet.SoapModels
         /// <summary>
         /// Context of the search after this last PULL
         /// </summary>
-        public EnumerationContext EnumerationContext { get; set; }
+        [XmlElement(ElementName = "EnumerationContext")]
+        public PagingContext PagingContext { get; set; }
 
         /// <summary>
         /// Objects/resources returned in the Pull
         /// </summary>
         public object Items { get; set; }
+
+        [XmlIgnore]
+        public List<IdmResource> Results;
     }
 
 

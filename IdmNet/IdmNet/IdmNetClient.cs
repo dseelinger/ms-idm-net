@@ -49,21 +49,21 @@ namespace IdmNet
         /// Search the Identity Manager  (async await)
         /// </summary>
         /// <param name="criteria"></param>
+        /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<IdmResource>> SearchAsync(SearchCriteria criteria)
+        public async Task<IEnumerable<IdmResource>> SearchAsync(SearchCriteria criteria, int pageSize = 50)
         {
-            var pullInfo = await EnumerateAndPreparePull(criteria);
+            PullInfo pullInfo = await PreparePagedSearchAsync(criteria, pageSize);
 
             // Pull all results
-            PullResponse pullResponseObj;
             var results = new List<IdmResource>();
-            EnumerationContext enumerationContext = pullInfo.EnumerationContext;
+            PagedSearchResults pagedResults;
+            PagingContext pagingContext = pullInfo.PagingContext;
             do
             {
-                // TODO: Paging
-                //pullResponseObj = await Pull(criteria.PageSize, enumerationContext, results);
-                pullResponseObj = await Pull(int.MaxValue, enumerationContext, results);
-            } while (pullResponseObj.EndOfSequence == null);
+                pagedResults = await PullAsync(pageSize, pagingContext);
+                results.AddRange(pagedResults.Results);
+            } while (pagedResults.EndOfSequence == null);
 
             return results;
         }
@@ -77,21 +77,19 @@ namespace IdmNet
             return compareResult;
         }
 
-        private async Task<PullInfo> EnumerateAndPreparePull(SearchCriteria criteria)
+        /// <summary>
+        /// Set up a Paged search
+        /// </summary>
+        /// <param name="criteria">Search criteria</param>
+        /// <param name="pageSize">number of records to return</param>
+        /// <returns></returns>
+        public async Task<PullInfo> PreparePagedSearchAsync(SearchCriteria criteria, int pageSize)
         {
             var enumerateResponseMessage = await EnumerateSearch(criteria);
 
-            // TODO Paging
-            //// Prepare first Pull
-            //if (criteria.PageSize == 0)
-            //    criteria.PageSize = int.MaxValue;
-
-
             var pullInfo = new PullInfo
             {
-                // TODO Paging
-                //PageSize = criteria.PageSize,
-                PageSize = int.MaxValue,
+                PageSize = pageSize,
                 EnumerateResponse =
                     enumerateResponseMessage.GetBody<EnumerateResponse>(new SoapXmlSerializer(typeof(EnumerateResponse))),
             };
@@ -116,17 +114,25 @@ namespace IdmNet
             return enumerateResponseMessage;
         }
 
-        private async Task<PullResponse> Pull(int pageSize, EnumerationContext enumerationContext, List<IdmResource> results)
+        /// <summary>
+        /// Pull resources from Identity Manager
+        /// </summary>
+        /// <param name="pageSize">Maximum number of records to return</param>
+        /// <param name="pagingContext">Information regarding which records to pull</param>
+        /// <param name="results"></param>
+        /// <returns></returns>
+        /// <exception cref="SoapFaultException"></exception>
+        public async Task<PagedSearchResults> PullAsync(int pageSize, PagingContext pagingContext)
         {
             var pullMessage = Message.CreateMessage(
                 MessageVersion.Default,
                 "http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull",
                 new Pull
                 {
-                    EnumerationContext = enumerationContext,
+                    PagingContext = pagingContext,
                     MaxElements = pageSize,
                     PullAdjustment =
-                        new PullAdjustment { StartingIndex = enumerationContext.CurrentIndex, EnumerationDirection = "Forwards" }
+                        new PullAdjustment { StartingIndex = pagingContext.CurrentIndex, EnumerationDirection = "Forwards" }
                 },
                 new SoapXmlSerializer(typeof(Pull)));
 
@@ -136,15 +142,15 @@ namespace IdmNet
             if (pullResponseMessage.IsFault)
                 throw new SoapFaultException("Pull Fault: " + pullResponseMessage);
 
-            var pullResponseObj = pullResponseMessage.GetBody<PullResponse>(new SoapXmlSerializer(typeof(PullResponse)));
-            if (pullResponseObj.Items != null)
+            var pagedSearchResults = pullResponseMessage.GetBody<PagedSearchResults>(new SoapXmlSerializer(typeof(PagedSearchResults)));
+            if (pagedSearchResults.Items != null)
             {
-                var xmlNodes = (XmlNode[])pullResponseObj.Items;
-                results.AddRange(xmlNodes.Select(BuildResource));
-
-                enumerationContext.CurrentIndex += xmlNodes.Length;
+                var xmlNodes = (XmlNode[])pagedSearchResults.Items;
+                var resources = xmlNodes.Select(BuildResource).ToArray();
+                pagedSearchResults.Results.AddRange(resources);
+                pagingContext.CurrentIndex += xmlNodes.Length;
             }
-            return pullResponseObj;
+            return pagedSearchResults;
         }
 
         private static IdmResource BuildResource(XmlNode xmlNode)

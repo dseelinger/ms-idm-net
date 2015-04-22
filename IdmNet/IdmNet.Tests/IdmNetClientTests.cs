@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Channels;
 using System.Threading.Tasks;
+using System.Xml;
 using IdmNet.Models;
 using IdmNet.SoapModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -562,8 +563,92 @@ namespace IdmNet.Tests
 
 
 
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task It_can_PreparePagedSearchAsync()
+        {
+            // Arrange
+            var it = IdmNetClientFactory.BuildClient();
+            var criteria = new SearchCriteria("/ObjectTypeDescription");
+            criteria.Selection.Add("DisplayName");
 
-        // TODO 004: Paging
+            // Act
+            var result = await it.PreparePagedSearchAsync(criteria, 5);
+
+            // Assert
+            Assert.AreEqual("/ObjectTypeDescription", result.PagingContext.Filter);
+            Assert.AreEqual(0, result.PagingContext.CurrentIndex);
+            Assert.AreEqual("Forwards", result.PagingContext.EnumerationDirection);
+            Assert.AreEqual("9999-12-31T23:59:59.9999999", result.PagingContext.Expires);
+            Assert.AreEqual("ObjectID", result.PagingContext.Selection[0]);
+            Assert.AreEqual("ObjectType", result.PagingContext.Selection[1]);
+            Assert.AreEqual("DisplayName", result.PagingContext.Selection[2]);
+            Assert.AreEqual("DisplayName", result.PagingContext.Sorting.SortingAttributes[0].AttributeName);
+            Assert.AreEqual(true, result.PagingContext.Sorting.SortingAttributes[0].Ascending);
+        }
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task It_can_PullAsync()
+        {
+            // Arrange
+            var it = IdmNetClientFactory.BuildClient();
+            var criteria = new SearchCriteria("/ObjectTypeDescription");
+            criteria.Selection.Add("DisplayName");
+            PullInfo pullInfo = await it.PreparePagedSearchAsync(criteria, 5);
+            PagingContext pagingContext = pullInfo.PagingContext;
+
+            // Act
+            var pagedResults = await it.PullAsync(5, pagingContext);
+
+            // Assert
+            Assert.AreEqual(5, pagedResults.Results.Count);
+            Assert.AreEqual("Activity Information Configuration", pagedResults.Results[0].DisplayName);
+            Assert.AreEqual("Binding Description", pagedResults.Results[4].DisplayName);
+            Assert.AreEqual("/ObjectTypeDescription", pagedResults.PagingContext.Filter);
+            Assert.AreEqual(5, pagedResults.PagingContext.CurrentIndex);
+            Assert.AreEqual("Forwards", pagedResults.PagingContext.EnumerationDirection);
+            Assert.AreEqual("9999-12-31T23:59:59.9999999", pagedResults.PagingContext.Expires);
+            Assert.AreEqual("ObjectID", pagedResults.PagingContext.Selection[0]);
+            Assert.AreEqual("ObjectType", pagedResults.PagingContext.Selection[1]);
+            Assert.AreEqual("DisplayName", pagedResults.PagingContext.Selection[2]);
+            Assert.AreEqual("DisplayName", pagedResults.PagingContext.Sorting.SortingAttributes[0].AttributeName);
+            Assert.AreEqual(true, pagedResults.PagingContext.Sorting.SortingAttributes[0].Ascending);
+
+            Assert.AreEqual(null, pagedResults.EndOfSequence);
+            Assert.AreEqual(true, pagedResults.Items is XmlNode[]);
+            Assert.AreEqual(5, ((XmlNode[])(pagedResults.Items)).Length);
+        }
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task It_can_PullAsync_even_wothout_getting_PullInfo_first_if_you_know_what_you_are_doing()
+        {
+            // Arrange
+            var it = IdmNetClientFactory.BuildClient();
+            PagingContext pagingContext = new PagingContext
+            {
+                CurrentIndex = 0,
+                Filter = "/ObjectTypeDescription",
+                Selection = new[] {"ObjectID", "ObjectType", "DisplayName"},
+                Sorting = new Sorting(),
+                EnumerationDirection = "Forwards",
+                Expires = "9999-12-31T23:59:59.9999999"
+            };
+
+            // Act
+            var pagedResults = await it.PullAsync(5, pagingContext);
+
+            // Assert
+            Assert.AreEqual(5, pagedResults.Results.Count);
+            Assert.AreEqual("Activity Information Configuration", pagedResults.Results[0].DisplayName);
+            Assert.AreEqual("Binding Description", pagedResults.Results[4].DisplayName);
+
+            Assert.AreEqual(null, pagedResults.EndOfSequence);
+            Assert.AreEqual(true, pagedResults.Items is XmlNode[]);
+            Assert.AreEqual(5, ((XmlNode[])(pagedResults.Items)).Length);
+        }
+
         // TODO 003: Implement GetSchema(string objectTypeName)
         // TODO 002: Implement Select *
         // TODO 001: Implement Approvals
