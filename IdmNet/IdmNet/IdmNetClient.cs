@@ -419,5 +419,98 @@ namespace IdmNet
 
             return response.EnumerationDetail.Count;
         }
+
+        public async Task<ObjectTypeDescription> GetSchema(string objectType)
+        {
+            var it = IdmNetClientFactory.BuildClient();
+            var result = await GetObjectTypeDescription(objectType, it);
+            result.BindingDescriptions = new List<BindingDescription>();
+
+
+            await AddBindingDescriptions(result, it);
+
+
+            return result;
+
+        }
+
+        private static async Task AddBindingDescriptions(ObjectTypeDescription result, IdmNetClient it)
+        {
+            var bindingCriteria = new SearchCriteria(String.Format("/BindingDescription[BoundObjectType='{0}']", result.ObjectID))
+            {
+                Selection =
+                    new List<string>
+                    {
+                        "DisplayName",
+                        "CreatedTime",
+                        "Creator",
+                        "Description",
+                        "Name",
+                        "ObjectID",
+                        "ObjectType",
+                        "ResourceTime",
+                        "UsageKeyword",
+                        "BoundObjectType",
+                        "BoundAttributeType",
+                        "Required"
+                    }
+            };
+
+            IEnumerable<IdmResource> bindingResources = await it.SearchAsync(bindingCriteria);
+            foreach (var bindingResource in bindingResources)
+            {
+                var binding = new BindingDescription(bindingResource);
+
+
+                var attrTypeResource = await it.GetAsync(binding.BoundAttributeType.ObjectID,
+                    new[]
+                    {
+                        "DisplayName",
+                        "CreatedTime",
+                        "Creator",
+                        "Description",
+                        "Name",
+                        "ObjectID",
+                        "ObjectType",
+                        "ResourceTime",
+                        "UsageKeyword",
+                        "DataType",
+                        "Multivalued"
+                    }
+                    );
+
+                var attrType = new AttributeTypeDescription(attrTypeResource);
+                binding.BoundAttributeType = attrType;
+
+
+
+                result.BindingDescriptions.Add(binding);
+            }
+        }
+
+        private static async Task<ObjectTypeDescription> GetObjectTypeDescription(string objectType, IdmNetClient it)
+        {
+            var criteria = new SearchCriteria(String.Format("/ObjectTypeDescription[Name='{0}']", objectType))
+            {
+                Selection =
+                    new List<string>
+                    {
+                        "DisplayName",
+                        "CreatedTime",
+                        "Creator",
+                        "Description",
+                        "Name",
+                        "ObjectID",
+                        "ObjectType",
+                        "ResourceTime",
+                        "UsageKeyword"
+                    }
+            };
+
+
+            IEnumerable<IdmResource> resources = await it.SearchAsync(criteria);
+            var result = new ObjectTypeDescription(resources.FirstOrDefault());
+            return result;
+        }
     }
 }

@@ -32,11 +32,11 @@ namespace IdmNet.Tests.Models
         {
             var it = new AttributeTypeDescription
             {
-                MultiValued = true,
+                Multivalued = true,
                 DataType = "Test DataType"
             };
 
-            Assert.AreEqual(true, it.MultiValued);
+            Assert.AreEqual(true, it.Multivalued);
             Assert.AreEqual("Test DataType", it.DataType);
         }
 
@@ -46,7 +46,7 @@ namespace IdmNet.Tests.Models
             var it = new AttributeTypeDescription();
 
             Assert.IsNull(it.DataType);
-            Assert.IsFalse(it.MultiValued);
+            Assert.IsFalse(it.Multivalued);
         }
 
     }

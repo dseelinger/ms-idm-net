@@ -32,10 +32,10 @@
         /// <summary>
         /// (required) A true indicates this attribute can be localized.  Only allowed for String DataTypes
         /// </summary>
-        public bool MultiValued 
+        public bool Multivalued 
         {
-            get { return AttrToBool("MultiValued") == true; }
-            set { SetAttrValue("MultiValued", value.ToString()); }
+            get { return AttrToBool("Multivalued") == true; }
+            set { SetAttrValue("Multivalued", value.ToString()); }
         }
 
 

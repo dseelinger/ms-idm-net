@@ -630,7 +630,7 @@ namespace IdmNet.Tests
             {
                 CurrentIndex = 0,
                 Filter = "/ObjectTypeDescription",
-                Selection = new[] {"ObjectID", "ObjectType", "DisplayName"},
+                Selection = new[] { "ObjectID", "ObjectType", "DisplayName" },
                 Sorting = new Sorting(),
                 EnumerationDirection = "Forwards",
                 Expires = "9999-12-31T23:59:59.9999999"
@@ -648,6 +648,66 @@ namespace IdmNet.Tests
             Assert.AreEqual(true, pagedResults.Items is XmlNode[]);
             Assert.AreEqual(5, ((XmlNode[])(pagedResults.Items)).Length);
         }
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task It_can_GetSchemaAsync()
+        {
+            // Arrange
+            var personOid = "6cb7e506-b4b3-4901-8b8c-ff044f14e743";
+            var it = IdmNetClientFactory.BuildClient();
+
+            // Act
+            ObjectTypeDescription result = await it.GetSchema("Person");
+
+            // Assert
+            Assert.AreEqual("User", result.DisplayName);
+            Assert.IsTrue(result.CreatedTime >= new DateTime(2010, 1, 1));
+            Assert.AreEqual(null, result.Creator);
+            Assert.AreEqual("This resource defines applicable policies to manage incoming requests. ", result.Description);
+            Assert.AreEqual("Person", result.Name);
+            Assert.AreEqual(personOid, result.ObjectID);
+            Assert.AreEqual("ObjectTypeDescription", result.ObjectType);
+            Assert.AreEqual(null, result.ResourceTime);
+            Assert.AreEqual("Microsoft.ResouceManagement.PortalClient", result.UsageKeyword[0]);
+
+            var expectedBindingCount = 59;
+            Assert.AreEqual(expectedBindingCount, result.BindingDescriptions.Count);
+            for (int i = 0; i < expectedBindingCount; i++)
+            {
+                Assert.AreEqual(personOid, result.BindingDescriptions[i].BoundObjectType.ObjectID);
+            }
+            Assert.AreEqual("3e04bbbf-014f-413c-8d07-6276cd383be8", result.BindingDescriptions[0].BoundAttributeType.ObjectID);
+            Assert.AreEqual(false, result.BindingDescriptions[0].Required);
+
+            Assert.AreEqual("String", result.BindingDescriptions[0].BoundAttributeType.DataType);
+            Assert.AreEqual(false, result.BindingDescriptions[0].BoundAttributeType.Multivalued);
+            Assert.AreEqual("Account Name", result.BindingDescriptions[0].BoundAttributeType.DisplayName);
+            Assert.AreEqual("User's log on name", result.BindingDescriptions[0].BoundAttributeType.Description);
+            Assert.AreEqual(null, result.BindingDescriptions[0].BoundAttributeType.IntegerMaximum);
+            Assert.AreEqual(null, result.BindingDescriptions[0].BoundAttributeType.IntegerMinimum);
+            Assert.AreEqual("AccountName", result.BindingDescriptions[0].BoundAttributeType.Name);
+            Assert.AreEqual(null, result.BindingDescriptions[0].BoundAttributeType.StringRegex);
+            Assert.AreEqual("Microsoft.ResourceManagement.WebServices", result.BindingDescriptions[0].BoundAttributeType.UsageKeyword[0]);
+
+            Assert.AreEqual("Reference", result.BindingDescriptions[expectedBindingCount -1].BoundAttributeType.DataType);
+            Assert.AreEqual(false, result.BindingDescriptions[expectedBindingCount -1].BoundAttributeType.Multivalued);
+            Assert.AreEqual("Time Zone", result.BindingDescriptions[expectedBindingCount -1].BoundAttributeType.DisplayName);
+            Assert.AreEqual("Reference to timezone configuration", result.BindingDescriptions[expectedBindingCount -1].BoundAttributeType.Description);
+            Assert.AreEqual(null, result.BindingDescriptions[expectedBindingCount -1].BoundAttributeType.IntegerMaximum);
+            Assert.AreEqual(null, result.BindingDescriptions[expectedBindingCount -1].BoundAttributeType.IntegerMinimum);
+            Assert.AreEqual("TimeZone", result.BindingDescriptions[expectedBindingCount -1].BoundAttributeType.Name);
+            Assert.AreEqual(null, result.BindingDescriptions[expectedBindingCount -1].BoundAttributeType.StringRegex);
+            Assert.AreEqual("Microsoft.ResourceManagement.WebServices", result.BindingDescriptions[expectedBindingCount -1].BoundAttributeType.UsageKeyword[0]);
+        
+        }
+
+
+
+
+
+
+
 
         // TODO 003: Implement GetSchema(string objectTypeName)
         // TODO 002: Implement Select *
