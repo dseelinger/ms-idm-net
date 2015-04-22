@@ -90,14 +90,13 @@ namespace IdmNet.SoapModels
         /// <summary>
         /// Part of a soap model
         /// </summary>
-        [XmlAttribute]
-        public string Dialect = "http://schemas.microsoft.com/2006/11/ResourceManagement/Dialect/IdentityAttributeType-20080602";
+        [XmlAttribute] public string Dialect = SoapConstants.IdentityAttributeTypeDialect;
 
         /// <summary>
         /// Part of a soap model
         /// </summary>
         [XmlElement(ElementName = "AttributeType")]
-        public string[] Expressions { get; set; }
+        public string[] AttributeType { get; set; }
     }
 
     /// <summary>
@@ -110,7 +109,7 @@ namespace IdmNet.SoapModels
         /// Part of a soap model
         /// </summary>
         [XmlAnyElement(Name = "PartialAttribute")]
-        public object[] Results { get; set; }
+        public object[] PartialAttribute { get; set; }
     }
 
 }

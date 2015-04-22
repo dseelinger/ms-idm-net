@@ -1,24 +1,27 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace IdmNet.SoapModels
 {
     /// <summary>
-    /// Yet another SOAP Model
+    /// Defines information requried to do a "Pull" from a search in Identity Manager (WS-Enumerate)
     /// </summary>
     public class PullInfo
     {
         /// <summary>
-        /// Part of a SOAP model
+        /// Information returned from the enumeration operations
         /// </summary>
         public EnumerateResponse EnumerateResponse { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// number of objects to return in the pull
         /// </summary>
         public int PageSize { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// current "state" of the query - what object to start with (in case of paging, sorting, which fields to 
+        /// populate, etc.)
         /// </summary>
         public EnumerationContext EnumerationContext
         {
@@ -28,50 +31,45 @@ namespace IdmNet.SoapModels
 
 
     /// <summary>
-    /// Yet another SOAP Model
+    /// Defines the XPath Filter/query for a search
     /// </summary>
     [XmlRoot(Namespace = SoapConstants.EnumerateAction, IsNullable = false)]
     public class Filter
     {
         /// <summary>
-        /// Part of a SOAP model
+        /// Paremeterless CTOR
         /// </summary>
         public Filter()
         {
-            Dialect = "http://schemas.microsoft.com/2006/11/XPathFilterDialect";
         }
 
-        /// <summary>
-        /// Part of a SOAP model
-        /// </summary>
         public Filter(string query)
-            : this()
         {
             Query = query;
         }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// Identity Manager XPath dialect - I suppose this was in case anything other than XPath was ever implemented 
+        /// (but nothing ever has been)
         /// </summary>
         [XmlAttribute(AttributeName = "Dialect", DataType = "anyURI")]
-        public string Dialect { get; set; }
+        public string Dialect = "http://schemas.microsoft.com/2006/11/XPathFilterDialect";
 
         /// <summary>
-        /// Part of a SOAP model
+        /// Actual XPath for the search
         /// </summary>
         [XmlText]
         public string Query { get; set; }
     }
 
 
-
     /// <summary>
-    /// Yet another SOAP Model
+    /// Additional information regarding the Pull
     /// </summary>
     public class PullAdjustment
     {
         /// <summary>
-        /// Part of a SOAP model
+        /// CTOR - enumerate forwards by default
         /// </summary>
         public PullAdjustment()
         {
@@ -84,56 +82,61 @@ namespace IdmNet.SoapModels
         public string EnumerationDirection { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// Number of the next attribute to retrieve
         /// </summary>
         public int StartingIndex { get; set; }
     }
 
     /// <summary>
-    /// Yet another SOAP Model
+    /// Context for the next pull
     /// </summary>
     public class EnumerationContext
     {
         /// <summary>
-        /// Part of a SOAP model
+        /// Current location in the search
         /// </summary>
         [XmlElement(Namespace = SoapConstants.RmNamespace)]
         public int CurrentIndex { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// direction of enumeration
         /// </summary>
         [XmlElement(Namespace = SoapConstants.RmNamespace)]
         public string EnumerationDirection { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// Always way in the future, so never really expires.  WS-Enumerate requirement
         /// </summary>
         [XmlElement(Namespace = SoapConstants.RmNamespace)]
         public string Expires { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// XPATH Query
         /// </summary>
         [XmlElement(Namespace = SoapConstants.RmNamespace)]
         public string Filter { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// Which attributes to populate
         /// </summary>
         [XmlArray(Namespace = SoapConstants.RmNamespace)]
         public string[] Selection { get; set; }
+
+        /// <summary>
+        /// How to sort results
+        /// </summary>
+        [XmlElement(ElementName = "Sorting", Namespace = SoapConstants.RmNamespace)]
+        public Sorting Sorting { get; set; }
     }
 
 
     /// <summary>
-    /// Yet another SOAP Model
+    /// Contains count
     /// </summary>
-    [XmlRoot(ElementName = "EnumerationDetail")]
-    public class EnumerationCount
+    public class EnumerationDetail
     {
         /// <summary>
-        /// Part of a SOAP model
+        /// Number of records returned in search
         /// </summary>
         [XmlElement]
         public int Count { get; set; }
@@ -141,24 +144,24 @@ namespace IdmNet.SoapModels
 
 
     /// <summary>
-    /// Yet another SOAP Model
+    /// Data returned from Enumeration
     /// </summary>
     [XmlRoot(Namespace = SoapConstants.EnumerationNamespace)]
     public class EnumerateResponse
     {
         /// <summary>
-        /// Part of a SOAP model
+        /// Current context of the enumeration
         /// </summary>
         public EnumerationContext EnumerationContext { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// Contains the count of records returned in the search
         /// </summary>
-        [XmlElement(ElementName = "EnumerationDetail", Namespace = SoapConstants.RmNamespace)]
-        public EnumerationCount EnumerationCount { get; set; }
+        [XmlElement(Namespace = SoapConstants.RmNamespace)]
+        public EnumerationDetail EnumerationDetail { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// Usually in the far future - WS-Enumerate requirement.
         /// </summary>
         public string Expires { get; set; }
     }
@@ -166,133 +169,145 @@ namespace IdmNet.SoapModels
 
 
     /// <summary>
-    /// Yet another SOAP Model
+    /// Information for a Pull request
     /// </summary>
     [XmlRoot(Namespace = SoapConstants.EnumerationNamespace)]
     public class Pull
     {
         /// <summary>
-        /// Part of a SOAP model
+        /// Context for the next PULL
         /// </summary>
         public EnumerationContext EnumerationContext { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// Number of elements to retrieve
         /// </summary>
         public int MaxElements { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// How to adjust the pull (paging, etc.)
         /// </summary>
         public PullAdjustment PullAdjustment { get; set; }
     }
 
-
-
     /// <summary>
-    /// Yet another SOAP Model
+    /// Response from the Pull operation
     /// </summary>
     [XmlRoot(Namespace = SoapConstants.EnumerationNamespace)]
     public class PullResponse
     {
         /// <summary>
-        /// Part of a SOAP model
+        /// If no more items, TRUE
         /// </summary>
         public object EndOfSequence { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// Context of the search after this last PULL
         /// </summary>
         public EnumerationContext EnumerationContext { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// Objects/resources returned in the Pull
         /// </summary>
         public object Items { get; set; }
     }
 
 
     /// <summary>
-    /// Yet another SOAP Model
     /// Enumeration Info (can't change class name, though)
     /// This is the main object that gets serialized for the Enumerate SOAP call
     /// </summary>
-    [XmlRoot(Namespace = SoapConstants.EnumerationNamespace)]
-    public class Enumerate
+    //[XmlRoot(Namespace = SoapConstants.EnumerationNamespace)]
+    [XmlRoot(ElementName = "Enumerate", IsNullable = false, Namespace = SoapConstants.EnumerationNamespace)]
+    public class SearchCriteria
     {
         /// <summary>
-        /// Part of a SOAP model
+        /// Default to selecting ObjectID and ObjectType and sorting by DisplayName
+        /// </summary>
+        public SearchCriteria(string filterQuery) : this()
+        {
+            Filter = new Filter(filterQuery);
+        }
+
+        /// <summary>
+        /// Default to selecting ObjectID and ObjectType and sorting by DisplayName
+        /// </summary>
+        public SearchCriteria()
+        {
+            Selection = new List<string>  { "ObjectID", "ObjectType" };
+            Sorting = new Sorting();
+        }
+
+        /// <summary>
+        /// XPath Query
         /// </summary>
         public Filter Filter { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// Which attributes to return
         /// </summary>
         [XmlElement(ElementName = "Selection", Namespace = SoapConstants.RmNamespace)]
-        public string[] Selection { get; set; }
+        //public string[] Selection { get; set; }
+        public List<string> Selection { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// How to sort the results
         /// </summary>
         [XmlElement(ElementName = "Sorting", Namespace = SoapConstants.RmNamespace)]
         public Sorting Sorting { get; set; }
     }
 
     /// <summary>
-    /// Yet another SOAP Model
+    /// Sorting information for both Enumerate and Pull's Enumeration contexts
     /// </summary>
+    [XmlRoot(IsNullable = true, Namespace = SoapConstants.RmNamespace)]
     public class Sorting
     {
         /// <summary>
-        /// Part of a SOAP model
+        /// Default CTOR sorts by DisplayName, Ascending
         /// </summary>
         public Sorting()
         {
-            Dialect = "http://schemas.microsoft.com/2006/11/XPathFilterDialect";
+            SortingAttributes = new[] {new SortingAttribute()};
         }
 
-        // TODO -012: Implement Paging and redo sorting if we ever get a reply
-        //public Sorting(SortingAttribute attribute)
-        //    : this()
-        //{
-        //    SortingAttribute = attribute;
-        //}
+        /// <summary>
+        /// List of Attributes to sort by (and sort direction)
+        /// </summary>
+        [XmlElement(ElementName = "SortingAttribute")]
+        public SortingAttribute[] SortingAttributes { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// Always the RM namespace - WS-Enumerate requirment
         /// </summary>
-        [XmlAttribute(AttributeName = "Dialect", DataType = "anyURI")]
-        public string Dialect { get; set; }
-
-        /// <summary>
-        /// Part of a SOAP model
-        /// </summary>
-        public SortingAttribute SortingAttribute { get; set; }
+        [XmlAttribute(AttributeName = "Dialect", DataType = "anyURI")] public string Dialect = SoapConstants.RmNamespace;
     }
 
     /// <summary>
-    /// Yet another SOAP Model
+    /// Information on how to sort fo a single attribute
     /// </summary>
+    [XmlType(Namespace = SoapConstants.RmNamespace)]
     public class SortingAttribute
     {
         /// <summary>
-        /// Part of a SOAP model
+        /// Default CTOR sorts by DisplayName, Ascending
         /// </summary>
         public SortingAttribute()
         {
+            AttributeName = "DisplayName";
             Ascending = true;
         }
-
+        
         /// <summary>
-        /// Part of a SOAP model
-        /// </summary>
-        [XmlAttribute(AttributeName = "Ascending", DataType = "boolean")]
-        public bool Ascending { get; set; }
-
-        /// <summary>
-        /// Part of a SOAP model
+        /// Attribute's name
         /// </summary>
         [XmlText]
         public string AttributeName { get; set; }
+
+        /// <summary>
+        /// If true, sort ascending
+        /// </summary>
+        [XmlAttribute]
+        public bool Ascending { get; set; }
     }
 }

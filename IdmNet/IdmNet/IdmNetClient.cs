@@ -60,23 +60,12 @@ namespace IdmNet
             EnumerationContext enumerationContext = pullInfo.EnumerationContext;
             do
             {
-                pullResponseObj = await Pull(criteria.PageSize, enumerationContext, results);
+                // TODO: Paging
+                //pullResponseObj = await Pull(criteria.PageSize, enumerationContext, results);
+                pullResponseObj = await Pull(int.MaxValue, enumerationContext, results);
             } while (pullResponseObj.EndOfSequence == null);
 
-            Sort(results, criteria);
-
             return results;
-        }
-
-        private static void Sort(List<IdmResource> results, SearchCriteria criteria)
-        {
-            string attrName = criteria.SortAttribute;
-            if (attrName == null)
-                return;
-
-            var negateIfNeeded = ((criteria.SortDecending) ? -1 : 1);
-
-            results.Sort((res1, res2) => CompareResult(res1, res2, attrName, negateIfNeeded));
         }
 
         private static int CompareResult(IdmResource res1, IdmResource res2, string attrName, int negateIfNeeded)
@@ -90,38 +79,41 @@ namespace IdmNet
 
         private async Task<PullInfo> EnumerateAndPreparePull(SearchCriteria criteria)
         {
-            // Enumerate request
+            var enumerateResponseMessage = await EnumerateSearch(criteria);
+
+            // TODO Paging
+            //// Prepare first Pull
+            //if (criteria.PageSize == 0)
+            //    criteria.PageSize = int.MaxValue;
+
+
+            var pullInfo = new PullInfo
+            {
+                // TODO Paging
+                //PageSize = criteria.PageSize,
+                PageSize = int.MaxValue,
+                EnumerateResponse =
+                    enumerateResponseMessage.GetBody<EnumerateResponse>(new SoapXmlSerializer(typeof(EnumerateResponse))),
+            };
+            return pullInfo;
+        }
+
+        private async Task<Message> EnumerateSearch(SearchCriteria criteria)
+        {
             var enumerateMessage = Message.CreateMessage(
                 MessageVersion.Default,
                 SoapConstants.EnumerateAction,
-                new Enumerate
-                {
-                    Filter = new Filter(criteria.XPath),
-                    Selection = criteria.Attributes,
-                    Sorting = new Sorting { SortingAttribute = new SortingAttribute { AttributeName = criteria.SortAttribute, Ascending = !criteria.SortDecending } }
-                },
-                new SoapXmlSerializer(typeof(Enumerate)));
-            Trace.WriteLine(enumerateMessage);
+                criteria,
+                new SoapXmlSerializer(typeof (SearchCriteria)));
+
+            enumerateMessage.Headers.Add(MessageHeader.CreateHeader("IncludeCount", "http://schemas.microsoft.com/2006/11/ResourceManagement", null, false));
             var enumerateResponseMessage = await _searchClient.EnumerateAsync(enumerateMessage);
 
 
             // Check for enumerate fault
             if (enumerateResponseMessage.IsFault)
                 throw new SoapFaultException("Enumerate Fault: " + enumerateResponseMessage);
-
-
-            // Prepare first Pull
-            if (criteria.PageSize == 0)
-                criteria.PageSize = int.MaxValue;
-
-
-            var pullInfo = new PullInfo
-            {
-                PageSize = criteria.PageSize,
-                EnumerateResponse =
-                    enumerateResponseMessage.GetBody<EnumerateResponse>(new SoapXmlSerializer(typeof(EnumerateResponse))),
-            };
-            return pullInfo;
+            return enumerateResponseMessage;
         }
 
         private async Task<PullResponse> Pull(int pageSize, EnumerationContext enumerationContext, List<IdmResource> results)
@@ -375,7 +367,7 @@ namespace IdmNet
 
             attributes = attrList.ToArray();
 
-            var getRequest = new BaseObjectSearchRequest {Expressions = attributes};
+            var getRequest = new BaseObjectSearchRequest {AttributeType = attributes};
 
             // Create the Get request message
             Message getRequestMsg = Message.CreateMessage(MessageVersion.Default,
@@ -400,12 +392,26 @@ namespace IdmNet
 
             var resource = new IdmResource();
 
-            foreach (XmlNode partialAttribute in getResponseObj.Results)
+            foreach (XmlNode partialAttribute in getResponseObj.PartialAttribute)
                 foreach (XmlNode attribute in partialAttribute.ChildNodes)
                     BuildAttribute(attribute, resource);
 
             return resource;
         }
 
+        /// <summary>
+        /// Get the number of Identity Manager resources that match the given XPath Filter.
+        /// </summary>
+        /// <param name="filter">Search filter</param>
+        /// <returns>Number of matching resources</returns>
+        public async Task<int> GetCountAsync(string filter)
+        {
+            var criteria = new SearchCriteria {Filter = new Filter {Query = filter}};
+            Message enumerateResponseMessage = await EnumerateSearch(criteria);
+            var response =
+                enumerateResponseMessage.GetBody<EnumerateResponse>(new SoapXmlSerializer(typeof (EnumerateResponse)));
+
+            return response.EnumerationDetail.Count;
+        }
     }
 }
