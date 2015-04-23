@@ -19,7 +19,7 @@ namespace IdmNet.Tests
     {
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_get_all_ObjectTypeDescription()
+        public async Task It_can_get_all_ObjectTypeDescription_objects()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -39,7 +39,7 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_get_objects_with_multi_valued_attributes()
+        public async Task It_can_get_resources_with_multi_valued_attributes()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -94,7 +94,7 @@ namespace IdmNet.Tests
         [TestMethod]
         [TestCategory("Integration")]
         [ExpectedException(typeof (SoapFaultException))]
-        public async Task It_throws_for_get_when_bad_xpath_given()
+        public async Task It_throws_an_exception_get_when_it_encounters_bad_xpath()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -107,7 +107,7 @@ namespace IdmNet.Tests
         [TestMethod]
         [TestCategory("Integration")]
         [ExpectedException(typeof (SoapFaultException))]
-        public async Task It_throws_when_unknown_xpath_given()
+        public async Task It_throws_an_exception_when_valid_yet_unknown_xpath_is_searched_for()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -186,7 +186,7 @@ namespace IdmNet.Tests
         [TestMethod]
         [TestCategory("Integration")]
         [ExpectedException(typeof (SoapFaultException))]
-        public async Task It_throws_when_an_invalid_resource_is_passed_to_create()
+        public async Task It_throws_an_exception_when_trying_to_create_an_invalid_resource()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -200,7 +200,7 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_delete_an_IdmResource()
+        public async Task It_can_delete_objects_from_Identity_Manager()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -240,7 +240,7 @@ namespace IdmNet.Tests
         [TestMethod]
         [TestCategory("Integration")]
         [ExpectedException(typeof (SoapFaultException))]
-        public async Task It_throws_when_attempting_to_delete_a_bad_object_ID()
+        public async Task It_throws_an_exception_when_attempting_to_delete_an_object_that_does_not_exist()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -253,7 +253,7 @@ namespace IdmNet.Tests
         [TestMethod]
         [TestCategory("Integration")]
         [ExpectedException(typeof (SoapFaultException))]
-        public async Task It_throws_when_Posting_a_value_to_a_single_valued_attribute()
+        public async Task It_throws_an_exception_when_you_treat_a_single_valued_attribute_as_if_it_is_multi_valued()
         {
             // Arrange
             const string attrName = "FirstName";
@@ -279,7 +279,7 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_PostAttributeValueAsync_to_a_multi_valued_attribute_that_already_has_one_or_more_values
+        public async Task It_can_add_a_value_to_a_multi_valued_attribute_that_already_has_one_or_more_values
             ()
         {
             // Arrange
@@ -318,7 +318,7 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_PostAttributeValueAsync_to_a_not_present_multi_valued_attribute()
+        public async Task It_can_add_a_value_to_an_empty_multi_valued_attribute()
         {
             // Arrange
             const string attrName = "ProxyAddressCollection";
@@ -355,7 +355,7 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_DeleteAttributeValueAsync_to_a_not_present_multi_valued_attribute()
+        public async Task It_can_delete_a_value_from_a_multi_valued_attribute()
         {
             // Arrange
             const string attrName = "ProxyAddressCollection";
@@ -397,7 +397,7 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_PutAttributeValueAsync_to_a_not_present_single_valued_attribute()
+        public async Task It_can_modify_single_valued_attribute_that_was_previously_null()
         {
             // Arrange
             const string attrName = "FirstName";
@@ -435,21 +435,21 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_PutAttributeValueAsync_to_a_present_single_valued_attribute()
+        public async Task It_can_modify_a_value_of_a_single_valued_attribute_even_if_it_already_had_a_value()
         {
             await AssertReplaceOk("FirstName", "TestFirstName1", "TestFirstName2");
         }
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_PutAttributeValueAsync_with_a_null_value_to_a_present_single_valued_attribute()
+        public async Task It_can_remove_a_single_valued_attribute_by_setting_its_value_to_null()
         {
             await AssertReplaceOk("FirstName", "TestFirstName1", null);
         }
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_PutAsync_to_batch_a_bunch_of_changes_together_for_a_single_object()
+        public async Task It_can_make_a_bunch_of_changes_at_the_same_time_for_a_single_resource()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -496,7 +496,7 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_GetAsync_by_ID()
+        public async Task It_can_get_a_resource_by_its_ID()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -519,7 +519,7 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_get_a_count_on_a_Search()
+        public async Task It_can_return_the_number_of_matching_records_for_a_given_search()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -533,7 +533,7 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_get_all_ObjectTypeDescription_in_reverse_order()
+        public async Task It_can_get_all_ObjectTypeDescription_objects_in_reverse_order()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -565,7 +565,7 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_PreparePagedSearchAsync()
+        public async Task It_can_do_a_search_and_return_the_results_at_a_later_time()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -589,7 +589,7 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_PullAsync()
+        public async Task It_can_get_resources_back_from_a_search_a_page_at_a_time()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -622,7 +622,7 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_PullAsync_even_wothout_getting_PullInfo_first_if_you_know_what_you_are_doing()
+        public async Task It_can_get_resources_even_without_an_initial_search_call_if_you_know_what_you_are_doing()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -651,14 +651,14 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_GetSchemaAsync()
+        public async Task It_can_return_the_entire_schema_for_a_particular_object_type()
         {
             // Arrange
             var personOid = "6cb7e506-b4b3-4901-8b8c-ff044f14e743";
             var it = IdmNetClientFactory.BuildClient();
 
             // Act
-            ObjectTypeDescription result = await it.GetSchema("Person");
+            ObjectTypeDescription result = await it.GetSchemaAsync("Person");
 
             // Assert
             Assert.AreEqual("User", result.DisplayName);
@@ -703,20 +703,37 @@ namespace IdmNet.Tests
         }
 
 
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task It_can_do_SELECT_STAR_FROM_blah_like_in_SQL()
+        {
+            // Arrange
+            var it = IdmNetClientFactory.BuildClient();
+
+            // Act
+            var result =
+                await
+                    it.SearchAsync(new SearchCriteria
+                    {
+                        Filter = new Filter("/ObjectTypeDescription"),
+                        Selection = new List<string> {"*"}
+                    });
+
+            // Assert
+            var actual = result.ToArray();
+            Assert.IsTrue(actual.Length >= 40);
+            Assert.AreEqual("Activity Information Configuration", actual[0].DisplayName);
+            Assert.AreEqual("ObjectTypeDescription", actual[0].ObjectType);
+            Assert.AreEqual("11/5/2014 9:19:55 AM", actual[0].CreatedTime.ToString());
+            Assert.AreEqual(null, actual[0].Creator);
+            Assert.AreEqual("This resource drives the appearance of an activity in FIM Portal.", actual[0].Description);
+            Assert.AreEqual("ActivityInformationConfiguration", actual[0].GetAttrValue("Name"));
+            Assert.AreEqual("Microsoft.ResourceManagement.WebServices", actual[0].GetAttrValue("UsageKeyword"));
+        }
 
 
-
-
-
-
-        // TODO 003: Implement GetSchema(string objectTypeName)
-        // TODO 002: Implement Select *
         // TODO 001: Implement Approvals
         // TODO -999: Implement the STS endpoint
-
-
-
-
 
         private static async Task<IdmResource> CreateTestPerson(IdmNetClient it)
         {

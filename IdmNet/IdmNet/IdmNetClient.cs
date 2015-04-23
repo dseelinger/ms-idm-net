@@ -53,6 +53,11 @@ namespace IdmNet
         /// <returns></returns>
         public async Task<IEnumerable<IdmResource>> SearchAsync(SearchCriteria criteria, int pageSize = 50)
         {
+            if (criteria.Selection.Count == 1 && criteria.Selection[0] == "*")
+            {
+                await SetupGetStar(criteria);
+            }
+
             PullInfo pullInfo = await PreparePagedSearchAsync(criteria, pageSize);
 
             // Pull all results
@@ -66,6 +71,22 @@ namespace IdmNet
             } while (pagedResults.EndOfSequence == null);
 
             return results;
+        }
+
+        private async Task SetupGetStar(SearchCriteria criteria)
+        {
+            criteria.Selection = new List<string> {"ObjectType"};
+            PullInfo objectTypePullInfo = await PreparePagedSearchAsync(criteria, 1);
+            PagingContext objectTypePagingContext = objectTypePullInfo.PagingContext;
+            PagedSearchResults objectTypeResults = await PullAsync(1, objectTypePagingContext);
+            string objectType = objectTypeResults.Results[0].ObjectType;
+
+            var schema = await GetSchemaAsync(objectType);
+            criteria.Selection.Clear();
+            foreach (var bindingDescription in schema.BindingDescriptions)
+            {
+                criteria.Selection.Add(bindingDescription.BoundAttributeType.Name);
+            }
         }
 
         private static int CompareResult(IdmResource res1, IdmResource res2, string attrName, int negateIfNeeded)
@@ -420,7 +441,7 @@ namespace IdmNet
             return response.EnumerationDetail.Count;
         }
 
-        public async Task<ObjectTypeDescription> GetSchema(string objectType)
+        public async Task<ObjectTypeDescription> GetSchemaAsync(string objectType)
         {
             var it = IdmNetClientFactory.BuildClient();
             var result = await GetObjectTypeDescription(objectType, it);
