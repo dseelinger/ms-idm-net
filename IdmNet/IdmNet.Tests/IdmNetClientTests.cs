@@ -19,22 +19,21 @@ namespace IdmNet.Tests
     {
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_get_all_ObjectTypeDescription_objects()
+        public async Task T001_It_can_search_for_all_ObjectTypeDescription_resources_without_specifying_select_or_sort()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
-            var criteria = new SearchCriteria("/ObjectTypeDescription");
-            criteria.Selection.Add("DisplayName");
 
             // Act
-            IEnumerable<IdmResource> result = await it.SearchAsync(criteria);
+            var results = (await it.SearchAsync(new SearchCriteria("/ObjectTypeDescription"))).ToArray();
 
             // Assert
-            var resultsAry = result.ToArray();
-            Assert.IsTrue(resultsAry.Length >= 42);
-            Assert.IsTrue(resultsAry[0].GetAttrValues("DisplayName").Count == 1);
-            Assert.AreEqual("Activity Information Configuration", resultsAry[0].DisplayName);
-            Assert.AreEqual("Workflow Instance", resultsAry[resultsAry.Length - 1].DisplayName);
+            Assert.IsTrue(results.Length >= 40);
+            Assert.AreEqual(2, results[0].Attributes.Count);
+            Assert.AreEqual("ObjectTypeDescription", results[0].ObjectType);
+            Assert.AreEqual("ObjectTypeDescription", results[results.Length - 1].ObjectType);
+            Assert.AreEqual("e1a42ced-6968-457c-b5c8-3f9a573295a6".Length, results[0].ObjectID.Length);
+            Assert.AreEqual("e1a42ced-6968-457c-b5c8-3f9a573295a6".Length, results[1].ObjectID.Length);
         }
 
         [TestMethod]
