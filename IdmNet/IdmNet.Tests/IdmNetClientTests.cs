@@ -38,6 +38,30 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
+        public async Task T002_It_can_search_and_return_specific_attributes()
+        {
+            // Arrange
+            var it = IdmNetClientFactory.BuildClient();
+
+            // Act
+            var results =
+                (await
+                    it.SearchAsync(new SearchCriteria("/ObjectTypeDescription")
+                    {
+                        Selection = new List<string> {"DisplayName", "Name"}
+                    })).ToArray();
+
+            // Assert
+            Assert.IsTrue(results.Length >= 40);
+            Assert.AreEqual(4, results[0].Attributes.Count);
+            Assert.AreEqual("Activity Information Configuration", results[0].DisplayName);
+            Assert.AreEqual("Workflow Instance", results[results.Length - 1].DisplayName);
+            Assert.AreEqual("ActivityInformationConfiguration", results[0].GetAttrValue("Name"));
+            Assert.AreEqual("Approval", results[1].GetAttrValue("Name"));
+        }
+
+        [TestMethod]
+        [TestCategory("Integration")]
         public async Task It_can_get_resources_with_multi_valued_attributes()
         {
             // Arrange
@@ -730,7 +754,7 @@ namespace IdmNet.Tests
             Assert.AreEqual("Microsoft.ResourceManagement.WebServices", actual[0].GetAttrValue("UsageKeyword"));
         }
 
-
+        // TODO 002: SearchCriteria.Selection should always contain ObjectType & ObjectID - even if set to null
         // TODO 001: Implement Approvals
         // TODO -999: Implement the STS endpoint
 
