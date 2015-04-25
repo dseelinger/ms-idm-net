@@ -48,7 +48,7 @@ namespace IdmNet.Tests
                 (await
                     it.SearchAsync(new SearchCriteria("/ObjectTypeDescription")
                     {
-                        Selection = new List<string> {"DisplayName", "Name"}
+                        Selection = new List<string> { "DisplayName", "Name" }
                     })).ToArray();
 
             // Assert
@@ -59,6 +59,60 @@ namespace IdmNet.Tests
             Assert.AreEqual("ActivityInformationConfiguration", results[0].GetAttrValue("Name"));
             Assert.AreEqual("Approval", results[1].GetAttrValue("Name"));
         }
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task T003_It_can_search_and_return_all_attributes_with_Select_STAR()
+        {
+            // Arrange
+            var it = IdmNetClientFactory.BuildClient();
+
+            // Act
+            var results =
+                (await
+                    it.SearchAsync(new SearchCriteria("/BindingDescription")
+                    {
+                        Selection = new List<string> {"*"},
+                        //Sorting = new Sorting
+                        //{
+                        //    SortingAttributes = new[]
+                        //    {
+                        //        new SortingAttribute {Ascending = true, AttributeName = "BoundObjectType"},
+                        //        new SortingAttribute {Ascending = false, AttributeName = "BoundAttributeType"}
+                        //    }
+                        //}
+                    })).ToArray();
+
+            // Assert
+            Assert.IsTrue(results.Length >= 40);
+            Assert.AreEqual(10, results[0].Attributes.Count);
+            Assert.AreEqual("Account Name", results[0].DisplayName);
+            Assert.AreEqual("XOML", results[results.Length - 1].DisplayName);
+        }
+
+        //[TestMethod]
+        //[TestCategory("Integration")]
+        //public async Task T002_It_can_Search_and_Sort_the_results_by_multiple_attributes_in_Ascending_or_Descending_order()
+        //{
+        //    // Arrange
+        //    var it = IdmNetClientFactory.BuildClient();
+
+        //    // Act
+        //    var results =
+        //        (await
+        //            it.SearchAsync(new SearchCriteria("/ObjectTypeDescription")
+        //            {
+        //                Selection = new List<string> { "DisplayName", "Name" }
+        //            })).ToArray();
+
+        //    // Assert
+        //    Assert.IsTrue(results.Length >= 40);
+        //    Assert.AreEqual(4, results[0].Attributes.Count);
+        //    Assert.AreEqual("Activity Information Configuration", results[0].DisplayName);
+        //    Assert.AreEqual("Workflow Instance", results[results.Length - 1].DisplayName);
+        //    Assert.AreEqual("ActivityInformationConfiguration", results[0].GetAttrValue("Name"));
+        //    Assert.AreEqual("Approval", results[1].GetAttrValue("Name"));
+        //}
 
         [TestMethod]
         [TestCategory("Integration")]
@@ -754,8 +808,7 @@ namespace IdmNet.Tests
             Assert.AreEqual("Microsoft.ResourceManagement.WebServices", actual[0].GetAttrValue("UsageKeyword"));
         }
 
-        // TODO 002: SearchCriteria.Selection should always contain ObjectType & ObjectID - even if set to null
-        // TODO 001: Implement Approvals
+       // TODO 001: Implement Approvals
         // TODO -999: Implement the STS endpoint
 
         private static async Task<IdmResource> CreateTestPerson(IdmNetClient it)

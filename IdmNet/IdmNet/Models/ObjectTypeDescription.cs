@@ -7,15 +7,25 @@ namespace IdmNet.Models
     /// </summary>
     public class ObjectTypeDescription : KeywordedResource
     {
+        /// <summary>
+        /// Parameterless CTOR
+        /// </summary>
         public ObjectTypeDescription()
         {
             
         }
 
+        /// <summary>
+        /// Build from an IdmResource
+        /// </summary>
+        /// <param name="resource"></param>
         public ObjectTypeDescription(IdmResource resource) : base(resource)
         {
         }
 
+        /// <summary>
+        /// List of associated BindingDescriptions 
+        /// </summary>
         public List<BindingDescription> BindingDescriptions { get; set; }
     }
 }

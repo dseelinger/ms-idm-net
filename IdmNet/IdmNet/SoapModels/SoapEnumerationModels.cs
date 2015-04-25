@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 using IdmNet.Models;
 
@@ -205,6 +206,9 @@ namespace IdmNet.SoapModels
     [XmlRoot(ElementName = "PullResponse", IsNullable = false, Namespace = SoapConstants.EnumerationNamespace)]
     public class PagedSearchResults
     {
+        /// <summary>
+        /// Parameterless CTOR
+        /// </summary>
         public PagedSearchResults()
         {
             Results = new List<IdmResource>();
@@ -225,6 +229,9 @@ namespace IdmNet.SoapModels
         /// </summary>
         public object Items { get; set; }
 
+        /// <summary>
+        /// List of actual results (not XML)
+        /// </summary>
         [XmlIgnore]
         public List<IdmResource> Results;
     }
@@ -238,6 +245,9 @@ namespace IdmNet.SoapModels
     [XmlRoot(ElementName = "Enumerate", IsNullable = false, Namespace = SoapConstants.EnumerationNamespace)]
     public class SearchCriteria
     {
+        private List<string> _selection;
+        private List<string> _defaultSelection;
+
         /// <summary>
         /// Default to selecting ObjectID and ObjectType and sorting by DisplayName
         /// </summary>
@@ -251,7 +261,7 @@ namespace IdmNet.SoapModels
         /// </summary>
         public SearchCriteria()
         {
-            Selection = new List<string>  { "ObjectID", "ObjectType" };
+            Selection = _defaultSelection = new List<string>  { "ObjectID", "ObjectType" };
             Sorting = new Sorting();
         }
 
@@ -265,7 +275,22 @@ namespace IdmNet.SoapModels
         /// </summary>
         [XmlElement(ElementName = "Selection", Namespace = SoapConstants.RmNamespace)]
         //public string[] Selection { get; set; }
-        public List<string> Selection { get; set; }
+        public List<string> Selection
+        {
+            get { return _selection; }
+            set
+            {
+                if (value == null  || value.Count == 0)
+                {
+                    _selection = _defaultSelection;
+                }
+                else
+                {
+                    _selection = _defaultSelection;
+                    _selection = _selection.Union(value).ToList();
+                }
+            }
+        }
 
         /// <summary>
         /// How to sort the results

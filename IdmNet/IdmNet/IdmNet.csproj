@@ -64,7 +64,6 @@
     <Compile Include="Models\IdmResource.cs" />
     <Compile Include="SoapModels\IdmSoapBinding.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SearchCriteria.cs" />
     <Compile Include="SoapConstants.cs" />
     <Compile Include="SoapModels\SoapEnumerationModels.cs" />
     <Compile Include="SoapModels\SoapFactoryModels.cs" />

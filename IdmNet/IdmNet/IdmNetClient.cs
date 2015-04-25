@@ -53,7 +53,7 @@ namespace IdmNet
         /// <returns></returns>
         public async Task<IEnumerable<IdmResource>> SearchAsync(SearchCriteria criteria, int pageSize = 50)
         {
-            if (criteria.Selection.Count == 1 && criteria.Selection[0] == "*")
+            if (criteria.Selection.Contains("*"))
             {
                 await SetupGetStar(criteria);
             }
@@ -140,8 +140,7 @@ namespace IdmNet
         /// </summary>
         /// <param name="pageSize">Maximum number of records to return</param>
         /// <param name="pagingContext">Information regarding which records to pull</param>
-        /// <param name="results"></param>
-        /// <returns></returns>
+        /// <returns>Paged search results</returns>
         /// <exception cref="SoapFaultException"></exception>
         public async Task<PagedSearchResults> PullAsync(int pageSize, PagingContext pagingContext)
         {
@@ -441,21 +440,23 @@ namespace IdmNet
             return response.EnumerationDetail.Count;
         }
 
+        /// <summary>
+        /// Get the Schema associated with a particular object type
+        /// </summary>
+        /// <param name="objectType">Name of the object for which the schema should be retrieved</param>
+        /// <returns>A fully populated ObjectTypeDescription object, including bindings for attributes</returns>
         public async Task<ObjectTypeDescription> GetSchemaAsync(string objectType)
         {
-            var it = IdmNetClientFactory.BuildClient();
-            var result = await GetObjectTypeDescription(objectType, it);
+            var result = await GetObjectTypeDescription(objectType);
             result.BindingDescriptions = new List<BindingDescription>();
 
-
-            await AddBindingDescriptions(result, it);
-
+            await AddBindingDescriptions(result);
 
             return result;
 
         }
 
-        private static async Task AddBindingDescriptions(ObjectTypeDescription result, IdmNetClient it)
+        private async Task AddBindingDescriptions(ObjectTypeDescription result)
         {
             var bindingCriteria = new SearchCriteria(String.Format("/BindingDescription[BoundObjectType='{0}']", result.ObjectID))
             {
@@ -477,13 +478,13 @@ namespace IdmNet
                     }
             };
 
-            IEnumerable<IdmResource> bindingResources = await it.SearchAsync(bindingCriteria);
+            IEnumerable<IdmResource> bindingResources = await SearchAsync(bindingCriteria);
             foreach (var bindingResource in bindingResources)
             {
                 var binding = new BindingDescription(bindingResource);
 
 
-                var attrTypeResource = await it.GetAsync(binding.BoundAttributeType.ObjectID,
+                var attrTypeResource = await GetAsync(binding.BoundAttributeType.ObjectID,
                     new[]
                     {
                         "DisplayName",
@@ -509,7 +510,7 @@ namespace IdmNet
             }
         }
 
-        private static async Task<ObjectTypeDescription> GetObjectTypeDescription(string objectType, IdmNetClient it)
+        private async Task<ObjectTypeDescription> GetObjectTypeDescription(string objectType)
         {
             var criteria = new SearchCriteria(String.Format("/ObjectTypeDescription[Name='{0}']", objectType))
             {
@@ -529,7 +530,7 @@ namespace IdmNet
             };
 
 
-            IEnumerable<IdmResource> resources = await it.SearchAsync(criteria);
+            IEnumerable<IdmResource> resources = await SearchAsync(criteria);
             var result = new ObjectTypeDescription(resources.FirstOrDefault());
             return result;
         }
