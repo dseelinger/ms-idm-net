@@ -73,14 +73,6 @@ namespace IdmNet.Tests
                     it.SearchAsync(new SearchCriteria("/BindingDescription")
                     {
                         Selection = new List<string> {"*"},
-                        //Sorting = new Sorting
-                        //{
-                        //    SortingAttributes = new[]
-                        //    {
-                        //        new SortingAttribute {Ascending = true, AttributeName = "BoundObjectType"},
-                        //        new SortingAttribute {Ascending = false, AttributeName = "BoundAttributeType"}
-                        //    }
-                        //}
                     })).ToArray();
 
             // Assert
@@ -88,6 +80,64 @@ namespace IdmNet.Tests
             Assert.AreEqual(10, results[0].Attributes.Count);
             Assert.AreEqual("Account Name", results[0].DisplayName);
             Assert.AreEqual("XOML", results[results.Length - 1].DisplayName);
+        }
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task T002_It_can_Search_and_Sort_the_results_by_multiple_attributes_in_Ascending_or_Descending_order()
+        {
+            // Arrange
+            var it = IdmNetClientFactory.BuildClient();
+
+            // Act
+            var results =
+                (await
+                    it.SearchAsync(new SearchCriteria("/BindingDescription")
+                    {
+                        Selection = new List<string> { "*" },
+                        Sorting = new Sorting
+                        {
+                            SortingAttributes = new[]
+                            {
+                                new SortingAttribute {Ascending = true, AttributeName = "BoundObjectType"},
+                                new SortingAttribute {Ascending = false, AttributeName = "BoundAttributeType"}
+                            }
+                        }
+                    })).ToArray();
+
+            // Assert
+            var bindings = results.Select(idmResource => new BindingDescription(idmResource)).ToList();
+
+            // Grouped/sorted by object type, ascending (incidentally it sorts reference attributes by their 
+            // associated DisplayName, except for attribute name, which appears to put ObjectID as the first attribute)
+            Assert.AreEqual("e1a42ced-6968-457c-b5c8-3f9a573295a6", bindings[0].BoundObjectType.ObjectID);
+            Assert.AreEqual("e1a42ced-6968-457c-b5c8-3f9a573295a6", bindings[1].BoundObjectType.ObjectID);
+            // ...
+            Assert.AreEqual("e1a42ced-6968-457c-b5c8-3f9a573295a6", bindings[18].BoundObjectType.ObjectID);
+            Assert.AreEqual("e1a42ced-6968-457c-b5c8-3f9a573295a6", bindings[19].BoundObjectType.ObjectID);
+
+            Assert.AreEqual("c51c9ef3-2de0-4d4e-b30b-c1a18e79c56e", bindings[20].BoundObjectType.ObjectID);
+
+            var objType1 = await it.GetAsync(bindings[0].BoundObjectType.ObjectID, new[] { "DisplayName" });
+            Assert.AreEqual("Activity Information Configuration", objType1.DisplayName);
+
+            var objType2 = await it.GetAsync(bindings[20].BoundObjectType.ObjectID, new[] { "DisplayName" });
+            Assert.AreEqual("Approval", objType2.DisplayName);
+
+
+            // Sub-sort is by attribute type - descending (note that ObjectID appears "before" ActivityName"
+            var objType3 = await it.GetAsync(bindings[0].BoundAttributeType.ObjectID, new[] { "Name" });
+            Assert.AreEqual("TypeName", objType3.GetAttrValue("Name"));
+
+            var objType4 = await it.GetAsync(bindings[1].BoundAttributeType.ObjectID, new[] { "Name" });
+            Assert.AreEqual("ResourceTime", objType4.GetAttrValue("Name"));
+
+            var objType6 = await it.GetAsync(bindings[18].BoundAttributeType.ObjectID, new[] { "Name" });
+            Assert.AreEqual("ActivityName", objType6.GetAttrValue("Name"));
+
+            var objType5 = await it.GetAsync(bindings[19].BoundAttributeType.ObjectID, new[] { "Name" });
+            Assert.AreEqual("ObjectID", objType5.GetAttrValue("Name"));
+
         }
 
         //[TestMethod]
@@ -807,6 +857,7 @@ namespace IdmNet.Tests
             Assert.AreEqual("ActivityInformationConfiguration", actual[0].GetAttrValue("Name"));
             Assert.AreEqual("Microsoft.ResourceManagement.WebServices", actual[0].GetAttrValue("UsageKeyword"));
         }
+
 
        // TODO 001: Implement Approvals
         // TODO -999: Implement the STS endpoint
