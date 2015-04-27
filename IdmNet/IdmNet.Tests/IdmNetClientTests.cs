@@ -149,16 +149,49 @@ namespace IdmNet.Tests
             var it = IdmNetClientFactory.BuildClient();
 
             // Act
-            IdmResource result = await it.GetAsync("c51c9ef3-2de0-4d4e-b30b-c1a18e79c56e", new List<string> { "DisplayName" });
+            IdmResource result = await it.GetAsync("c51c9ef3-2de0-4d4e-b30b-c1a18e79c56e", null);
 
             // Assert
+            Assert.AreEqual("c51c9ef3-2de0-4d4e-b30b-c1a18e79c56e", result.ObjectID);
+            Assert.AreEqual("ObjectTypeDescription", result.ObjectType);
+        }
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task T006_It_can_get_any_or_all_attributes_for_a_resource_by_its_ObjectID()
+        {
+            // Arrange
+            var it = IdmNetClientFactory.BuildClient();
+
+            // Act
+            IdmResource result = await it.GetAsync("c51c9ef3-2de0-4d4e-b30b-c1a18e79c56e", new List<string> { "*" });
+
+            // Assert
+            Assert.AreEqual(6, result.Attributes.Count);
             Assert.AreEqual("c51c9ef3-2de0-4d4e-b30b-c1a18e79c56e", result.ObjectID);
             Assert.AreEqual("ObjectTypeDescription", result.ObjectType);
             Assert.AreEqual("Approval", result.DisplayName);
         }
 
 
-        // GetById with select
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task T007_It_can_return_the_number_of_matching_records_for_a_given_search()
+        {
+            // Arrange
+            var it = IdmNetClientFactory.BuildClient();
+
+            // Act
+            int result = await it.GetCountAsync("/ConstantSpecifier");
+
+            // Assert
+            Assert.AreEqual(97, result);
+        }
+
+
+
+
+
 
 
 
@@ -567,20 +600,6 @@ namespace IdmNet.Tests
                 // Afterwards
                 it.DeleteAsync(testResource.ObjectID);
             }
-        }
-
-        [TestMethod]
-        [TestCategory("Integration")]
-        public async Task It_can_return_the_number_of_matching_records_for_a_given_search()
-        {
-            // Arrange
-            var it = IdmNetClientFactory.BuildClient();
-
-            // Act
-            int result = await it.GetCountAsync("/ConstantSpecifier");
-
-
-            Assert.AreEqual(97, result);
         }
 
         [TestMethod]

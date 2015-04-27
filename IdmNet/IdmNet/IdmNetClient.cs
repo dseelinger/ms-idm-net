@@ -133,8 +133,13 @@ namespace IdmNet
             if (String.IsNullOrWhiteSpace(objectID))
                 throw new ArgumentNullException("objectID");
 
-            var getRequestMsg = PrepareGetRequestMsg(objectID, selection);
+            if (selection != null && selection.Contains("*"))
+            {
+                IdmResource baseResource = await GetAsync(objectID, new List<string> {"ObjectType"});
+                selection = await GetAttributeNamesForObjectType(baseResource.ObjectType);
+            }
 
+            var getRequestMsg = PrepareGetRequestMsg(objectID, selection);
             Message getResponseMsg = await _resourceClient.GetAsync(getRequestMsg);
 
             if (getResponseMsg.IsFault)
@@ -415,12 +420,15 @@ namespace IdmNet
             PagedSearchResults objectTypeResults = await PullAsync(1, objectTypePagingContext);
             string objectType = objectTypeResults.Results[0].ObjectType;
 
+            criteria.Selection = await GetAttributeNamesForObjectType(objectType);
+        }
+
+        private async Task<List<string>> GetAttributeNamesForObjectType(string objectType)
+        {
             var schema = await GetSchemaAsync(objectType);
-            criteria.Selection.Clear();
-            foreach (var bindingDescription in schema.BindingDescriptions)
-            {
-                criteria.Selection.Add(bindingDescription.BoundAttributeType.Name);
-            }
+            var selectList =
+                schema.BindingDescriptions.Select(bindingDescription => bindingDescription.BoundAttributeType.Name).ToList();
+            return selectList;
         }
 
         private async Task<Message> EnumerateSearch(SearchCriteria criteria)
