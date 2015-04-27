@@ -246,7 +246,6 @@ namespace IdmNet.SoapModels
     public class SearchCriteria
     {
         private List<string> _selection;
-        private List<string> _defaultSelection;
 
         /// <summary>
         /// Default to selecting ObjectID and ObjectType and sorting by DisplayName
@@ -261,7 +260,7 @@ namespace IdmNet.SoapModels
         /// </summary>
         public SearchCriteria()
         {
-            Selection = _defaultSelection = new List<string>  { "ObjectID", "ObjectType" };
+            Selection = IdmNetUtils.EnsureDefaultSelectionPresent(null);
             Sorting = new Sorting();
         }
 
@@ -280,15 +279,8 @@ namespace IdmNet.SoapModels
             get { return _selection; }
             set
             {
-                if (value == null  || value.Count == 0)
-                {
-                    _selection = _defaultSelection;
-                }
-                else
-                {
-                    _selection = _defaultSelection;
-                    _selection = _selection.Union(value).ToList();
-                }
+                var finalValue = IdmNetUtils.EnsureDefaultSelectionPresent(value);
+                _selection = finalValue;
             }
         }
 

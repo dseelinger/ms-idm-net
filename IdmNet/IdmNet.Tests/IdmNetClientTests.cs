@@ -19,7 +19,7 @@ namespace IdmNet.Tests
     {
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task T001_It_can_search_for_all_ObjectTypeDescription_resources_without_specifying_select_or_sort()
+        public async Task T001_It_can_search_for_resources_without_specifying_a_select_or_sort()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -38,7 +38,7 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task T002_It_can_search_and_return_specific_attributes()
+        public async Task T002_It_can_search_for_resources_and_return_specific_attributes()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -62,7 +62,7 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task T003_It_can_search_and_return_all_attributes_with_Select_STAR()
+        public async Task T003_It_can_search_for_resources_and_return_all_attributes_with_Select_STAR()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -84,7 +84,7 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task T002_It_can_Search_and_Sort_the_results_by_multiple_attributes_in_Ascending_or_Descending_order()
+        public async Task T004_It_can_Search_for_resources_and_Sort_the_results_by_multiple_attributes_in_Ascending_or_Descending_order()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -118,104 +118,52 @@ namespace IdmNet.Tests
 
             Assert.AreEqual("c51c9ef3-2de0-4d4e-b30b-c1a18e79c56e", bindings[20].BoundObjectType.ObjectID);
 
-            var objType1 = await it.GetAsync(bindings[0].BoundObjectType.ObjectID, new[] { "DisplayName" });
+            var attributes = new List<string> { "DisplayName" };
+            var objType1 = await it.GetAsync(bindings[0].BoundObjectType.ObjectID, attributes);
             Assert.AreEqual("Activity Information Configuration", objType1.DisplayName);
 
-            var objType2 = await it.GetAsync(bindings[20].BoundObjectType.ObjectID, new[] { "DisplayName" });
+            var objType2 = await it.GetAsync(bindings[20].BoundObjectType.ObjectID, attributes);
             Assert.AreEqual("Approval", objType2.DisplayName);
 
 
             // Sub-sort is by attribute type - descending (note that ObjectID appears "before" ActivityName"
-            var objType3 = await it.GetAsync(bindings[0].BoundAttributeType.ObjectID, new[] { "Name" });
+            var attributes2 = new List<string> { "Name" };
+            var objType3 = await it.GetAsync(bindings[0].BoundAttributeType.ObjectID, attributes2);
             Assert.AreEqual("TypeName", objType3.GetAttrValue("Name"));
 
-            var objType4 = await it.GetAsync(bindings[1].BoundAttributeType.ObjectID, new[] { "Name" });
+            var objType4 = await it.GetAsync(bindings[1].BoundAttributeType.ObjectID, attributes2);
             Assert.AreEqual("ResourceTime", objType4.GetAttrValue("Name"));
 
-            var objType6 = await it.GetAsync(bindings[18].BoundAttributeType.ObjectID, new[] { "Name" });
+            var objType6 = await it.GetAsync(bindings[18].BoundAttributeType.ObjectID, attributes2);
             Assert.AreEqual("ActivityName", objType6.GetAttrValue("Name"));
 
-            var objType5 = await it.GetAsync(bindings[19].BoundAttributeType.ObjectID, new[] { "Name" });
+            var objType5 = await it.GetAsync(bindings[19].BoundAttributeType.ObjectID, attributes2);
             Assert.AreEqual("ObjectID", objType5.GetAttrValue("Name"));
-
         }
-
-        //[TestMethod]
-        //[TestCategory("Integration")]
-        //public async Task T002_It_can_Search_and_Sort_the_results_by_multiple_attributes_in_Ascending_or_Descending_order()
-        //{
-        //    // Arrange
-        //    var it = IdmNetClientFactory.BuildClient();
-
-        //    // Act
-        //    var results =
-        //        (await
-        //            it.SearchAsync(new SearchCriteria("/ObjectTypeDescription")
-        //            {
-        //                Selection = new List<string> { "DisplayName", "Name" }
-        //            })).ToArray();
-
-        //    // Assert
-        //    Assert.IsTrue(results.Length >= 40);
-        //    Assert.AreEqual(4, results[0].Attributes.Count);
-        //    Assert.AreEqual("Activity Information Configuration", results[0].DisplayName);
-        //    Assert.AreEqual("Workflow Instance", results[results.Length - 1].DisplayName);
-        //    Assert.AreEqual("ActivityInformationConfiguration", results[0].GetAttrValue("Name"));
-        //    Assert.AreEqual("Approval", results[1].GetAttrValue("Name"));
-        //}
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_can_get_resources_with_multi_valued_attributes()
+        public async Task T005_It_can_get_a_resource_by_its_ObjectID()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
-            var criteria = new SearchCriteria("/BindingDescription");
-            criteria.Selection.Add("UsageKeyword");
 
             // Act
-            IEnumerable<IdmResource> result = await it.SearchAsync(criteria);
+            IdmResource result = await it.GetAsync("c51c9ef3-2de0-4d4e-b30b-c1a18e79c56e", new List<string> { "DisplayName" });
 
             // Assert
-            var resultsAry = result.ToArray();
-            Assert.IsTrue(resultsAry.Length > 42);
-            Assert.IsTrue(resultsAry[0].GetAttrValues("UsageKeyword").Count >= 1);
+            Assert.AreEqual("c51c9ef3-2de0-4d4e-b30b-c1a18e79c56e", result.ObjectID);
+            Assert.AreEqual("ObjectTypeDescription", result.ObjectType);
+            Assert.AreEqual("Approval", result.DisplayName);
         }
 
-        [TestMethod]
-        [TestCategory("Integration")]
-        public async Task It_can_perform_multiple_searches()
-        {
-            // Arrange 1
-            var it = IdmNetClientFactory.BuildClient();
-            var criteria = new SearchCriteria("/BindingDescription");
-            criteria.Selection.Add("UsageKeyword");
 
-            // Act 1
-            IEnumerable<IdmResource> result = await it.SearchAsync(criteria);
-
-            // Assert 1
-            var resultsAry = result.ToArray();
-            Assert.IsTrue(resultsAry.Length > 42);
-            Assert.IsTrue(resultsAry[0].GetAttrValues("UsageKeyword").Count >= 1);
+        // GetById with select
 
 
 
 
-            // Arrange 2
-            var criteria2 = new SearchCriteria("/ObjectTypeDescription");
-            criteria2.Selection.Add("DisplayName");
 
-            // Act 2
-            IEnumerable<IdmResource> result2 = await it.SearchAsync(criteria2);
-
-            // Assert 2
-            var resultsAry2 = result2.ToArray();
-            Assert.IsTrue(resultsAry2.Length >= 42);
-            Assert.IsTrue(resultsAry2[0].GetAttrValues("DisplayName").Count == 1);
-            Assert.AreEqual("Activity Information Configuration", resultsAry2[0].DisplayName);
-            Assert.AreEqual("Workflow Instance", resultsAry2[resultsAry2.Length - 1].DisplayName);
-        }
 
 
         [TestMethod]
@@ -292,7 +240,7 @@ namespace IdmNet.Tests
             // assert
             //IEnumerable<IdmResource> searchResult =
             //    await it.SearchAsync(new SearchCriteria { XPath = "/Person[ObjectID='" + createResult.ObjectID + "']" });
-            var result = await it.GetAsync(createResult.ObjectID, new[] {"DisplayName"});
+            var result = await it.GetAsync(createResult.ObjectID, new List<string> { "DisplayName" });
             Assert.AreEqual(newUser.DisplayName, result.DisplayName);
 
             // afterwards
@@ -342,7 +290,7 @@ namespace IdmNet.Tests
             Assert.IsFalse(result.IsFault);
             try
             {
-                await it.GetAsync(toDelete.ObjectID, new[] {"DisplayName"});
+                await it.GetAsync(toDelete.ObjectID, new List<string> { "DisplayName" });
                 Assert.Fail("Should not make it here");
             }
             catch (SoapFaultException)
@@ -620,29 +568,6 @@ namespace IdmNet.Tests
                 it.DeleteAsync(testResource.ObjectID);
             }
         }
-
-        [TestMethod]
-        [TestCategory("Integration")]
-        public async Task It_can_get_a_resource_by_its_ID()
-        {
-            // Arrange
-            var it = IdmNetClientFactory.BuildClient();
-            var newUser = new IdmResource {ObjectType = "Person", DisplayName = "Test User"};
-            IdmResource createResult = await it.PostAsync(newUser);
-            var attributes = new[] {"DisplayName", "ObjectID"};
-
-            // Act
-            IdmResource result = await it.GetAsync(createResult.ObjectID, attributes);
-
-            // assert
-            Assert.AreEqual(createResult.ObjectID, result.ObjectID);
-            Assert.AreEqual("Person", result.ObjectType);
-            Assert.AreEqual("Test User", result.DisplayName);
-
-            // afterwards
-            await it.DeleteAsync(createResult.ObjectID);
-        }
-
 
         [TestMethod]
         [TestCategory("Integration")]

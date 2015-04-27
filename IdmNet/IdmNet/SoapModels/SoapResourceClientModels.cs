@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace IdmNet.SoapModels
 {
@@ -96,7 +97,7 @@ namespace IdmNet.SoapModels
         /// Part of a soap model
         /// </summary>
         [XmlElement(ElementName = "AttributeType")]
-        public string[] AttributeType { get; set; }
+        public List<string> AttributeType { get; set; }
     }
 
     /// <summary>

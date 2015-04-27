@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel.Channels;
 using System.Threading.Tasks;
 using System.Xml;
 using IdmNet.Models;
 using IdmNet.SoapModels;
+
 // ReSharper disable InconsistentNaming
 
 namespace IdmNet
@@ -73,31 +73,6 @@ namespace IdmNet
             return results;
         }
 
-        private async Task SetupGetStar(SearchCriteria criteria)
-        {
-            criteria.Selection = new List<string> {"ObjectType"};
-            PullInfo objectTypePullInfo = await PreparePagedSearchAsync(criteria, 1);
-            PagingContext objectTypePagingContext = objectTypePullInfo.PagingContext;
-            PagedSearchResults objectTypeResults = await PullAsync(1, objectTypePagingContext);
-            string objectType = objectTypeResults.Results[0].ObjectType;
-
-            var schema = await GetSchemaAsync(objectType);
-            criteria.Selection.Clear();
-            foreach (var bindingDescription in schema.BindingDescriptions)
-            {
-                criteria.Selection.Add(bindingDescription.BoundAttributeType.Name);
-            }
-        }
-
-        private static int CompareResult(IdmResource res1, IdmResource res2, string attrName, int negateIfNeeded)
-        {
-            var val1 = res1[attrName].Value ?? "";
-            var val2 = res2[attrName].Value ?? "";
-            var compareResult = String.Compare(val1.ToLower(), val2.ToLower(),
-                StringComparison.Ordinal)*negateIfNeeded;
-            return compareResult;
-        }
-
         /// <summary>
         /// Set up a Paged search
         /// </summary>
@@ -115,24 +90,6 @@ namespace IdmNet
                     enumerateResponseMessage.GetBody<EnumerateResponse>(new SoapXmlSerializer(typeof(EnumerateResponse))),
             };
             return pullInfo;
-        }
-
-        private async Task<Message> EnumerateSearch(SearchCriteria criteria)
-        {
-            var enumerateMessage = Message.CreateMessage(
-                MessageVersion.Default,
-                SoapConstants.EnumerateAction,
-                criteria,
-                new SoapXmlSerializer(typeof (SearchCriteria)));
-
-            enumerateMessage.Headers.Add(MessageHeader.CreateHeader("IncludeCount", "http://schemas.microsoft.com/2006/11/ResourceManagement", null, false));
-            var enumerateResponseMessage = await _searchClient.EnumerateAsync(enumerateMessage);
-
-
-            // Check for enumerate fault
-            if (enumerateResponseMessage.IsFault)
-                throw new SoapFaultException("Enumerate Fault: " + enumerateResponseMessage);
-            return enumerateResponseMessage;
         }
 
         /// <summary>
@@ -162,40 +119,45 @@ namespace IdmNet
             if (pullResponseMessage.IsFault)
                 throw new SoapFaultException("Pull Fault: " + pullResponseMessage);
 
-            var pagedSearchResults = pullResponseMessage.GetBody<PagedSearchResults>(new SoapXmlSerializer(typeof(PagedSearchResults)));
-            if (pagedSearchResults.Items != null)
-            {
-                var xmlNodes = (XmlNode[])pagedSearchResults.Items;
-                var resources = xmlNodes.Select(BuildResource).ToArray();
-                pagedSearchResults.Results.AddRange(resources);
-                pagingContext.CurrentIndex += xmlNodes.Length;
-            }
-            return pagedSearchResults;
+            return ConvertPullResponseToPagedSearchResults(pagingContext, pullResponseMessage);
         }
 
-        private static IdmResource BuildResource(XmlNode xmlNode)
+        /// <summary>
+        /// Get an object by its ID from Identity Manager (async await)
+        /// </summary>
+        /// <param name="objectID">Resource ID for the object to retrieve</param>
+        /// <param name="selection"></param>
+        /// <returns>Resource matching ObjectID</returns>
+        public async Task<IdmResource> GetAsync(string objectID, List<string> selection)
         {
-            var resource = new IdmResource();
+            if (String.IsNullOrWhiteSpace(objectID))
+                throw new ArgumentNullException("objectID");
 
-            foreach (XmlNode attribute in xmlNode.ChildNodes)
-                BuildAttribute(attribute, resource);
+            var getRequestMsg = PrepareGetRequestMsg(objectID, selection);
+
+            Message getResponseMsg = await _resourceClient.GetAsync(getRequestMsg);
+
+            if (getResponseMsg.IsFault)
+                throw new SoapFaultException("Get Fault: " + getResponseMsg);
+
+            var resource = ConvertGetResponseToIdmResource(getResponseMsg);
 
             return resource;
         }
 
-        private static void BuildAttribute(XmlNode attribute, IdmResource resource)
+        /// <summary>
+        /// Get the number of Identity Manager resources that match the given XPath Filter.
+        /// </summary>
+        /// <param name="filter">Search filter</param>
+        /// <returns>Number of matching resources</returns>
+        public async Task<int> GetCountAsync(string filter)
         {
-            string name = attribute.LocalName;
-            string val = attribute.InnerText;
+            var criteria = new SearchCriteria { Filter = new Filter { Query = filter } };
+            Message enumerateResponseMessage = await EnumerateSearch(criteria);
+            var response =
+                enumerateResponseMessage.GetBody<EnumerateResponse>(new SoapXmlSerializer(typeof(EnumerateResponse)));
 
-            if (val.StartsWith("urn:uuid:"))
-                val = val.Substring(9);
-
-            var attr = resource.GetAttr(name);
-            if (attr != null)
-                attr.Values.Add(val);
-            else
-                resource.Attributes.Add(new IdmAttribute {Name = name, Value = val});
+            return response.EnumerationDetail.Count;
         }
 
         /// <summary>
@@ -228,34 +190,6 @@ namespace IdmNet
                 resource.ObjectID = resource.ObjectID.Substring(9);
 
             return resource;
-        }
-
-        private static Message BuildCreateRequestMessage(IdmResource resource)
-        {
-            var factoryRequest = BuildFactoryRequest(resource);
-
-            var createRequestMessage = CreateSoapMessage(factoryRequest);
-
-            return createRequestMessage;
-        }
-
-        private static Message CreateSoapMessage(AddRequest factoryRequest)
-        {
-            var createRequestMessage = Message.CreateMessage(MessageVersion.Default,
-                SoapConstants.CreateAction,
-                factoryRequest,
-                new SoapXmlSerializer(typeof (AddRequest))
-                );
-            return createRequestMessage;
-        }
-
-        private static AddRequest BuildFactoryRequest(IdmResource resource)
-        {
-            var values = from attribute in resource.Attributes
-                from val in attribute.Values
-                select new AttributeTypeAndValue(attribute.Name, val);
-            var factoryRequest = new AddRequest {AttributeTypeAndValue = values.ToArray()};
-            return factoryRequest;
         }
 
         /// <summary>
@@ -311,38 +245,6 @@ namespace IdmNet
             return await PutAttribute(objectID, attrName, attrValue, ModeType.Delete);
         }
 
-        private async Task<Message> PutAttribute(string objectID, string attrName, string attrValue, ModeType modeType)
-        {
-            ModifyRequest modifyRequest = new ModifyRequest();
-            Change changeRemoveAttribute = new Change(modeType, attrName, attrValue);
-            modifyRequest.Change = new[] {changeRemoveAttribute};
-
-            return await PutAsync(objectID, modifyRequest);
-        }
-
-        private async Task<Message> PutAsync(string objectID, ModifyRequest modifyRequest)
-        {
-            // Create the Put request messsage
-            Message putRequestMsg = Message.CreateMessage(MessageVersion.Default,
-                SoapConstants.PutAction,
-                modifyRequest,
-                new SoapXmlSerializer(typeof (ModifyRequest))
-                );
-
-            // Add the ResourceReferenceProperty header for the Put request
-            putRequestMsg.Headers.Add(MessageHeader.CreateHeader("ResourceReferenceProperty", SoapConstants.RmNamespace,
-                objectID));
-            putRequestMsg.Headers.Add(MessageHeader.CreateHeader("IdentityManagementOperation", SoapConstants.DirectoryAccess,
-                null, true));
-
-            Message putResponseMsg = await _resourceClient.PutAsync(putRequestMsg);
-
-            if (putResponseMsg.IsFault)
-                throw new SoapFaultException("Put Fault: " + putResponseMsg);
-
-            return putResponseMsg;
-        }
-
         /// <summary>
         /// Replace/Set the value for a single-valued attribute in the Identity Manager service (async await)
         /// </summary>
@@ -375,72 +277,6 @@ namespace IdmNet
         }
 
         /// <summary>
-        /// Get an object by its ID from Identity Manager (async await)
-        /// </summary>
-        /// <param name="objectID">Resource ID for the object to retrieve</param>
-        /// <param name="attributes"></param>
-        /// <returns>Resource matching ObjectID</returns>
-        public async Task<IdmResource> GetAsync(string objectID, string[] attributes)
-        {
-            if (String.IsNullOrWhiteSpace(objectID))
-                throw new ArgumentNullException("objectID");
-
-            var attrList = new List<string>(attributes);
-            if (!attrList.Contains("ObjectID"))
-                attrList.Add("ObjectID");
-            if (!attrList.Contains("ObjectType"))
-                attrList.Add("ObjectType");
-
-            attributes = attrList.ToArray();
-
-            var getRequest = new BaseObjectSearchRequest {AttributeType = attributes};
-
-            // Create the Get request message
-            Message getRequestMsg = Message.CreateMessage(MessageVersion.Default,
-                SoapConstants.GetAction,
-                getRequest,
-                new SoapXmlSerializer(typeof(BaseObjectSearchRequest))
-            );
-
-            // Add the required headers for the Get request
-            getRequestMsg.Headers.Add(MessageHeader.CreateHeader("ResourceReferenceProperty", SoapConstants.RmNamespace,
-                objectID));
-            getRequestMsg.Headers.Add(MessageHeader.CreateHeader("IdentityManagementOperation",
-                SoapConstants.DirectoryAccess, null, true));
-
-            Message getResponseMsg = await _resourceClient.GetAsync(getRequestMsg);
-
-            if (getResponseMsg.IsFault)
-                throw new SoapFaultException("Get Fault: " + getResponseMsg);
-
-            BaseObjectSearchResponse getResponseObj =
-                getResponseMsg.GetBody<BaseObjectSearchResponse>(new SoapXmlSerializer(typeof (BaseObjectSearchResponse)));
-
-            var resource = new IdmResource();
-
-            foreach (XmlNode partialAttribute in getResponseObj.PartialAttribute)
-                foreach (XmlNode attribute in partialAttribute.ChildNodes)
-                    BuildAttribute(attribute, resource);
-
-            return resource;
-        }
-
-        /// <summary>
-        /// Get the number of Identity Manager resources that match the given XPath Filter.
-        /// </summary>
-        /// <param name="filter">Search filter</param>
-        /// <returns>Number of matching resources</returns>
-        public async Task<int> GetCountAsync(string filter)
-        {
-            var criteria = new SearchCriteria {Filter = new Filter {Query = filter}};
-            Message enumerateResponseMessage = await EnumerateSearch(criteria);
-            var response =
-                enumerateResponseMessage.GetBody<EnumerateResponse>(new SoapXmlSerializer(typeof (EnumerateResponse)));
-
-            return response.EnumerationDetail.Count;
-        }
-
-        /// <summary>
         /// Get the Schema associated with a particular object type
         /// </summary>
         /// <param name="objectType">Name of the object for which the schema should be retrieved</param>
@@ -455,6 +291,10 @@ namespace IdmNet
             return result;
 
         }
+
+
+
+
 
         private async Task AddBindingDescriptions(ObjectTypeDescription result)
         {
@@ -485,7 +325,7 @@ namespace IdmNet
 
 
                 var attrTypeResource = await GetAsync(binding.BoundAttributeType.ObjectID,
-                    new[]
+                    new List<string>
                     {
                         "DisplayName",
                         "CreatedTime",
@@ -533,6 +373,172 @@ namespace IdmNet
             IEnumerable<IdmResource> resources = await SearchAsync(criteria);
             var result = new ObjectTypeDescription(resources.FirstOrDefault());
             return result;
+        }
+
+        private static IdmResource ConvertGetResponseToIdmResource(Message getResponseMsg)
+        {
+            BaseObjectSearchResponse getResponseObj =
+                getResponseMsg.GetBody<BaseObjectSearchResponse>(new SoapXmlSerializer(typeof(BaseObjectSearchResponse)));
+
+            var resource = new IdmResource();
+
+            foreach (XmlNode partialAttribute in getResponseObj.PartialAttribute)
+                foreach (XmlNode attribute in partialAttribute.ChildNodes)
+                    BuildAttribute(attribute, resource);
+            return resource;
+        }
+
+        private static Message PrepareGetRequestMsg(string objectID, List<string> selection)
+        {
+            var getRequest = new BaseObjectSearchRequest { AttributeType = IdmNetUtils.EnsureDefaultSelectionPresent(selection) };
+
+            // Create the Get request message
+            Message getRequestMsg = Message.CreateMessage(MessageVersion.Default,
+                SoapConstants.GetAction,
+                getRequest,
+                new SoapXmlSerializer(typeof(BaseObjectSearchRequest))
+                );
+
+            // Add the required headers for the Get request
+            getRequestMsg.Headers.Add(MessageHeader.CreateHeader("ResourceReferenceProperty", SoapConstants.RmNamespace,
+                objectID));
+            getRequestMsg.Headers.Add(MessageHeader.CreateHeader("IdentityManagementOperation",
+                SoapConstants.DirectoryAccess, null, true));
+            return getRequestMsg;
+        }
+
+        private async Task SetupGetStar(SearchCriteria criteria)
+        {
+            criteria.Selection = new List<string> { "ObjectType" };
+            PullInfo objectTypePullInfo = await PreparePagedSearchAsync(criteria, 1);
+            PagingContext objectTypePagingContext = objectTypePullInfo.PagingContext;
+            PagedSearchResults objectTypeResults = await PullAsync(1, objectTypePagingContext);
+            string objectType = objectTypeResults.Results[0].ObjectType;
+
+            var schema = await GetSchemaAsync(objectType);
+            criteria.Selection.Clear();
+            foreach (var bindingDescription in schema.BindingDescriptions)
+            {
+                criteria.Selection.Add(bindingDescription.BoundAttributeType.Name);
+            }
+        }
+
+        private async Task<Message> EnumerateSearch(SearchCriteria criteria)
+        {
+            var enumerateMessage = Message.CreateMessage(
+                MessageVersion.Default,
+                SoapConstants.EnumerateAction,
+                criteria,
+                new SoapXmlSerializer(typeof(SearchCriteria)));
+
+            enumerateMessage.Headers.Add(MessageHeader.CreateHeader("IncludeCount", "http://schemas.microsoft.com/2006/11/ResourceManagement", null, false));
+            var enumerateResponseMessage = await _searchClient.EnumerateAsync(enumerateMessage);
+
+
+            // Check for enumerate fault
+            if (enumerateResponseMessage.IsFault)
+                throw new SoapFaultException("Enumerate Fault: " + enumerateResponseMessage);
+            return enumerateResponseMessage;
+        }
+
+        private static PagedSearchResults ConvertPullResponseToPagedSearchResults(PagingContext pagingContext,
+            Message pullResponseMessage)
+        {
+            var pagedSearchResults =
+                pullResponseMessage.GetBody<PagedSearchResults>(new SoapXmlSerializer(typeof(PagedSearchResults)));
+            if (pagedSearchResults.Items != null)
+            {
+                var xmlNodes = (XmlNode[])pagedSearchResults.Items;
+                var resources = xmlNodes.Select(BuildResource).ToArray();
+                pagedSearchResults.Results.AddRange(resources);
+                pagingContext.CurrentIndex += xmlNodes.Length;
+            }
+            return pagedSearchResults;
+        }
+
+        private static IdmResource BuildResource(XmlNode xmlNode)
+        {
+            var resource = new IdmResource();
+
+            foreach (XmlNode attribute in xmlNode.ChildNodes)
+                BuildAttribute(attribute, resource);
+
+            return resource;
+        }
+
+        private static void BuildAttribute(XmlNode attribute, IdmResource resource)
+        {
+            string name = attribute.LocalName;
+            string val = attribute.InnerText;
+
+            if (val.StartsWith("urn:uuid:"))
+                val = val.Substring(9);
+
+            var attr = resource.GetAttr(name);
+            if (attr != null)
+                attr.Values.Add(val);
+            else
+                resource.Attributes.Add(new IdmAttribute { Name = name, Value = val });
+        }
+
+        private static Message BuildCreateRequestMessage(IdmResource resource)
+        {
+            var factoryRequest = BuildFactoryRequest(resource);
+
+            var createRequestMessage = CreateSoapMessage(factoryRequest);
+
+            return createRequestMessage;
+        }
+
+        private static Message CreateSoapMessage(AddRequest factoryRequest)
+        {
+            var createRequestMessage = Message.CreateMessage(MessageVersion.Default,
+                SoapConstants.CreateAction,
+                factoryRequest,
+                new SoapXmlSerializer(typeof(AddRequest))
+                );
+            return createRequestMessage;
+        }
+
+        private static AddRequest BuildFactoryRequest(IdmResource resource)
+        {
+            var values = from attribute in resource.Attributes
+                         from val in attribute.Values
+                         select new AttributeTypeAndValue(attribute.Name, val);
+            var factoryRequest = new AddRequest { AttributeTypeAndValue = values.ToArray() };
+            return factoryRequest;
+        }
+
+        private async Task<Message> PutAttribute(string objectID, string attrName, string attrValue, ModeType modeType)
+        {
+            ModifyRequest modifyRequest = new ModifyRequest();
+            Change changeRemoveAttribute = new Change(modeType, attrName, attrValue);
+            modifyRequest.Change = new[] { changeRemoveAttribute };
+
+            return await PutAsync(objectID, modifyRequest);
+        }
+
+        private async Task<Message> PutAsync(string objectID, ModifyRequest modifyRequest)
+        {
+            // Create the Put request messsage
+            Message putRequestMsg = Message.CreateMessage(MessageVersion.Default,
+                SoapConstants.PutAction,
+                modifyRequest,
+                new SoapXmlSerializer(typeof(ModifyRequest))
+                );
+
+            // Add the ResourceReferenceProperty header for the Put request
+            putRequestMsg.Headers.Add(MessageHeader.CreateHeader("ResourceReferenceProperty", SoapConstants.RmNamespace,
+                objectID));
+            putRequestMsg.Headers.Add(MessageHeader.CreateHeader("IdentityManagementOperation", SoapConstants.DirectoryAccess,
+                null, true));
+
+            Message putResponseMsg = await _resourceClient.PutAsync(putRequestMsg);
+
+            if (putResponseMsg.IsFault)
+                throw new SoapFaultException("Put Fault: " + putResponseMsg);
+
+            return putResponseMsg;
         }
     }
 }

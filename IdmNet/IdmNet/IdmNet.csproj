@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IdmNetClientFactory.cs" />
+    <Compile Include="IdmNetUtils.cs" />
     <Compile Include="Models\AttributeInfoResource.cs" />
     <Compile Include="Models\AttributeTypeDescription.cs" />
     <Compile Include="Models\BindingDescription.cs" />
