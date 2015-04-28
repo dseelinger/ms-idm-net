@@ -66,7 +66,7 @@ namespace IdmNet
             PagingContext pagingContext = pullInfo.PagingContext;
             do
             {
-                pagedResults = await PullAsync(pageSize, pagingContext);
+                pagedResults = await GetPagedResultsAsync(pageSize, pagingContext);
                 results.AddRange(pagedResults.Results);
             } while (pagedResults.EndOfSequence == null);
 
@@ -74,12 +74,26 @@ namespace IdmNet
         }
 
         /// <summary>
-        /// Set up a Paged search
+        /// Search the Identity Manager  (async await)
         /// </summary>
-        /// <param name="criteria">Search criteria</param>
-        /// <param name="pageSize">number of records to return</param>
+        /// <param name="criteria"></param>
+        /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<PullInfo> PreparePagedSearchAsync(SearchCriteria criteria, int pageSize)
+        public async Task<PagedSearchResults> GetPagedResultsAsync(SearchCriteria criteria, int pageSize = 50)
+        {
+            if (criteria.Selection.Contains("*"))
+            {
+                await SetupGetStar(criteria);
+            }
+
+            PullInfo pullInfo = await PreparePagedSearchAsync(criteria, pageSize);
+
+            // Pull all results
+            PagingContext pagingContext = pullInfo.PagingContext;
+            return await GetPagedResultsAsync(pageSize, pagingContext);
+        }
+
+        private async Task<PullInfo> PreparePagedSearchAsync(SearchCriteria criteria, int pageSize)
         {
             var enumerateResponseMessage = await EnumerateSearch(criteria);
 
@@ -99,22 +113,11 @@ namespace IdmNet
         /// <param name="pagingContext">Information regarding which records to pull</param>
         /// <returns>Paged search results</returns>
         /// <exception cref="SoapFaultException"></exception>
-        public async Task<PagedSearchResults> PullAsync(int pageSize, PagingContext pagingContext)
+        public async Task<PagedSearchResults> GetPagedResultsAsync(int pageSize, PagingContext pagingContext)
         {
-            var pullMessage = Message.CreateMessage(
-                MessageVersion.Default,
-                "http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull",
-                new Pull
-                {
-                    PagingContext = pagingContext,
-                    MaxElements = pageSize,
-                    PullAdjustment =
-                        new PullAdjustment { StartingIndex = pagingContext.CurrentIndex, EnumerationDirection = "Forwards" }
-                },
-                new SoapXmlSerializer(typeof(Pull)));
+            var pullMessage = BuildPullMessage(pageSize, pagingContext);
 
             var pullResponseMessage = await _searchClient.PullAsync(pullMessage);
-
 
             if (pullResponseMessage.IsFault)
                 throw new SoapFaultException("Pull Fault: " + pullResponseMessage);
@@ -189,10 +192,7 @@ namespace IdmNet
             // Deserialize the Add response
             ResourceCreated resourceCreatedObject = addResponseMsg.GetBody<ResourceCreated>(new SoapXmlSerializer(typeof(ResourceCreated)));
 
-            resource.ObjectID = resourceCreatedObject.EndpointReference.ReferenceProperties.ResourceReferenceProperty.Value;
-
-            if (resource.ObjectID.StartsWith("urn:uuid:"))
-                resource.ObjectID = resource.ObjectID.Substring(9);
+            resource.ObjectID = resourceCreatedObject.EndpointReference.ReferenceProperties.ResourceReferenceProperty.Value.Substring(9);;
 
             return resource;
         }
@@ -417,7 +417,7 @@ namespace IdmNet
             criteria.Selection = new List<string> { "ObjectType" };
             PullInfo objectTypePullInfo = await PreparePagedSearchAsync(criteria, 1);
             PagingContext objectTypePagingContext = objectTypePullInfo.PagingContext;
-            PagedSearchResults objectTypeResults = await PullAsync(1, objectTypePagingContext);
+            PagedSearchResults objectTypeResults = await GetPagedResultsAsync(1, objectTypePagingContext);
             string objectType = objectTypeResults.Results[0].ObjectType;
 
             criteria.Selection = await GetAttributeNamesForObjectType(objectType);
@@ -548,5 +548,23 @@ namespace IdmNet
 
             return putResponseMsg;
         }
+
+        private static Message BuildPullMessage(int pageSize, PagingContext pagingContext)
+        {
+            var pullMessage = Message.CreateMessage(
+                MessageVersion.Default,
+                "http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull",
+                new Pull
+                {
+                    PagingContext = pagingContext,
+                    MaxElements = pageSize,
+                    PullAdjustment =
+                        new PullAdjustment { StartingIndex = pagingContext.CurrentIndex, EnumerationDirection = "Forwards" }
+                },
+                new SoapXmlSerializer(typeof(Pull)));
+            return pullMessage;
+        }
+
+
     }
 }

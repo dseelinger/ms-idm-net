@@ -210,12 +210,17 @@ namespace IdmNet.Models
         {
             IdmAttribute attr = GetAttr(attrName);
             if (attr != null)
-                attr.Value = value;
-            Attributes.Add(new IdmAttribute()
             {
-                Name = attrName,
-                Value = value
-            });
+                attr.Value = value;
+            }
+            else
+            {
+                Attributes.Add(new IdmAttribute()
+                {
+                    Name = attrName,
+                    Value = value
+                });
+            }
         }
 
         /// <summary>

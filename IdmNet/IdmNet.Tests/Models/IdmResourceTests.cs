@@ -594,7 +594,23 @@ namespace IdmNet.Tests
             Assert.IsNull(it.ExpectedRulesList);
         }
 
+        [TestMethod]
+        public void It_doesnt_end_up_with_superflous_attributes_by_calling_SetAttrValue()
+        {
+            // Arrange
+            var it = new IdmResource { Description = "foo" };
+            var attrCountBefore = it.Attributes.Count;
 
+            it.SetAttrValue("Description", "bar");
+            it.SetAttrValue("Description", "bar");
+            it.SetAttrValue("Description", "bar");
+
+            var attrCountAfter = it.Attributes.Count;
+
+            Assert.AreEqual(attrCountBefore, attrCountAfter);
+        }
+
+        //SetAttrValue
     }
 }
 
