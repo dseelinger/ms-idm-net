@@ -237,6 +237,69 @@ namespace IdmNet.Tests
             }
         }
 
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task T010_It_can_do_a_search_and_return_the_first_page_of_results_and_info_on_retrieving_subsequent_pages_if_any()
+        {
+            // Arrange
+            var it = IdmNetClientFactory.BuildClient();
+            var criteria = new SearchCriteria("/ObjectTypeDescription");
+            criteria.Selection.Add("DisplayName");
+
+            // Act
+            PagedSearchResults result = await it.GetPagedResultsAsync(criteria, 5);
+
+            // Assert
+            Assert.AreEqual("/ObjectTypeDescription", result.PagingContext.Filter);
+            Assert.AreEqual(5, result.PagingContext.CurrentIndex);
+            Assert.AreEqual("Forwards", result.PagingContext.EnumerationDirection);
+            Assert.AreEqual("9999-12-31T23:59:59.9999999", result.PagingContext.Expires);
+            Assert.AreEqual("ObjectID", result.PagingContext.Selection[0]);
+            Assert.AreEqual("ObjectType", result.PagingContext.Selection[1]);
+            Assert.AreEqual("DisplayName", result.PagingContext.Selection[2]);
+            Assert.AreEqual("DisplayName", result.PagingContext.Sorting.SortingAttributes[0].AttributeName);
+            Assert.AreEqual(true, result.PagingContext.Sorting.SortingAttributes[0].Ascending);
+
+            Assert.AreEqual("ObjectTypeDescription", result.Results[0].ObjectType);
+            Assert.AreEqual("Activity Information Configuration", result.Results[0].DisplayName);
+            Assert.AreEqual("Binding Description", result.Results[4].DisplayName);
+        }
+
+
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task T011_It_can_get_resources_back_from_a_search_a_page_at_a_time()
+        {
+            // Arrange
+            var it = IdmNetClientFactory.BuildClient();
+            var criteria = new SearchCriteria("/ObjectTypeDescription");
+            criteria.Selection.Add("DisplayName");
+            PagedSearchResults pagedSearchResults = await it.GetPagedResultsAsync(criteria, 5);
+            PagingContext pagingContext = pagedSearchResults.PagingContext;
+
+            // Act
+            var pagedResults = await it.GetPagedResultsAsync(5, pagingContext);
+
+            // Assert
+            Assert.AreEqual(5, pagedResults.Results.Count);
+            Assert.AreEqual("CompositeType", pagedResults.Results[0].DisplayName);
+            Assert.AreEqual("Detected Rule Entry", pagedResults.Results[4].DisplayName);
+            Assert.AreEqual("/ObjectTypeDescription", pagedResults.PagingContext.Filter);
+            Assert.AreEqual(10, pagedResults.PagingContext.CurrentIndex);
+            Assert.AreEqual("Forwards", pagedResults.PagingContext.EnumerationDirection);
+            Assert.AreEqual("9999-12-31T23:59:59.9999999", pagedResults.PagingContext.Expires);
+            Assert.AreEqual("ObjectID", pagedResults.PagingContext.Selection[0]);
+            Assert.AreEqual("ObjectType", pagedResults.PagingContext.Selection[1]);
+            Assert.AreEqual("DisplayName", pagedResults.PagingContext.Selection[2]);
+            Assert.AreEqual("DisplayName", pagedResults.PagingContext.Sorting.SortingAttributes[0].AttributeName);
+            Assert.AreEqual(true, pagedResults.PagingContext.Sorting.SortingAttributes[0].Ascending);
+
+            Assert.AreEqual(null, pagedResults.EndOfSequence);
+            Assert.AreEqual(true, pagedResults.Items is XmlNode[]);
+            Assert.AreEqual(5, ((XmlNode[])(pagedResults.Items)).Length);
+        }
+
 
 
 
@@ -301,67 +364,6 @@ namespace IdmNet.Tests
             Assert.AreEqual(null, result.BindingDescriptions[expectedBindingCount - 1].BoundAttributeType.StringRegex);
             Assert.AreEqual("Microsoft.ResourceManagement.WebServices", result.BindingDescriptions[expectedBindingCount - 1].BoundAttributeType.UsageKeyword[0]);
 
-        }
-
-        [TestMethod]
-        [TestCategory("Integration")]
-        public async Task _It_can_do_a_search_and_return_the_first_page_of_results_and_info_on_retrieving_subsequent_pages_if_any()
-        {
-            // Arrange
-            var it = IdmNetClientFactory.BuildClient();
-            var criteria = new SearchCriteria("/ObjectTypeDescription");
-            criteria.Selection.Add("DisplayName");
-
-            // Act
-            PagedSearchResults result = await it.GetPagedResultsAsync(criteria, 5);
-
-            // Assert
-            Assert.AreEqual("/ObjectTypeDescription", result.PagingContext.Filter);
-            Assert.AreEqual(5, result.PagingContext.CurrentIndex);
-            Assert.AreEqual("Forwards", result.PagingContext.EnumerationDirection);
-            Assert.AreEqual("9999-12-31T23:59:59.9999999", result.PagingContext.Expires);
-            Assert.AreEqual("ObjectID", result.PagingContext.Selection[0]);
-            Assert.AreEqual("ObjectType", result.PagingContext.Selection[1]);
-            Assert.AreEqual("DisplayName", result.PagingContext.Selection[2]);
-            Assert.AreEqual("DisplayName", result.PagingContext.Sorting.SortingAttributes[0].AttributeName);
-            Assert.AreEqual(true, result.PagingContext.Sorting.SortingAttributes[0].Ascending);
-
-            Assert.AreEqual("ObjectTypeDescription", result.Results[0].ObjectType);
-            Assert.AreEqual("Activity Information Configuration", result.Results[0].DisplayName);
-            Assert.AreEqual("Binding Description", result.Results[4].DisplayName);
-        }
-
-        [TestMethod]
-        [TestCategory("Integration")]
-        public async Task It_can_get_resources_back_from_a_search_a_page_at_a_time()
-        {
-            // Arrange
-            var it = IdmNetClientFactory.BuildClient();
-            var criteria = new SearchCriteria("/ObjectTypeDescription");
-            criteria.Selection.Add("DisplayName");
-            PagedSearchResults pagedSearchResults = await it.GetPagedResultsAsync(criteria, 5);
-            PagingContext pagingContext = pagedSearchResults.PagingContext;
-
-            // Act
-            var pagedResults = await it.GetPagedResultsAsync(5, pagingContext);
-
-            // Assert
-            Assert.AreEqual(5, pagedResults.Results.Count);
-            Assert.AreEqual("CompositeType", pagedResults.Results[0].DisplayName);
-            Assert.AreEqual("Detected Rule Entry", pagedResults.Results[4].DisplayName);
-            Assert.AreEqual("/ObjectTypeDescription", pagedResults.PagingContext.Filter);
-            Assert.AreEqual(10, pagedResults.PagingContext.CurrentIndex);
-            Assert.AreEqual("Forwards", pagedResults.PagingContext.EnumerationDirection);
-            Assert.AreEqual("9999-12-31T23:59:59.9999999", pagedResults.PagingContext.Expires);
-            Assert.AreEqual("ObjectID", pagedResults.PagingContext.Selection[0]);
-            Assert.AreEqual("ObjectType", pagedResults.PagingContext.Selection[1]);
-            Assert.AreEqual("DisplayName", pagedResults.PagingContext.Selection[2]);
-            Assert.AreEqual("DisplayName", pagedResults.PagingContext.Sorting.SortingAttributes[0].AttributeName);
-            Assert.AreEqual(true, pagedResults.PagingContext.Sorting.SortingAttributes[0].Ascending);
-
-            Assert.AreEqual(null, pagedResults.EndOfSequence);
-            Assert.AreEqual(true, pagedResults.Items is XmlNode[]);
-            Assert.AreEqual(5, ((XmlNode[])(pagedResults.Items)).Length);
         }
 
         [TestMethod]
@@ -733,6 +735,23 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
+        public async Task It_Agrees_both_GetCount_and_Search()
+        {
+            // Arrange
+            var it = IdmNetClientFactory.BuildClient();
+            int count = await it.GetCountAsync("/ConstantSpecifier");
+
+            var searchResults = await it.SearchAsync(new SearchCriteria("/ConstantSpecifier"), 25);
+
+            Assert.AreEqual(count, searchResults.Count());
+        }
+
+
+
+
+
+        [TestMethod]
+        [TestCategory("Integration")]
         public async Task It_doesnt_add_superflous_attributes_on_create()
         {
             // Arrange
@@ -755,7 +774,7 @@ namespace IdmNet.Tests
                 // assert
                 Assert.AreEqual(3, createResult.Attributes.Count);
                 Assert.AreEqual(newUser.DisplayName, createResult.DisplayName);
-                var result = await it.GetAsync(createResult.ObjectID, new List<string> {"DisplayName"});
+                var result = await it.GetAsync(createResult.ObjectID, new List<string> { "DisplayName" });
                 Assert.AreEqual(newUser.DisplayName, result.DisplayName);
             }
             finally
@@ -771,22 +790,6 @@ namespace IdmNet.Tests
 
 
 
-//        {
-//      "Attributes":       [
-//                  {
-//            "Name": "ObjectType",
-//            "Values": ["Person"]
-//         },
-//                  {
-//            "Name": "ObjectID",
-//            "Values": []
-//         },
-//                  {
-//            "Name": "DisplayName",
-//            "Values": ["_Test User"]
-//         }
-//      ]
-//}
 
 
 
