@@ -49,7 +49,7 @@ namespace IdmNet.Models
 
 
         /// <summary>
-        /// Object Type (can only be Person)
+        /// Object Type (can only be Group)
         /// </summary>
         [Required]
         public override sealed string ObjectType

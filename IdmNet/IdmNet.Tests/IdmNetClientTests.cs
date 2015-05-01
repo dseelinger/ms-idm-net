@@ -787,6 +787,9 @@ namespace IdmNet.Tests
         }
 
 
+        // TODO: Test for AttributeTypeDescriotions, BindingDescriptions, ObjectTypeDescriptions that you can't mess with their object types
+
+
 
 
 
