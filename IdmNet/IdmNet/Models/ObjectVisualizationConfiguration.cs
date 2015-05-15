@@ -53,7 +53,7 @@ namespace IdmNet.Models
         /// Applies to Create - The configuration applies to create mode of the target resource type
         /// </summary>
         [Required]
-        public bool? AppliesToCreate
+        public bool AppliesToCreate
         {
             get { return AttrToBool("AppliesToCreate"); }
             set { 
@@ -66,7 +66,7 @@ namespace IdmNet.Models
         /// Applies to Edit - The configuration applies to edit mode of the target resource type
         /// </summary>
         [Required]
-        public bool? AppliesToEdit
+        public bool AppliesToEdit
         {
             get { return AttrToBool("AppliesToEdit"); }
             set { 
@@ -79,7 +79,7 @@ namespace IdmNet.Models
         /// Applies to View - The configuration applies to view mode of the target resource type
         /// </summary>
         [Required]
-        public bool? AppliesToView
+        public bool AppliesToView
         {
             get { return AttrToBool("AppliesToView"); }
             set { 
@@ -106,7 +106,7 @@ namespace IdmNet.Models
         /// </summary>
         public bool? IsConfigurationType
         {
-            get { return AttrToBool("IsConfigurationType"); }
+            get { return AttrToNullableBool("IsConfigurationType"); }
             set { 
                 SetAttrValue("IsConfigurationType", value.ToString());
             }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -66,7 +66,7 @@ namespace IdmNet.Models
         /// </summary>
         public bool? AD_UserCannotChangePassword
         {
-            get { return AttrToBool("AD_UserCannotChangePassword"); }
+            get { return AttrToNullableBool("AD_UserCannotChangePassword"); }
             set { 
                 SetAttrValue("AD_UserCannotChangePassword", value.ToString());
             }
@@ -250,7 +250,7 @@ namespace IdmNet.Models
         /// </summary>
         public DateTime? EmployeeEndDate
         {
-            get { return GetAttr("EmployeeEndDate") == null ? null : GetAttr("EmployeeEndDate").ToDateTime(); }
+            get { return AttrToNullableDateTime("EmployeeEndDate"); }
             set { SetAttrValue("EmployeeEndDate", value.ToString()); }
         }
 
@@ -272,7 +272,7 @@ namespace IdmNet.Models
         /// </summary>
         public DateTime? EmployeeStartDate
         {
-            get { return GetAttr("EmployeeStartDate") == null ? null : GetAttr("EmployeeStartDate").ToDateTime(); }
+            get { return AttrToNullableDateTime("EmployeeStartDate"); }
             set { SetAttrValue("EmployeeStartDate", value.ToString()); }
         }
 
@@ -318,7 +318,7 @@ namespace IdmNet.Models
         /// </summary>
         public int? FreezeCount
         {
-            get { return AttrToInteger("FreezeCount"); }
+            get { return AttrToNullableInteger("FreezeCount"); }
             set { 
                 SetAttrValue("FreezeCount", value.ToString());
             }
@@ -366,7 +366,7 @@ namespace IdmNet.Models
         /// </summary>
         public DateTime? LastResetAttemptTime
         {
-            get { return GetAttr("LastResetAttemptTime") == null ? null : GetAttr("LastResetAttemptTime").ToDateTime(); }
+            get { return AttrToNullableDateTime("LastResetAttemptTime"); }
             set { SetAttrValue("LastResetAttemptTime", value.ToString()); }
         }
 
@@ -520,7 +520,7 @@ namespace IdmNet.Models
         /// </summary>
         public bool? IsRASEnabled
         {
-            get { return AttrToBool("IsRASEnabled"); }
+            get { return AttrToNullableBool("IsRASEnabled"); }
             set { 
                 SetAttrValue("IsRASEnabled", value.ToString());
             }
@@ -532,7 +532,7 @@ namespace IdmNet.Models
         /// </summary>
         public bool? Register
         {
-            get { return AttrToBool("Register"); }
+            get { return AttrToNullableBool("Register"); }
             set { 
                 SetAttrValue("Register", value.ToString());
             }
@@ -544,7 +544,7 @@ namespace IdmNet.Models
         /// </summary>
         public bool? RegistrationRequired
         {
-            get { return AttrToBool("RegistrationRequired"); }
+            get { return AttrToNullableBool("RegistrationRequired"); }
             set { 
                 SetAttrValue("RegistrationRequired", value.ToString());
             }

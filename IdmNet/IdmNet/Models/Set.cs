@@ -88,7 +88,7 @@ namespace IdmNet.Models
         /// </summary>
         public bool? Temporal
         {
-            get { return AttrToBool("Temporal"); }
+            get { return AttrToNullableBool("Temporal"); }
             set { 
                 SetAttrValue("Temporal", value.ToString());
             }

@@ -81,7 +81,7 @@ namespace IdmNet.Models
         /// </summary>
         public int? msidmAttributeTypeKey
         {
-            get { return AttrToInteger("msidmAttributeTypeKey"); }
+            get { return AttrToNullableInteger("msidmAttributeTypeKey"); }
             set { 
                 SetAttrValue("msidmAttributeTypeKey", value.ToString());
             }
@@ -105,7 +105,7 @@ namespace IdmNet.Models
         /// </summary>
         public int? msidmIsReference
         {
-            get { return AttrToInteger("msidmIsReference"); }
+            get { return AttrToNullableInteger("msidmIsReference"); }
             set { 
                 SetAttrValue("msidmIsReference", value.ToString());
             }
@@ -144,7 +144,7 @@ namespace IdmNet.Models
         /// </summary>
         public int? msidmSequenceID
         {
-            get { return AttrToInteger("msidmSequenceID"); }
+            get { return AttrToNullableInteger("msidmSequenceID"); }
             set { 
                 SetAttrValue("msidmSequenceID", value.ToString());
             }

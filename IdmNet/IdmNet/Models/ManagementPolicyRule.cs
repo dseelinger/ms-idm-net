@@ -111,7 +111,7 @@ namespace IdmNet.Models
         /// Disabled - Determines if resource is disabled or enabled
         /// </summary>
         [Required]
-        public bool? Disabled
+        public bool Disabled
         {
             get { return AttrToBool("Disabled"); }
             set { 
@@ -124,7 +124,7 @@ namespace IdmNet.Models
         /// Grant Right - 
         /// </summary>
         [Required]
-        public bool? GrantRight
+        public bool GrantRight
         {
             get { return AttrToBool("GrantRight"); }
             set { 

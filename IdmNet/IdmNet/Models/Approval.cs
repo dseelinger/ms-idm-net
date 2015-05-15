@@ -53,9 +53,9 @@ namespace IdmNet.Models
         /// Approval Duration - 
         /// </summary>
         [Required]
-        public DateTime? ApprovalDuration
+        public DateTime ApprovalDuration
         {
-            get { return GetAttr("ApprovalDuration") == null ? null : GetAttr("ApprovalDuration").ToDateTime(); }
+            get { return AttrToDateTime("ApprovalDuration"); }
             set { SetAttrValue("ApprovalDuration", value.ToString()); }
         }
 
@@ -88,7 +88,7 @@ namespace IdmNet.Models
         /// Approval Threshold - 
         /// </summary>
         [Required]
-        public int? ApprovalThreshold
+        public int ApprovalThreshold
         {
             get { return AttrToInteger("ApprovalThreshold"); }
             set { 

@@ -79,7 +79,7 @@ namespace IdmNet.Models
         /// Is Action Activity - This is an indication that this activity could be put into an action process
         /// </summary>
         [Required]
-        public bool? IsActionActivity
+        public bool IsActionActivity
         {
             get { return AttrToBool("IsActionActivity"); }
             set { 
@@ -92,7 +92,7 @@ namespace IdmNet.Models
         /// Is Authentication Activity - This is an indication that this activity could be put into an authentication process
         /// </summary>
         [Required]
-        public bool? IsAuthenticationActivity
+        public bool IsAuthenticationActivity
         {
             get { return AttrToBool("IsAuthenticationActivity"); }
             set { 
@@ -105,7 +105,7 @@ namespace IdmNet.Models
         /// Is Authorization Activity - This is an indication that this activity could be put into an authorization process
         /// </summary>
         [Required]
-        public bool? IsAuthorizationActivity
+        public bool IsAuthorizationActivity
         {
             get { return AttrToBool("IsAuthorizationActivity"); }
             set { 
@@ -118,7 +118,7 @@ namespace IdmNet.Models
         /// Is Configuration Type - This is an indication that this resource is a configuration resource.
         /// </summary>
         [Required]
-        public bool? IsConfigurationType
+        public bool IsConfigurationType
         {
             get { return AttrToBool("IsConfigurationType"); }
             set { 

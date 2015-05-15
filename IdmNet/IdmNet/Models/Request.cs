@@ -87,7 +87,7 @@ namespace IdmNet.Models
         /// </summary>
         public DateTime? CommittedTime
         {
-            get { return GetAttr("CommittedTime") == null ? null : GetAttr("CommittedTime").ToDateTime(); }
+            get { return AttrToNullableDateTime("CommittedTime"); }
             set { SetAttrValue("CommittedTime", value.ToString()); }
         }
 
@@ -97,7 +97,7 @@ namespace IdmNet.Models
         /// </summary>
         public DateTime? msidmCompletedTime
         {
-            get { return GetAttr("msidmCompletedTime") == null ? null : GetAttr("msidmCompletedTime").ToDateTime(); }
+            get { return AttrToNullableDateTime("msidmCompletedTime"); }
             set { SetAttrValue("msidmCompletedTime", value.ToString()); }
         }
 
@@ -118,7 +118,7 @@ namespace IdmNet.Models
         /// </summary>
         public bool? HasCollateralRequest
         {
-            get { return AttrToBool("HasCollateralRequest"); }
+            get { return AttrToNullableBool("HasCollateralRequest"); }
             set { 
                 SetAttrValue("HasCollateralRequest", value.ToString());
             }

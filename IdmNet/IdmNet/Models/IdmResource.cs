@@ -51,7 +51,7 @@ namespace IdmNet.Models
         /// </summary>
         public DateTime? CreatedTime
         {
-            get { return AttrToDateTime("CreatedTime"); }
+            get { return AttrToNullableDateTime("CreatedTime"); }
             set { SetAttrValue("CreatedTime", value.ToString()); }
         }
 
@@ -76,7 +76,7 @@ namespace IdmNet.Models
         /// </summary>
         public DateTime? DeletedTime
         {
-            get { return AttrToDateTime("DeletedTime"); }
+            get { return AttrToNullableDateTime("DeletedTime"); }
             set { SetAttrValue("DeletedTime", value.ToString()); }
         }
 
@@ -126,7 +126,7 @@ namespace IdmNet.Models
         /// </summary>
         public DateTime? ExpirationTime
         {
-            get { return AttrToDateTime("ExpirationTime"); }
+            get { return AttrToNullableDateTime("ExpirationTime"); }
             set { SetAttrValue("ExpirationTime", value.ToString()); }
         }
 
@@ -154,7 +154,7 @@ namespace IdmNet.Models
         /// </summary>
         public DateTime? ResourceTime
         {
-            get { return AttrToDateTime("ResourceTime"); }
+            get { return AttrToNullableDateTime("ResourceTime"); }
             set { SetAttrValue("ResourceTime", value.ToString()); }
         }
 
@@ -345,7 +345,7 @@ namespace IdmNet.Models
         /// </summary>
         /// <param name="attrName">Attribute Name</param>
         /// <returns>DateTime value (Nullable)</returns>
-        protected DateTime? AttrToDateTime(string attrName)
+        protected DateTime? AttrToNullableDateTime(string attrName)
         {
             return GetAttr(attrName) != null ? GetAttr(attrName).ToDateTime() : null;
         }
@@ -355,7 +355,7 @@ namespace IdmNet.Models
         /// </summary>
         /// <param name="attrName">Attribute Name</param>
         /// <returns>Boolean value (Nullable)</returns>
-        protected bool? AttrToBool(string attrName)
+        protected bool? AttrToNullableBool(string attrName)
         {
             return GetAttr(attrName) == null ? null : GetAttr(attrName).ToBool();
         }
@@ -365,10 +365,51 @@ namespace IdmNet.Models
         /// </summary>
         /// <param name="attrName">Attribute Name</param>
         /// <returns>Integer value (Nullable)</returns>
-        protected int? AttrToInteger(string attrName)
+        protected int? AttrToNullableInteger(string attrName)
         {
             return GetAttr(attrName) == null ? null : GetAttr(attrName).ToInteger();
         }
+
+
+
+
+
+
+        /// <summary>
+        /// Convert the named attribute to a DateTime value
+        /// </summary>
+        /// <param name="attrName">Attribute Name</param>
+        /// <returns>DateTime value (Nullable)</returns>
+        protected DateTime AttrToDateTime(string attrName)
+        {
+            return DateTime.Parse(GetAttrValue(attrName));
+        }
+
+        /// <summary>
+        /// Convert the named attribute to a Boolean value
+        /// </summary>
+        /// <param name="attrName">Attribute Name</param>
+        /// <returns>Boolean value (Nullable)</returns>
+        protected bool AttrToBool(string attrName)
+        {
+            return bool.Parse(GetAttrValue(attrName));
+        }
+
+        /// <summary>
+        /// Convert the named attribute to an Integer value
+        /// </summary>
+        /// <param name="attrName">Attribute Name</param>
+        /// <returns>Integer value (Nullable)</returns>
+        protected int AttrToInteger(string attrName)
+        {
+            return int.Parse(GetAttrValue(attrName));
+        }
+
+
+
+
+
+
 
         /// <summary>
         /// Returns the ObjectID of the resource or NULL if the resource value is null

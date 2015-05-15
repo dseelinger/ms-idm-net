@@ -7,25 +7,25 @@ using System.Linq;
 namespace IdmNet.Models
 {
     /// <summary>
-    /// NavigationBarConfiguration - These resources drives the apperance of the navigation pane in FIM Portal.
+    /// HomepageConfiguration - These resources drive the homepage appearance in FIM Portal.
     /// </summary>
-    public class NavigationBarConfiguration : IdmResource
+    public class HomepageConfiguration : IdmResource
     {
         /// <summary>
         /// Parameterless CTOR
         /// </summary>
-        public NavigationBarConfiguration()
+        public HomepageConfiguration()
         {
-            ObjectType = ForcedObjType = "NavigationBarConfiguration";
+            ObjectType = ForcedObjType = "HomepageConfiguration";
         }
 
         /// <summary>
-        /// Build a NavigationBarConfiguration object from a IdmResource object
+        /// Build a HomepageConfiguration object from a IdmResource object
         /// </summary>
         /// <param name="resource">base class</param>
-        public NavigationBarConfiguration(IdmResource resource)
+        public HomepageConfiguration(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "NavigationBarConfiguration";
+            ObjectType = ForcedObjType = "HomepageConfiguration";
             Attributes = resource.Attributes;
             if (resource.Creator == null)
                 return;
@@ -35,7 +35,7 @@ namespace IdmNet.Models
         readonly string ForcedObjType;
 
         /// <summary>
-        /// Object Type (can only be NavigationBarConfiguration)
+        /// Object Type (can only be HomepageConfiguration)
         /// </summary>
         [Required]
         public override sealed string ObjectType
@@ -44,10 +44,22 @@ namespace IdmNet.Models
             set
             {
                 if (value != ForcedObjType)
-                    throw new InvalidOperationException("Object Type of NavigationBarConfiguration can only be 'NavigationBarConfiguration'");
+                    throw new InvalidOperationException("Object Type of HomepageConfiguration can only be 'HomepageConfiguration'");
                 SetAttrValue("ObjectType", value);
             }
         }
+
+        /// <summary>
+        /// Image Url - Image url for the a given element.
+        /// </summary>
+        public string ImageUrl
+        {
+            get { return GetAttrValue("ImageUrl"); }
+            set {
+                SetAttrValue("ImageUrl", value); 
+            }
+        }
+
 
         /// <summary>
         /// Is Configuration Type - This is an indication that this resource is a configuration resource.
@@ -88,7 +100,7 @@ namespace IdmNet.Models
 
 
         /// <summary>
-        /// Parent Order - Parent grouping for this navigation bar resource.
+        /// Parent Order - Parent grouping for this home page resource.
         /// </summary>
         [Required]
         public int ParentOrder
@@ -96,6 +108,19 @@ namespace IdmNet.Models
             get { return AttrToInteger("ParentOrder"); }
             set { 
                 SetAttrValue("ParentOrder", value.ToString());
+            }
+        }
+
+
+        /// <summary>
+        /// Region - Specifies where the item will be shown in the UI.
+        /// </summary>
+        [Required]
+        public int Region
+        {
+            get { return AttrToInteger("Region"); }
+            set { 
+                SetAttrValue("Region", value.ToString());
             }
         }
 

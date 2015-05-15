@@ -54,7 +54,7 @@ namespace IdmNet.Models
         /// </summary>
         public bool? Required
         {
-            get { return AttrToBool("Required"); }
+            get { return AttrToNullableBool("Required"); }
             set { 
                 SetAttrValue("Required", value.ToString());
             }
@@ -81,7 +81,7 @@ namespace IdmNet.Models
         /// </summary>
         public int? IntegerMaximum
         {
-            get { return AttrToInteger("IntegerMaximum"); }
+            get { return AttrToNullableInteger("IntegerMaximum"); }
             set { 
                 SetAttrValue("IntegerMaximum", value.ToString());
             }
@@ -93,7 +93,7 @@ namespace IdmNet.Models
         /// </summary>
         public int? IntegerMinimum
         {
-            get { return AttrToInteger("IntegerMinimum"); }
+            get { return AttrToNullableInteger("IntegerMinimum"); }
             set { 
                 SetAttrValue("IntegerMinimum", value.ToString());
             }
@@ -105,7 +105,7 @@ namespace IdmNet.Models
         /// </summary>
         public bool? Localizable
         {
-            get { return AttrToBool("Localizable"); }
+            get { return AttrToNullableBool("Localizable"); }
             set { 
                 SetAttrValue("Localizable", value.ToString());
             }

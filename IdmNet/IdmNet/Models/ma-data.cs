@@ -66,7 +66,7 @@ namespace IdmNet.Models
         /// </summary>
         public int? SyncConfig_capabilities_mask
         {
-            get { return AttrToInteger("SyncConfig-capabilities-mask"); }
+            get { return AttrToNullableInteger("SyncConfig-capabilities-mask"); }
             set { 
                 SetAttrValue("SyncConfig-capabilities-mask", value.ToString());
             }
@@ -162,7 +162,7 @@ namespace IdmNet.Models
         /// </summary>
         public int? SyncConfig_export_type
         {
-            get { return AttrToInteger("SyncConfig-export-type"); }
+            get { return AttrToNullableInteger("SyncConfig-export-type"); }
             set { 
                 SetAttrValue("SyncConfig-export-type", value.ToString());
             }
@@ -186,7 +186,7 @@ namespace IdmNet.Models
         /// </summary>
         public int? SyncConfig_format_version
         {
-            get { return AttrToInteger("SyncConfig-format-version"); }
+            get { return AttrToNullableInteger("SyncConfig-format-version"); }
             set { 
                 SetAttrValue("SyncConfig-format-version", value.ToString());
             }
@@ -211,7 +211,7 @@ namespace IdmNet.Models
         /// </summary>
         public int? SyncConfig_internal_version
         {
-            get { return AttrToInteger("SyncConfig-internal-version"); }
+            get { return AttrToNullableInteger("SyncConfig-internal-version"); }
             set { 
                 SetAttrValue("SyncConfig-internal-version", value.ToString());
             }
@@ -319,7 +319,7 @@ namespace IdmNet.Models
         /// </summary>
         public int? SyncConfig_password_sync_allowed
         {
-            get { return AttrToInteger("SyncConfig-password-sync-allowed"); }
+            get { return AttrToNullableInteger("SyncConfig-password-sync-allowed"); }
             set { 
                 SetAttrValue("SyncConfig-password-sync-allowed", value.ToString());
             }
@@ -379,7 +379,7 @@ namespace IdmNet.Models
         /// </summary>
         public int? SyncConfig_refresh_schema
         {
-            get { return AttrToInteger("SyncConfig-refresh-schema"); }
+            get { return AttrToNullableInteger("SyncConfig-refresh-schema"); }
             set { 
                 SetAttrValue("SyncConfig-refresh-schema", value.ToString());
             }
@@ -427,7 +427,7 @@ namespace IdmNet.Models
         /// </summary>
         public int? SyncConfig_version
         {
-            get { return AttrToInteger("SyncConfig-version"); }
+            get { return AttrToNullableInteger("SyncConfig-version"); }
             set { 
                 SetAttrValue("SyncConfig-version", value.ToString());
             }

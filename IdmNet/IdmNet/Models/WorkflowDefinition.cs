@@ -54,7 +54,7 @@ namespace IdmNet.Models
         /// </summary>
         public bool? ClearRegistration
         {
-            get { return AttrToBool("ClearRegistration"); }
+            get { return AttrToNullableBool("ClearRegistration"); }
             set { 
                 SetAttrValue("ClearRegistration", value.ToString());
             }
@@ -91,7 +91,7 @@ namespace IdmNet.Models
         /// </summary>
         public bool? RunOnPolicyUpdate
         {
-            get { return AttrToBool("RunOnPolicyUpdate"); }
+            get { return AttrToNullableBool("RunOnPolicyUpdate"); }
             set { 
                 SetAttrValue("RunOnPolicyUpdate", value.ToString());
             }

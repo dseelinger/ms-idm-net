@@ -66,7 +66,7 @@ namespace IdmNet.Models
         /// </summary>
         public int? SyncConfig_format_version
         {
-            get { return AttrToInteger("SyncConfig-format-version"); }
+            get { return AttrToNullableInteger("SyncConfig-format-version"); }
             set { 
                 SetAttrValue("SyncConfig-format-version", value.ToString());
             }
@@ -102,7 +102,7 @@ namespace IdmNet.Models
         /// </summary>
         public int? SyncConfig_password_change_history_size
         {
-            get { return AttrToInteger("SyncConfig-password-change-history-size"); }
+            get { return AttrToNullableInteger("SyncConfig-password-change-history-size"); }
             set { 
                 SetAttrValue("SyncConfig-password-change-history-size", value.ToString());
             }
@@ -162,7 +162,7 @@ namespace IdmNet.Models
         /// </summary>
         public int? SyncConfig_version
         {
-            get { return AttrToInteger("SyncConfig-version"); }
+            get { return AttrToNullableInteger("SyncConfig-version"); }
             set { 
                 SetAttrValue("SyncConfig-version", value.ToString());
             }

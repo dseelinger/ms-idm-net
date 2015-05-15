@@ -54,7 +54,7 @@ namespace IdmNet.Models
         /// </summary>
         public DateTime? msidmCompletedTime
         {
-            get { return GetAttr("msidmCompletedTime") == null ? null : GetAttr("msidmCompletedTime").ToDateTime(); }
+            get { return AttrToNullableDateTime("msidmCompletedTime"); }
             set { SetAttrValue("msidmCompletedTime", value.ToString()); }
         }
 
@@ -101,7 +101,7 @@ namespace IdmNet.Models
         /// </summary>
         public DateTime? msidmStartTime
         {
-            get { return GetAttr("msidmStartTime") == null ? null : GetAttr("msidmStartTime").ToDateTime(); }
+            get { return AttrToNullableDateTime("msidmStartTime"); }
             set { SetAttrValue("msidmStartTime", value.ToString()); }
         }
 

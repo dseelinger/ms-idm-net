@@ -53,7 +53,7 @@ namespace IdmNet.Models
         /// Create External System Resource - Indicates if an external system resource is created if the relationship criteria is not met.
         /// </summary>
         [Required]
-        public bool? CreateConnectedSystemObject
+        public bool CreateConnectedSystemObject
         {
             get { return AttrToBool("CreateConnectedSystemObject"); }
             set { 
@@ -66,7 +66,7 @@ namespace IdmNet.Models
         /// Create FIM Resource - Indicates if a resource should be created in FIM if the relationship criteria is not met.
         /// </summary>
         [Required]
-        public bool? CreateILMObject
+        public bool CreateILMObject
         {
             get { return AttrToBool("CreateILMObject"); }
             set { 
@@ -79,7 +79,7 @@ namespace IdmNet.Models
         /// Data Flow Direction - A Synchronization Rule can be defined as inbound (0), outbound (1) or bi-directional (2).
         /// </summary>
         [Required]
-        public int? FlowType
+        public int FlowType
         {
             get { return AttrToInteger("FlowType"); }
             set { 
@@ -107,7 +107,7 @@ namespace IdmNet.Models
         /// Disconnect External System Resource - This option applies when this Synchronization Rule is removed from a resource in FIM.
         /// </summary>
         [Required]
-        public bool? DisconnectConnectedSystemObject
+        public bool DisconnectConnectedSystemObject
         {
             get { return AttrToBool("DisconnectConnectedSystemObject"); }
             set { 
@@ -211,7 +211,7 @@ namespace IdmNet.Models
         /// </summary>
         public bool? msidmOutboundIsFilterBased
         {
-            get { return AttrToBool("msidmOutboundIsFilterBased"); }
+            get { return AttrToNullableBool("msidmOutboundIsFilterBased"); }
             set { 
                 SetAttrValue("msidmOutboundIsFilterBased", value.ToString());
             }
@@ -247,7 +247,7 @@ namespace IdmNet.Models
         /// </summary>
         public int? Precedence
         {
-            get { return AttrToInteger("Precedence"); }
+            get { return AttrToNullableInteger("Precedence"); }
             set { 
                 SetAttrValue("Precedence", value.ToString());
             }

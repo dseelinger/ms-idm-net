@@ -84,7 +84,7 @@ namespace IdmNet.Models
         /// </summary>
         public bool? IsConfigurationType
         {
-            get { return AttrToBool("IsConfigurationType"); }
+            get { return AttrToNullableBool("IsConfigurationType"); }
             set { 
                 SetAttrValue("IsConfigurationType", value.ToString());
             }

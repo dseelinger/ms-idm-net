@@ -53,7 +53,7 @@ namespace IdmNet.Models
         /// Retention Period in Days - The number of days after completion a Request, Approval, Approval Response or Workflow Instance is retained before being deleted.
         /// </summary>
         [Required]
-        public int? RetentionPeriod
+        public int RetentionPeriod
         {
             get { return AttrToInteger("RetentionPeriod"); }
             set { 

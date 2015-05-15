@@ -91,7 +91,7 @@ namespace IdmNet.Models
         /// </summary>
         public bool? IsConfigurationType
         {
-            get { return AttrToBool("IsConfigurationType"); }
+            get { return AttrToNullableBool("IsConfigurationType"); }
             set { 
                 SetAttrValue("IsConfigurationType", value.ToString());
             }
@@ -114,7 +114,7 @@ namespace IdmNet.Models
         /// Order - Precedence of this item within a parent grouping
         /// </summary>
         [Required]
-        public int? Order
+        public int Order
         {
             get { return AttrToInteger("Order"); }
             set { 

@@ -91,7 +91,7 @@ namespace IdmNet.Models
         /// Global Cache Duration - This time how long the UI configuration element will be kept on the cache
         /// </summary>
         [Required]
-        public int? UICacheTime
+        public int UICacheTime
         {
             get { return AttrToInteger("UICacheTime"); }
             set { 
@@ -105,7 +105,7 @@ namespace IdmNet.Models
         /// </summary>
         public bool? IsConfigurationType
         {
-            get { return AttrToBool("IsConfigurationType"); }
+            get { return AttrToNullableBool("IsConfigurationType"); }
             set { 
                 SetAttrValue("IsConfigurationType", value.ToString());
             }
@@ -116,7 +116,7 @@ namespace IdmNet.Models
         /// ListView Cache Time Out - Specify the amount of time for the ListView cache to time out and expire.
         /// </summary>
         [Required]
-        public int? ListViewCacheTimeOut
+        public int ListViewCacheTimeOut
         {
             get { return AttrToInteger("ListViewCacheTimeOut"); }
             set { 
@@ -129,7 +129,7 @@ namespace IdmNet.Models
         /// ListView Items per Page - Specify the number of items to show per page in all ListViews.
         /// </summary>
         [Required]
-        public int? ListViewPageSize
+        public int ListViewPageSize
         {
             get { return AttrToInteger("ListViewPageSize"); }
             set { 
@@ -142,7 +142,7 @@ namespace IdmNet.Models
         /// ListView Pages to Cache - Specify the number of pages to cache while retrieving ListView results.
         /// </summary>
         [Required]
-        public int? ListViewPagesToCache
+        public int ListViewPagesToCache
         {
             get { return AttrToInteger("ListViewPagesToCache"); }
             set { 
@@ -155,7 +155,7 @@ namespace IdmNet.Models
         /// Navigation Bar Resource Count Cache Duration - This time how long the UI dynamic counts will stay on the cache before it expired
         /// </summary>
         [Required]
-        public int? UICountCacheTime
+        public int UICountCacheTime
         {
             get { return AttrToInteger("UICountCacheTime"); }
             set { 
@@ -168,7 +168,7 @@ namespace IdmNet.Models
         /// Per User Cache Duration - This time for how long the UI user data will stay on the cache before it expired
         /// </summary>
         [Required]
-        public int? UIUserCacheTime
+        public int UIUserCacheTime
         {
             get { return AttrToInteger("UIUserCacheTime"); }
             set { 

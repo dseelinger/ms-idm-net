@@ -54,7 +54,7 @@ namespace IdmNet.Models
         /// </summary>
         public bool? msidmCreateCriteriaBasedGroupsAsDeferredByDefault
         {
-            get { return AttrToBool("msidmCreateCriteriaBasedGroupsAsDeferredByDefault"); }
+            get { return AttrToNullableBool("msidmCreateCriteriaBasedGroupsAsDeferredByDefault"); }
             set { 
                 SetAttrValue("msidmCreateCriteriaBasedGroupsAsDeferredByDefault", value.ToString());
             }
@@ -65,7 +65,7 @@ namespace IdmNet.Models
         /// Is Configuration Type - This value specified whether or not the resource is a configuration resource.
         /// </summary>
         [Required]
-        public bool? IsConfigurationType
+        public bool IsConfigurationType
         {
             get { return AttrToBool("IsConfigurationType"); }
             set { 
@@ -78,7 +78,7 @@ namespace IdmNet.Models
         /// Reporting Logging Enabled - This is a global setting that controls whether service activity is logged for reporting purposes.
         /// </summary>
         [Required]
-        public bool? msidmReportingLoggingEnabled
+        public bool msidmReportingLoggingEnabled
         {
             get { return AttrToBool("msidmReportingLoggingEnabled"); }
             set { 
@@ -91,7 +91,7 @@ namespace IdmNet.Models
         /// Request Maximum Active Duration - Requests that exceed this duration before reaching a final state will be automatically canceled by the system. Value defined in days.
         /// </summary>
         [Required]
-        public int? msidmRequestMaximumActiveDuration
+        public int msidmRequestMaximumActiveDuration
         {
             get { return AttrToInteger("msidmRequestMaximumActiveDuration"); }
             set { 
@@ -104,7 +104,7 @@ namespace IdmNet.Models
         /// Request Maximum Canceling Duration - Maximum duration a request can be in the Canceling state before the system auto terminates it. Value defined in days.
         /// </summary>
         [Required]
-        public int? msidmRequestMaximumCancelingDuration
+        public int msidmRequestMaximumCancelingDuration
         {
             get { return AttrToInteger("msidmRequestMaximumCancelingDuration"); }
             set { 
@@ -117,7 +117,7 @@ namespace IdmNet.Models
         /// System Throttle Level - Increasing this number will allocate more system resources to process outstanding workloads. Setting the value to -1 will disable the system resource throttling.
         /// </summary>
         [Required]
-        public int? msidmSystemThrottleLevel
+        public int msidmSystemThrottleLevel
         {
             get { return AttrToInteger("msidmSystemThrottleLevel"); }
             set { 

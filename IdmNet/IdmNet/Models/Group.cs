@@ -77,7 +77,7 @@ namespace IdmNet.Models
         /// </summary>
         public bool? msidmDeferredEvaluation
         {
-            get { return AttrToBool("msidmDeferredEvaluation"); }
+            get { return AttrToNullableBool("msidmDeferredEvaluation"); }
             set { 
                 SetAttrValue("msidmDeferredEvaluation", value.ToString());
             }
@@ -191,7 +191,7 @@ namespace IdmNet.Models
         /// Membership Locked - 
         /// </summary>
         [Required]
-        public bool? MembershipLocked
+        public bool MembershipLocked
         {
             get { return AttrToBool("MembershipLocked"); }
             set { 
@@ -249,7 +249,7 @@ namespace IdmNet.Models
         /// </summary>
         public bool? Temporal
         {
-            get { return AttrToBool("Temporal"); }
+            get { return AttrToNullableBool("Temporal"); }
             set { 
                 SetAttrValue("Temporal", value.ToString());
             }
