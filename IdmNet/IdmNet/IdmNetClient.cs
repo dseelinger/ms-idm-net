@@ -286,9 +286,9 @@ namespace IdmNet
         /// </summary>
         /// <param name="objectType">Name of the object for which the schema should be retrieved</param>
         /// <returns>A fully populated ObjectTypeDescription object, including bindings for attributes</returns>
-        public async Task<ObjectTypeDescription> GetSchemaAsync(string objectType)
+        public async Task<Schema> GetSchemaAsync(string objectType)
         {
-            var result = await GetObjectTypeDescription(objectType);
+            var result = await BuildSchemaObject(objectType);
             result.BindingDescriptions = new List<BindingDescription>();
 
             await AddBindingDescriptions(result);
@@ -301,7 +301,7 @@ namespace IdmNet
 
 
 
-        private async Task AddBindingDescriptions(ObjectTypeDescription result)
+        private async Task AddBindingDescriptions(Schema result)
         {
             var bindingCriteria = new SearchCriteria(String.Format("/BindingDescription[BoundObjectType='{0}']", result.ObjectID))
             {
@@ -355,7 +355,7 @@ namespace IdmNet
             }
         }
 
-        private async Task<ObjectTypeDescription> GetObjectTypeDescription(string objectType)
+        private async Task<Schema> BuildSchemaObject(string objectType)
         {
             var criteria = new SearchCriteria(String.Format("/ObjectTypeDescription[Name='{0}']", objectType))
             {
@@ -376,7 +376,7 @@ namespace IdmNet
 
 
             IEnumerable<IdmResource> resources = await SearchAsync(criteria);
-            var result = new ObjectTypeDescription(resources.FirstOrDefault());
+            var result = new Schema(resources.FirstOrDefault());
             return result;
         }
 

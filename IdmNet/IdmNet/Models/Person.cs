@@ -1,24 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
+using System.Linq;
 // ReSharper disable InconsistentNaming
 
 namespace IdmNet.Models
 {
     /// <summary>
-    /// Person object
+    /// Person - This resource defines applicable policies to manage incoming requests. 
     /// </summary>
-    public class Person : SecurityIdentifierResource
+    public class Person : IdmResource
     {
-        private Person _assistant;
-        private Person _manager;
-        private List<IdmResource> _authNLockoutRegistrationID;
-        private IdmResource _timeZone;
-
-
         /// <summary>
-        /// Person's parmeterless constructor
+        /// Parameterless CTOR
         /// </summary>
         public Person()
         {
@@ -26,31 +20,22 @@ namespace IdmNet.Models
         }
 
         /// <summary>
-        /// Construct a Person from a SecurityIdentifierResource
+        /// Build a Person object from a IdmResource object
         /// </summary>
         /// <param name="resource">base class</param>
-        public Person(SecurityIdentifierResource resource)
-            : base(resource)
+        public Person(IdmResource resource)
         {
             ObjectType = ForcedObjType = "Person";
-            Clone(resource);
+            Attributes = resource.Attributes;
+            if (resource.Creator == null)
+                return;
+            Creator = resource.Creator;
         }
 
-        /// <summary>
-        /// Construct a Person from an IdMResource
-        /// </summary>
-        /// <param name="resource">base class</param>
-        public Person(IdmResource resource) : base(resource)
-        {
-            ObjectType = ForcedObjType = "Person";
-            var identifierResource = resource as SecurityIdentifierResource;
-            if (identifierResource != null)
-                Clone(identifierResource);
-        }
+        readonly string ForcedObjType;
 
-        
         /// <summary>
-        /// For a Person object this can only be 'Person'
+        /// Object Type (can only be Person)
         /// </summary>
         [Required]
         public override sealed string ObjectType
@@ -65,92 +50,203 @@ namespace IdmNet.Models
         }
 
         /// <summary>
-        /// (aka AD User Cannot Change Password) Will sync from AD to track whether the user is locked out from changing their AD password
+        /// Account Name - User's log on name
+        /// </summary>
+        public string AccountName
+        {
+            get { return GetAttrValue("AccountName"); }
+            set {
+                SetAttrValue("AccountName", value); 
+            }
+        }
+
+
+        /// <summary>
+        /// AD User Cannot Change Password - Will sync from AD to track whether the user is locked out from changing their AD password
         /// </summary>
         public bool? AD_UserCannotChangePassword
         {
             get { return AttrToBool("AD_UserCannotChangePassword"); }
-            set { SetAttrValue("AD_UserCannotChangePassword", value.ToString()); }
+            set { 
+                SetAttrValue("AD_UserCannotChangePassword", value.ToString());
+            }
         }
 
+
         /// <summary>
-        /// Person's Address
+        /// Address - 
         /// </summary>
         public string Address
         {
             get { return GetAttrValue("Address"); }
-            set { SetAttrValue("Address", value); }
-        }
-
-        /// <summary>
-        /// Person's Assistance - reference to another person
-        /// </summary>
-        public Person Assistant
-        {
-            get { return GetAttr("Assistant", _assistant); }
-            set
-            {
-                _assistant = value;
-                SetAttrValue("Assistant", ObjectIdOrNull(value));
+            set {
+                SetAttrValue("Address", value); 
             }
         }
 
+
         /// <summary>
-        /// Person's City
+        /// Assistant - 
+        /// </summary>
+        public Person Assistant
+        {
+            get { return GetAttr("Assistant", _theAssistant); }
+            set 
+            { 
+                _theAssistant = value;
+                SetAttrValue("Assistant", ObjectIdOrNull(value)); 
+            }
+        }
+        private Person _theAssistant;
+
+
+        /// <summary>
+        /// AuthN Workflow Locked Out - This is the list of AuthN Processes a user is locked out of
+        /// </summary>
+        public List<WorkflowDefinition> AuthNWFLockedOut
+        {
+            get { return GetMultiValuedAttr("AuthNWFLockedOut", _theAuthNWFLockedOut); }
+            set { SetMultiValuedAttr("AuthNWFLockedOut", out _theAuthNWFLockedOut, value); }
+        }
+        private List<WorkflowDefinition> _theAuthNWFLockedOut;
+
+
+        /// <summary>
+        /// AuthN Workflow Registered - This is the list of AuthN Processes a user is registered for
+        /// </summary>
+        public List<WorkflowDefinition> AuthNWFRegistered
+        {
+            get { return GetMultiValuedAttr("AuthNWFRegistered", _theAuthNWFRegistered); }
+            set { SetMultiValuedAttr("AuthNWFRegistered", out _theAuthNWFRegistered, value); }
+        }
+        private List<WorkflowDefinition> _theAuthNWFRegistered;
+
+
+        /// <summary>
+        /// City - 
         /// </summary>
         public string City
         {
             get { return GetAttrValue("City"); }
-            set { SetAttrValue("City", value); }
+            set {
+                SetAttrValue("City", value); 
+            }
         }
 
+
         /// <summary>
-        /// Person's Company
+        /// Company - 
         /// </summary>
         public string Company
         {
             get { return GetAttrValue("Company"); }
-            set { SetAttrValue("Company", value); }
+            set {
+                SetAttrValue("Company", value); 
+            }
         }
 
+
         /// <summary>
-        /// Person's Cost Center
+        /// Cost Center - 
         /// </summary>
         public string CostCenter
         {
             get { return GetAttrValue("CostCenter"); }
-            set { SetAttrValue("CostCenter", value); }
+            set {
+                SetAttrValue("CostCenter", value); 
+            }
         }
 
+
         /// <summary>
-        /// Person's Cost Center Name
+        /// Cost Center Name - 
         /// </summary>
         public string CostCenterName
         {
             get { return GetAttrValue("CostCenterName"); }
-            set { SetAttrValue("CostCenterName", value); }
+            set {
+                SetAttrValue("CostCenterName", value); 
+            }
         }
 
+
         /// <summary>
-        /// A Person's Country/Region
+        /// Country/Region - 
         /// </summary>
         public string Country
         {
             get { return GetAttrValue("Country"); }
-            set { SetAttrValue("Country", value); }
+            set {
+                SetAttrValue("Country", value); 
+            }
         }
 
+
         /// <summary>
-        /// A Person's Department
+        /// Department - 
         /// </summary>
         public string Department
         {
             get { return GetAttrValue("Department"); }
-            set { SetAttrValue("Department", value); }
+            set {
+                SetAttrValue("Department", value); 
+            }
         }
 
+
         /// <summary>
-        /// A Person's end date as an employee
+        /// Domain - Choose the domain where you want to create the user account for this user
+        /// </summary>
+        public string Domain
+        {
+            get { return GetAttrValue("Domain"); }
+            set {
+                SetAttrValue("Domain", value); 
+            }
+        }
+
+
+        /// <summary>
+        /// Domain Configuration - A reference to a the parent Domain resource for this resource.
+        /// </summary>
+        public DomainConfiguration DomainConfiguration
+        {
+            get { return GetAttr("DomainConfiguration", _theDomainConfiguration); }
+            set 
+            { 
+                _theDomainConfiguration = value;
+                SetAttrValue("DomainConfiguration", ObjectIdOrNull(value)); 
+            }
+        }
+        private DomainConfiguration _theDomainConfiguration;
+
+
+        /// <summary>
+        /// E-mail - Primary e-mail address for the user
+        /// </summary>
+        public string Email
+        {
+            get { return GetAttrValue("Email"); }
+            set {
+                SetAttrValue("Email", value); 
+            }
+        }
+
+
+        /// <summary>
+        /// E-mail Alias - E-mail alias. It is used to create the e-mail address
+        /// </summary>
+        public string MailNickname
+        {
+            get { return GetAttrValue("MailNickname"); }
+            set {
+                SetAttrValue("MailNickname", value); 
+            }
+        }
+
+
+        /// <summary>
+        /// Employee End Date - 
         /// </summary>
         public DateTime? EmployeeEndDate
         {
@@ -158,17 +254,21 @@ namespace IdmNet.Models
             set { SetAttrValue("EmployeeEndDate", value.ToString()); }
         }
 
+
         /// <summary>
-        /// A Person's Employee ID (often some other unique ID)
+        /// Employee ID - 
         /// </summary>
         public string EmployeeID
         {
             get { return GetAttrValue("EmployeeID"); }
-            set { SetAttrValue("EmployeeID", value); }
+            set {
+                SetAttrValue("EmployeeID", value); 
+            }
         }
 
+
         /// <summary>
-        /// A Person's start date as an employee
+        /// Employee Start Date - 
         /// </summary>
         public DateTime? EmployeeStartDate
         {
@@ -176,74 +276,93 @@ namespace IdmNet.Models
             set { SetAttrValue("EmployeeStartDate", value.ToString()); }
         }
 
+
         /// <summary>
-        /// A Person's employee type.  By default must be "Contractor", "Intern", or "Full Time Employee" unless 
-        /// change in Identity Manager's Schema.
+        /// Employee Type - 
         /// </summary>
         public string EmployeeType
         {
             get { return GetAttrValue("EmployeeType"); }
-            set { SetAttrValue("EmployeeType", value); }
+            set {
+                SetAttrValue("EmployeeType", value); 
+            }
         }
 
+
         /// <summary>
-        /// A Person's Office Fax number
+        /// Fax - 
         /// </summary>
         public string OfficeFax
         {
             get { return GetAttrValue("OfficeFax"); }
-            set { SetAttrValue("OfficeFax", value); }
+            set {
+                SetAttrValue("OfficeFax", value); 
+            }
         }
 
+
         /// <summary>
-        /// A Person's first name (givenName in AD)
+        /// First Name - 
         /// </summary>
         public string FirstName
         {
             get { return GetAttrValue("FirstName"); }
-            set { SetAttrValue("FirstName", value); }
+            set {
+                SetAttrValue("FirstName", value); 
+            }
         }
 
+
         /// <summary>
-        /// Tracks the number of times the user has unsuccessfully attempted to run an AuthN WF
+        /// Freeze Count - 
         /// </summary>
         public int? FreezeCount
         {
             get { return AttrToInteger("FreezeCount"); }
-            set { SetAttrValue("FreezeCount", value.ToString()); }
+            set { 
+                SetAttrValue("FreezeCount", value.ToString());
+            }
         }
 
+
         /// <summary>
-        /// Defines the amount of functionality that is disabled due to unsuccessful AuthN WF attempts
+        /// Freeze Level - Tracks the number of times the user has unsuccessfully attempted to run an AuthN WF
         /// </summary>
         public string FreezeLevel
         {
             get { return GetAttrValue("FreezeLevel"); }
-            set { SetAttrValue("FreezeLevel", value); }
+            set {
+                SetAttrValue("FreezeLevel", value); 
+            }
         }
 
 
         /// <summary>
-        /// A Person's job title
+        /// Job Title - 
         /// </summary>
         public string JobTitle
         {
             get { return GetAttrValue("JobTitle"); }
-            set { SetAttrValue("JobTitle", value); }
+            set {
+                SetAttrValue("JobTitle", value); 
+            }
         }
 
+
         /// <summary>
-        /// A Person's last name (sn in AD)
+        /// Last Name - 
         /// </summary>
         public string LastName
         {
             get { return GetAttrValue("LastName"); }
-            set { SetAttrValue("LastName", value); }
+            set {
+                SetAttrValue("LastName", value); 
+            }
         }
 
 
         /// <summary>
-        /// The Last time the person attempted a reset (to be used in conjunction with Freeze Time and Freeze Level)
+        /// Last Reset Attempt Time - 
         /// </summary>
         public DateTime? LastResetAttemptTime
         {
@@ -253,72 +372,88 @@ namespace IdmNet.Models
 
 
         /// <summary>
-        /// This is the list of gate registration ids used by the lockout gate
+        /// Lockout Gate Registration Data Ids - This is the list of gate registration ids used by the lockout gate
         /// </summary>
-        public List<IdmResource> AuthNLockoutRegistrationID
+        public List<GateRegistration> AuthNLockoutRegistrationID
         {
-            get { return GetMultiValuedAttr("AuthNLockoutRegistrationID", _authNLockoutRegistrationID); }
-            set { SetMultiValuedAttr("AuthNLockoutRegistrationID", out _authNLockoutRegistrationID, value); }
+            get { return GetMultiValuedAttr("AuthNLockoutRegistrationID", _theAuthNLockoutRegistrationID); }
+            set { SetMultiValuedAttr("AuthNLockoutRegistrationID", out _theAuthNLockoutRegistrationID, value); }
         }
-
+        private List<GateRegistration> _theAuthNLockoutRegistrationID;
 
 
         /// <summary>
-        /// A Person's Country/Region
+        /// Login Name - This is a combination for domain/Alias
         /// </summary>
         public string LoginName
         {
             get { return GetAttrValue("LoginName"); }
-            set { SetAttrValue("LoginName", value); }
-        }
-
-        /// <summary>
-        /// A Person's Manager
-        /// </summary>
-        public Person Manager
-        {
-            get { return GetAttr("Manager", _manager); }
-            set
-            {
-                _manager = value;
-                SetAttrValue("Manager", ObjectIdOrNull(value));
+            set {
+                SetAttrValue("LoginName", value); 
             }
         }
 
+
         /// <summary>
-        /// The person's middle name
+        /// Manager - 
+        /// </summary>
+        public Person Manager
+        {
+            get { return GetAttr("Manager", _theManager); }
+            set 
+            { 
+                _theManager = value;
+                SetAttrValue("Manager", ObjectIdOrNull(value)); 
+            }
+        }
+        private Person _theManager;
+
+
+        /// <summary>
+        /// Middle Name - 
         /// </summary>
         public string MiddleName
         {
             get { return GetAttrValue("MiddleName"); }
-            set { SetAttrValue("MiddleName", value); }
+            set {
+                SetAttrValue("MiddleName", value); 
+            }
         }
 
+
         /// <summary>
-        /// The person's mobile phone number
+        /// Mobile Phone - 
         /// </summary>
         public string MobilePhone
         {
             get { return GetAttrValue("MobilePhone"); }
-            set { SetAttrValue("MobilePhone", value); }
+            set {
+                SetAttrValue("MobilePhone", value); 
+            }
         }
 
+
         /// <summary>
-        /// The person's office location
+        /// Office Location - 
         /// </summary>
         public string OfficeLocation
         {
             get { return GetAttrValue("OfficeLocation"); }
-            set { SetAttrValue("OfficeLocation", value); }
+            set {
+                SetAttrValue("OfficeLocation", value); 
+            }
         }
 
+
         /// <summary>
-        /// The person's office phone number
+        /// Office Phone - 
         /// </summary>
         public string OfficePhone
         {
             get { return GetAttrValue("OfficePhone"); }
-            set { SetAttrValue("OfficePhone", value); }
+            set {
+                SetAttrValue("OfficePhone", value); 
+            }
         }
 
 
@@ -328,8 +463,11 @@ namespace IdmNet.Models
         public string msidmOneTimePasswordEmailAddress
         {
             get { return GetAttrValue("msidmOneTimePasswordEmailAddress"); }
-            set { SetAttrValue("msidmOneTimePasswordEmailAddress", value); }
+            set {
+                SetAttrValue("msidmOneTimePasswordEmailAddress", value); 
+            }
         }
+
 
         /// <summary>
         /// One-Time Password Mobile Phone - Mobile phone number used to deliver a one-time password to the user.
@@ -337,11 +475,14 @@ namespace IdmNet.Models
         public string msidmOneTimePasswordMobilePhone
         {
             get { return GetAttrValue("msidmOneTimePasswordMobilePhone"); }
-            set { SetAttrValue("msidmOneTimePasswordMobilePhone", value); }
+            set {
+                SetAttrValue("msidmOneTimePasswordMobilePhone", value); 
+            }
         }
 
+
         /// <summary>
-        /// A photograph of the person
+        /// Photo - 
         /// </summary>
         public byte[] Photo
         {
@@ -349,72 +490,113 @@ namespace IdmNet.Models
             set { SetAttrValue("Photo", Convert.ToBase64String(value)); }
         }
 
+
         /// <summary>
-        /// The person's postal/zip code
+        /// Postal Code - 
         /// </summary>
         public string PostalCode
         {
             get { return GetAttrValue("PostalCode"); }
-            set { SetAttrValue("PostalCode", value); }
+            set {
+                SetAttrValue("PostalCode", value); 
+            }
         }
 
+
         /// <summary>
-        /// List of alternate email addresses for the person (used by AD/Exchange)
+        /// Proxy Address Collection - 
         /// </summary>
         public List<string> ProxyAddressCollection
         {
             get { return GetAttrValues("ProxyAddressCollection"); }
-            set { SetAttrValues("ProxyAddressCollection", value); }
+            set {
+                SetAttrValues("ProxyAddressCollection", value); 
+            }
         }
 
 
         /// <summary>
-        /// True if the person has RAS Access Permission
+        /// RAS Access Permission - 
         /// </summary>
         public bool? IsRASEnabled
         {
-            get { return GetAttr("IsRASEnabled") == null ? null : GetAttr("IsRASEnabled").ToBool(); }
-            set { SetAttrValue("IsRASEnabled", value.ToString()); }
+            get { return AttrToBool("IsRASEnabled"); }
+            set { 
+                SetAttrValue("IsRASEnabled", value.ToString());
+            }
         }
 
+
         /// <summary>
-        /// True if the person is registered for self-service password reset
+        /// Register - 
         /// </summary>
         public bool? Register
         {
-            get { return GetAttr("Register") == null ? null : GetAttr("Register").ToBool(); }
-            set { SetAttrValue("Register", value.ToString()); }
+            get { return AttrToBool("Register"); }
+            set { 
+                SetAttrValue("Register", value.ToString());
+            }
         }
 
+
         /// <summary>
-        /// Tracks if the user must register for SSPR
+        /// Registration Required - Tracks if the user must register for SSPR
         /// </summary>
         public bool? RegistrationRequired
         {
-            get { return GetAttr("RegistrationRequired") == null ? null : GetAttr("RegistrationRequired").ToBool(); }
-            set { SetAttrValue("RegistrationRequired", value.ToString()); }
+            get { return AttrToBool("RegistrationRequired"); }
+            set { 
+                SetAttrValue("RegistrationRequired", value.ToString());
+            }
         }
 
+
         /// <summary>
-        /// This attribute is used to trigger a password reset process.
+        /// Reset Password - This attribute is used to trigger a password reset process.
         /// </summary>
         public string ResetPassword
         {
             get { return GetAttrValue("ResetPassword"); }
-            set { SetAttrValue("ResetPassword", value); }
-        }
-
-        /// <summary>
-        /// Reference tot he Domain Name configuration object for the resource (if any)
-        /// </summary>
-        public IdmResource TimeZone
-        {
-            get { return GetAttr("TimeZone", _timeZone); }
-            set
-            {
-                _timeZone = value;
-                SetAttrValue("TimeZone", ObjectIdOrNull(value));
+            set {
+                SetAttrValue("ResetPassword", value); 
             }
         }
+
+
+        /// <summary>
+        /// Resource SID - A binary value that specifies the security identifier (SID) of the user. The SID is a unique value used to identify the user as a security principal.
+        /// </summary>
+        public byte[] ObjectSID
+        {
+            get { return GetAttr("ObjectSID") == null ? null : GetAttr("ObjectSID").ToBinary(); }
+            set { SetAttrValue("ObjectSID", Convert.ToBase64String(value)); }
+        }
+
+
+        /// <summary>
+        /// SID History - Contains previous SIDs used for the resource if the resource was moved from another domain.
+        /// </summary>
+        public List<byte[]> SIDHistory
+        {
+            get { return GetAttr("SIDHistory").ToBinaries(); }
+            set { SetAttrValues("SIDHistory", value.Select(Convert.ToBase64String).ToList()); }
+        }
+
+
+        /// <summary>
+        /// Time Zone - Reference to timezone configuration
+        /// </summary>
+        public TimeZoneConfiguration TimeZone
+        {
+            get { return GetAttr("TimeZone", _theTimeZone); }
+            set 
+            { 
+                _theTimeZone = value;
+                SetAttrValue("TimeZone", ObjectIdOrNull(value)); 
+            }
+        }
+        private TimeZoneConfiguration _theTimeZone;
+
+
     }
 }

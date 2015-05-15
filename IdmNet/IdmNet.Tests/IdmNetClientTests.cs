@@ -319,7 +319,7 @@ namespace IdmNet.Tests
             var it = IdmNetClientFactory.BuildClient();
 
             // Act
-            ObjectTypeDescription result = await it.GetSchemaAsync("Person");
+            Schema result = await it.GetSchemaAsync("Person");
 
             // Assert
             Assert.AreEqual("User", result.DisplayName);
@@ -333,7 +333,7 @@ namespace IdmNet.Tests
             Assert.AreEqual("Microsoft.ResouceManagement.PortalClient", result.UsageKeyword[0]);
 
             var expectedBindingCount = 59;
-            Assert.AreEqual(expectedBindingCount, result.BindingDescriptions.Count);
+            Assert.IsTrue(result.BindingDescriptions.Count >= expectedBindingCount);
             for (int i = 0; i < expectedBindingCount; i++)
             {
                 Assert.AreEqual(personOid, result.BindingDescriptions[i].BoundObjectType.ObjectID);
@@ -350,16 +350,6 @@ namespace IdmNet.Tests
             Assert.AreEqual("AccountName", result.BindingDescriptions[0].BoundAttributeType.Name);
             Assert.AreEqual(null, result.BindingDescriptions[0].BoundAttributeType.StringRegex);
             Assert.AreEqual("Microsoft.ResourceManagement.WebServices", result.BindingDescriptions[0].BoundAttributeType.UsageKeyword[0]);
-
-            Assert.AreEqual("Reference", result.BindingDescriptions[expectedBindingCount - 1].BoundAttributeType.DataType);
-            Assert.AreEqual(false, result.BindingDescriptions[expectedBindingCount - 1].BoundAttributeType.Multivalued);
-            Assert.AreEqual("Time Zone", result.BindingDescriptions[expectedBindingCount - 1].BoundAttributeType.DisplayName);
-            Assert.AreEqual("Reference to timezone configuration", result.BindingDescriptions[expectedBindingCount - 1].BoundAttributeType.Description);
-            Assert.AreEqual(null, result.BindingDescriptions[expectedBindingCount - 1].BoundAttributeType.IntegerMaximum);
-            Assert.AreEqual(null, result.BindingDescriptions[expectedBindingCount - 1].BoundAttributeType.IntegerMinimum);
-            Assert.AreEqual("TimeZone", result.BindingDescriptions[expectedBindingCount - 1].BoundAttributeType.Name);
-            Assert.AreEqual(null, result.BindingDescriptions[expectedBindingCount - 1].BoundAttributeType.StringRegex);
-            Assert.AreEqual("Microsoft.ResourceManagement.WebServices", result.BindingDescriptions[expectedBindingCount - 1].BoundAttributeType.UsageKeyword[0]);
 
         }
 

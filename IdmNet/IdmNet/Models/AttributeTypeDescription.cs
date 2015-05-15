@@ -1,41 +1,150 @@
-﻿namespace IdmNet.Models
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+// ReSharper disable InconsistentNaming
+
+namespace IdmNet.Models
 {
     /// <summary>
-    /// Attribute Type Description - This describes an attribute type
+    /// AttributeTypeDescription - This describes an attribute type.
     /// </summary>
-    public class AttributeTypeDescription : AttributeInfoResource
+    public class AttributeTypeDescription : IdmResource
     {
         /// <summary>
         /// Parameterless CTOR
         /// </summary>
         public AttributeTypeDescription()
         {
+            ObjectType = ForcedObjType = "AttributeTypeDescription";
         }
 
         /// <summary>
-        /// Base CTOR
+        /// Build a AttributeTypeDescription object from a IdmResource object
         /// </summary>
-        /// <param name="idmResource">base class</param>
-        public AttributeTypeDescription(IdmResource idmResource) : base(idmResource)
+        /// <param name="resource">base class</param>
+        public AttributeTypeDescription(IdmResource resource)
         {
+            ObjectType = ForcedObjType = "AttributeTypeDescription";
+            Attributes = resource.Attributes;
+            if (resource.Creator == null)
+                return;
+            Creator = resource.Creator;
+        }
+
+        readonly string ForcedObjType;
+
+        /// <summary>
+        /// Object Type (can only be AttributeTypeDescription)
+        /// </summary>
+        [Required]
+        public override sealed string ObjectType
+        {
+            get { return GetAttrValue("ObjectType"); }
+            set
+            {
+                if (value != ForcedObjType)
+                    throw new InvalidOperationException("Object Type of AttributeTypeDescription can only be 'AttributeTypeDescription'");
+                SetAttrValue("ObjectType", value);
+            }
         }
 
         /// <summary>
-        /// (Binary|Boolean|DateTime|Integer|Reference|String|Text)
+        /// Data Type - 
         /// </summary>
-        public string DataType 
+        [Required]
+        public string DataType
         {
             get { return GetAttrValue("DataType"); }
-            set { SetAttrValue("DataType", value); }
+            set {
+                SetAttrValue("DataType", value); 
+            }
         }
 
+
         /// <summary>
-        /// (required) A true indicates this attribute can be localized.  Only allowed for String DataTypes
+        /// Integer Maximum - For an Integer attribute, this is the maximum value, inclusive.
         /// </summary>
-        public bool Multivalued 
+        public int? IntegerMaximum
         {
-            get { return AttrToBool("Multivalued") == true; }
-            set { SetAttrValue("Multivalued", value.ToString()); }
+            get { return AttrToInteger("IntegerMaximum"); }
+            set { 
+                SetAttrValue("IntegerMaximum", value.ToString());
+            }
+        }
+
+
+        /// <summary>
+        /// Integer Minimum - For an Integer attribute, this is the minimum value, inclusive.
+        /// </summary>
+        public int? IntegerMinimum
+        {
+            get { return AttrToInteger("IntegerMinimum"); }
+            set { 
+                SetAttrValue("IntegerMinimum", value.ToString());
+            }
+        }
+
+
+        /// <summary>
+        /// Localizable - A true indicates this attribute can be localized.  Only allowed for String DataTypes.
+        /// </summary>
+        public bool? Localizable
+        {
+            get { return AttrToBool("Localizable"); }
+            set { 
+                SetAttrValue("Localizable", value.ToString());
+            }
+        }
+
+
+        /// <summary>
+        /// Multivalued - 
+        /// </summary>
+        [Required]
+        public bool? Multivalued
+        {
+            get { return AttrToBool("Multivalued"); }
+            set { 
+                SetAttrValue("Multivalued", value.ToString());
+            }
+        }
+
+
+        /// <summary>
+        /// Name - 
+        /// </summary>
+        [Required]
+        public string Name
+        {
+            get { return GetAttrValue("Name"); }
+            set {
+                SetAttrValue("Name", value); 
+            }
+        }
+
+
+        /// <summary>
+        /// String Regular Expression - This is a .Net Regex pattern that defines what string values are allowed.
+        /// </summary>
+        public string StringRegex
+        {
+            get { return GetAttrValue("StringRegex"); }
+            set {
+                SetAttrValue("StringRegex", value); 
+            }
+        }
+
+
+        /// <summary>
+        /// Usage Keyword - 
+        /// </summary>
+        public List<string> UsageKeyword
+        {
+            get { return GetAttrValues("UsageKeyword"); }
+            set {
+                SetAttrValues("UsageKeyword", value); 
+            }
         }
 
 

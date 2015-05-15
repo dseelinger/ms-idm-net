@@ -22,36 +22,5 @@ namespace IdmNet.Tests
             Assert.AreEqual(resourceTime, it.ResourceTime);
         }
 
-        public static IdmResource BuildAttrInfoAsIdmResource()
-        {
-            var baseClass = new AttributeInfoResource
-            {
-                DisplayName = "AttributeInfoResource DisplayName",
-                Creator = new Person { DisplayName = "Creator Name", ObjectID = "Creator ObjectID" },
-                ObjectID = "Test ObjectID",
-                Name = "Test Name",
-                UsageKeyword = new List<string> { "Test UsageKeyword1", "Test UsageKeyword2" },
-                IntegerMaximum = 1,
-                IntegerMinimum = 10,
-                Localizable = true,
-                StringRegex = "Test StringRegex"
-            };
-            IdmResource idmResource = baseClass;
-            return idmResource;
-        }
-
-        public static void AssertAttrInfoOk(AttributeInfoResource it)
-        {
-            Assert.AreEqual("AttributeInfoResource DisplayName", it.DisplayName);
-            Assert.AreEqual("Creator Name", it.Creator.DisplayName);
-            Assert.AreEqual("Test ObjectID", it.ObjectID);
-            Assert.AreEqual("Test Name", it.Name);
-            Assert.AreEqual("Test UsageKeyword1", it.UsageKeyword[0]);
-            Assert.AreEqual("Test UsageKeyword2", it.UsageKeyword[1]);
-            Assert.AreEqual(1, it.IntegerMaximum);
-            Assert.AreEqual(10, it.IntegerMinimum);
-            Assert.AreEqual(true, it.Localizable);
-            Assert.AreEqual("Test StringRegex", it.StringRegex);
-        }
     }
 }

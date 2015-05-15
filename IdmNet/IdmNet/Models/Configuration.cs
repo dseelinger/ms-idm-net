@@ -7,25 +7,25 @@ using System.Linq;
 namespace IdmNet.Models
 {
     /// <summary>
-    /// ObjectTypeDescription - This describes a resource type.
+    /// Configuration - This is used for user to specify the configuration for each application.
     /// </summary>
-    public class ObjectTypeDescription : IdmResource
+    public class Configuration : IdmResource
     {
         /// <summary>
         /// Parameterless CTOR
         /// </summary>
-        public ObjectTypeDescription()
+        public Configuration()
         {
-            ObjectType = ForcedObjType = "ObjectTypeDescription";
+            ObjectType = ForcedObjType = "Configuration";
         }
 
         /// <summary>
-        /// Build a ObjectTypeDescription object from a IdmResource object
+        /// Build a Configuration object from a IdmResource object
         /// </summary>
         /// <param name="resource">base class</param>
-        public ObjectTypeDescription(IdmResource resource)
+        public Configuration(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "ObjectTypeDescription";
+            ObjectType = ForcedObjType = "Configuration";
             Attributes = resource.Attributes;
             if (resource.Creator == null)
                 return;
@@ -35,7 +35,7 @@ namespace IdmNet.Models
         readonly string ForcedObjType;
 
         /// <summary>
-        /// Object Type (can only be ObjectTypeDescription)
+        /// Object Type (can only be Configuration)
         /// </summary>
         [Required]
         public override sealed string ObjectType
@@ -44,32 +44,20 @@ namespace IdmNet.Models
             set
             {
                 if (value != ForcedObjType)
-                    throw new InvalidOperationException("Object Type of ObjectTypeDescription can only be 'ObjectTypeDescription'");
+                    throw new InvalidOperationException("Object Type of Configuration can only be 'Configuration'");
                 SetAttrValue("ObjectType", value);
             }
         }
 
         /// <summary>
-        /// Name - 
+        /// Configuration Data - It is a configurationData type.
         /// </summary>
         [Required]
-        public string Name
+        public string ConfigurationData
         {
-            get { return GetAttrValue("Name"); }
+            get { return GetAttrValue("ConfigurationData"); }
             set {
-                SetAttrValue("Name", value); 
-            }
-        }
-
-
-        /// <summary>
-        /// Usage Keyword - 
-        /// </summary>
-        public List<string> UsageKeyword
-        {
-            get { return GetAttrValues("UsageKeyword"); }
-            set {
-                SetAttrValues("UsageKeyword", value); 
+                SetAttrValue("ConfigurationData", value); 
             }
         }
 

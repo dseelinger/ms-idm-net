@@ -7,25 +7,25 @@ using System.Linq;
 namespace IdmNet.Models
 {
     /// <summary>
-    /// ObjectTypeDescription - This describes a resource type.
+    /// TimeZoneConfiguration - This resource defines a supported timezone in FIM Portal.
     /// </summary>
-    public class ObjectTypeDescription : IdmResource
+    public class TimeZoneConfiguration : IdmResource
     {
         /// <summary>
         /// Parameterless CTOR
         /// </summary>
-        public ObjectTypeDescription()
+        public TimeZoneConfiguration()
         {
-            ObjectType = ForcedObjType = "ObjectTypeDescription";
+            ObjectType = ForcedObjType = "TimeZoneConfiguration";
         }
 
         /// <summary>
-        /// Build a ObjectTypeDescription object from a IdmResource object
+        /// Build a TimeZoneConfiguration object from a IdmResource object
         /// </summary>
         /// <param name="resource">base class</param>
-        public ObjectTypeDescription(IdmResource resource)
+        public TimeZoneConfiguration(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "ObjectTypeDescription";
+            ObjectType = ForcedObjType = "TimeZoneConfiguration";
             Attributes = resource.Attributes;
             if (resource.Creator == null)
                 return;
@@ -35,7 +35,7 @@ namespace IdmNet.Models
         readonly string ForcedObjType;
 
         /// <summary>
-        /// Object Type (can only be ObjectTypeDescription)
+        /// Object Type (can only be TimeZoneConfiguration)
         /// </summary>
         [Required]
         public override sealed string ObjectType
@@ -44,32 +44,20 @@ namespace IdmNet.Models
             set
             {
                 if (value != ForcedObjType)
-                    throw new InvalidOperationException("Object Type of ObjectTypeDescription can only be 'ObjectTypeDescription'");
+                    throw new InvalidOperationException("Object Type of TimeZoneConfiguration can only be 'TimeZoneConfiguration'");
                 SetAttrValue("ObjectType", value);
             }
         }
 
         /// <summary>
-        /// Name - 
+        /// Time Zone Id - .Net equivalent timezone id
         /// </summary>
         [Required]
-        public string Name
+        public string TimeZoneId
         {
-            get { return GetAttrValue("Name"); }
+            get { return GetAttrValue("TimeZoneId"); }
             set {
-                SetAttrValue("Name", value); 
-            }
-        }
-
-
-        /// <summary>
-        /// Usage Keyword - 
-        /// </summary>
-        public List<string> UsageKeyword
-        {
-            get { return GetAttrValues("UsageKeyword"); }
-            set {
-                SetAttrValues("UsageKeyword", value); 
+                SetAttrValue("TimeZoneId", value); 
             }
         }
 

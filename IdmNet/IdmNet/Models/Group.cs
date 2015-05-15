@@ -1,20 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 // ReSharper disable InconsistentNaming
 
 namespace IdmNet.Models
 {
     /// <summary>
-    /// Group class - covers both Security Groups and Distribution Lists
+    /// Group - 
     /// </summary>
-    public class Group : SecurityIdentifierResource
+    public class Group : IdmResource
     {
-        private Person _displayedOwner;
-        private List<Person> _owners;
-        private List<SecurityIdentifierResource> _computedMembers;
-        private List<SecurityIdentifierResource> _explicitMembers;
-
         /// <summary>
         /// Parameterless CTOR
         /// </summary>
@@ -24,29 +20,19 @@ namespace IdmNet.Models
         }
 
         /// <summary>
-        /// Build a Group object from a SecurityIdentifierResource object
-        /// </summary>
-        /// <param name="resource">base class</param>
-        public Group(SecurityIdentifierResource resource)
-            : base(resource)
-        {
-            ObjectType = ForcedObjType = "Group";
-            Clone(resource);
-        }
-
-        /// <summary>
-        /// Construct a Group from an IdMResource
+        /// Build a Group object from a IdmResource object
         /// </summary>
         /// <param name="resource">base class</param>
         public Group(IdmResource resource)
-            : base(resource)
         {
             ObjectType = ForcedObjType = "Group";
-            var identifierResource = resource as SecurityIdentifierResource;
-            if (identifierResource != null)
-                Clone(identifierResource);
+            Attributes = resource.Attributes;
+            if (resource.Creator == null)
+                return;
+            Creator = resource.Creator;
         }
 
+        readonly string ForcedObjType;
 
         /// <summary>
         /// Object Type (can only be Group)
@@ -58,110 +44,230 @@ namespace IdmNet.Models
             set
             {
                 if (value != ForcedObjType)
-                    throw new InvalidOperationException("Object Type of Person can only be 'Person'");
+                    throw new InvalidOperationException("Object Type of Group can only be 'Group'");
                 SetAttrValue("ObjectType", value);
             }
         }
 
         /// <summary>
-        /// List of owners of the Group
+        /// Account Name - User's log on name
         /// </summary>
-        public List<Person> Owner
+        public string AccountName
         {
-            get { return GetMultiValuedAttr("Owner", _owners); }
-            set { SetMultiValuedAttr("Owner", out _owners, value); }
+            get { return GetAttrValue("AccountName"); }
+            set {
+                SetAttrValue("AccountName", value); 
+            }
         }
 
-        /// <summary>
-        /// Resources in the set that are computed from the membership filter.  List of resources that are currently 
-        /// computed as being members of the group. Should only be retrieved from Identity Manger.  Use ExplicitMember
-        /// to manually add members to the group.
-        /// </summary>
-        public List<SecurityIdentifierResource> ComputedMember
-        {
-            get { return GetMultiValuedAttr("ComputedMember", _computedMembers); }
-            set { SetMultiValuedAttr("ComputedMember", out _computedMembers, value); }
-        }
 
         /// <summary>
-        /// Determines when evaluation of the group happens with respect to request processing - real-time or deferred.
+        /// Computed Member - Resources in the set that are computed from the membership filter
+        /// </summary>
+        public List<IdmResource> ComputedMember
+        {
+            get { return GetMultiValuedAttr("ComputedMember", _theComputedMember); }
+            set { SetMultiValuedAttr("ComputedMember", out _theComputedMember, value); }
+        }
+        private List<IdmResource> _theComputedMember;
+
+
+        /// <summary>
+        /// Deferred Evaluation - Determines when evaluation of the group happens with respect to request processing - real-time or deferred.
         /// </summary>
         public bool? msidmDeferredEvaluation
         {
             get { return AttrToBool("msidmDeferredEvaluation"); }
-            set { SetAttrValue("msidmDeferredEvaluation", value.ToString()); }
-        }
-
-        /// <summary>
-        /// Single Person who is listed as the owner of the group
-        /// </summary>
-        public Person DisplayedOwner
-        {
-            get { return GetAttr("DisplayedOwner", _displayedOwner); }
-            set
-            {
-                _displayedOwner = value;
-                SetAttrValue("DisplayedOwner", ObjectIdOrNull(value));
+            set { 
+                SetAttrValue("msidmDeferredEvaluation", value.ToString());
             }
         }
 
+
         /// <summary>
-        /// A predicate defining a subset of the resources.
+        /// Displayed Owner - 
+        /// </summary>
+        public Person DisplayedOwner
+        {
+            get { return GetAttr("DisplayedOwner", _theDisplayedOwner); }
+            set 
+            { 
+                _theDisplayedOwner = value;
+                SetAttrValue("DisplayedOwner", ObjectIdOrNull(value)); 
+            }
+        }
+        private Person _theDisplayedOwner;
+
+
+        /// <summary>
+        /// Domain - Choose the domain where you want to create the user account for this user
+        /// </summary>
+        [Required]
+        public string Domain
+        {
+            get { return GetAttrValue("Domain"); }
+            set {
+                SetAttrValue("Domain", value); 
+            }
+        }
+
+
+        /// <summary>
+        /// Domain Configuration - A reference to a the parent Domain resource for this resource.
+        /// </summary>
+        public DomainConfiguration DomainConfiguration
+        {
+            get { return GetAttr("DomainConfiguration", _theDomainConfiguration); }
+            set 
+            { 
+                _theDomainConfiguration = value;
+                SetAttrValue("DomainConfiguration", ObjectIdOrNull(value)); 
+            }
+        }
+        private DomainConfiguration _theDomainConfiguration;
+
+
+        /// <summary>
+        /// E-mail - Primary email address for the group.
+        /// </summary>
+        public string Email
+        {
+            get { return GetAttrValue("Email"); }
+            set {
+                SetAttrValue("Email", value); 
+            }
+        }
+
+
+        /// <summary>
+        /// E-mail Alias - E-mail alias. It is used to create the e-mail address
+        /// </summary>
+        public string MailNickname
+        {
+            get { return GetAttrValue("MailNickname"); }
+            set {
+                SetAttrValue("MailNickname", value); 
+            }
+        }
+
+
+        /// <summary>
+        /// Filter - A predicate defining a subset of the resources.
         /// </summary>
         public string Filter
         {
             get { return GetAttrValue("Filter"); }
-            set { SetAttrValue("Filter", value); }
+            set {
+                SetAttrValue("Filter", value); 
+            }
         }
 
+
         /// <summary>
-        /// (aka Manually-managed Membership) Members in the group that are manually managed.
+        /// Manually-managed Membership - Members in the group that are manually managed.
         /// </summary>
-        public List<SecurityIdentifierResource> ExplicitMember
+        public List<IdmResource> ExplicitMember
         {
-            get { return GetMultiValuedAttr("ExplicitMember", _explicitMembers); }
-            set { SetMultiValuedAttr("ExplicitMember", out _explicitMembers, value); }
+            get { return GetMultiValuedAttr("ExplicitMember", _theExplicitMember); }
+            set { SetMultiValuedAttr("ExplicitMember", out _theExplicitMember, value); }
         }
+        private List<IdmResource> _theExplicitMember;
+
 
         /// <summary>
-        /// Membership Add Workflow - Workflow that fires when someone is manually added to the group. Note that this
-        /// is a string and not a reference object in the Identity Manager Schema.
+        /// Membership Add Workflow - 
         /// </summary>
         [Required]
         public string MembershipAddWorkflow
         {
             get { return GetAttrValue("MembershipAddWorkflow"); }
-            set { SetAttrValue("MembershipAddWorkflow", value); }
+            set {
+                SetAttrValue("MembershipAddWorkflow", value); 
+            }
         }
 
+
         /// <summary>
-        /// If true, no one may be manually added to the group.
+        /// Membership Locked - 
         /// </summary>
         [Required]
         public bool? MembershipLocked
         {
             get { return AttrToBool("MembershipLocked"); }
-            set { SetAttrValue("MembershipLocked", value.ToString()); }
+            set { 
+                SetAttrValue("MembershipLocked", value.ToString());
+            }
         }
 
+
         /// <summary>
-        /// Group scope.  Must be one of (DomainLocal|Global|Universal)
+        /// Owner - 
         /// </summary>
-        [RegularExpression("^(DomainLocal|Global|Universal)$")]
+        public List<Person> Owner
+        {
+            get { return GetMultiValuedAttr("Owner", _theOwner); }
+            set { SetMultiValuedAttr("Owner", out _theOwner, value); }
+        }
+        private List<Person> _theOwner;
+
+
+        /// <summary>
+        /// Resource SID - A binary value that specifies the security identifier (SID) of the user. The SID is a unique value used to identify the user as a security principal.
+        /// </summary>
+        public byte[] ObjectSID
+        {
+            get { return GetAttr("ObjectSID") == null ? null : GetAttr("ObjectSID").ToBinary(); }
+            set { SetAttrValue("ObjectSID", Convert.ToBase64String(value)); }
+        }
+
+
+        /// <summary>
+        /// Scope - 
+        /// </summary>
         [Required]
         public string Scope
         {
             get { return GetAttrValue("Scope"); }
-            set { SetAttrValue("Scope", value); }
+            set {
+                SetAttrValue("Scope", value); 
+            }
         }
 
+
         /// <summary>
-        /// Defined by a filter that matches resources based on date and time attributes
+        /// SID History - Contains previous SIDs used for the resource if the resource was moved from another domain.
+        /// </summary>
+        public List<byte[]> SIDHistory
+        {
+            get { return GetAttr("SIDHistory").ToBinaries(); }
+            set { SetAttrValues("SIDHistory", value.Select(Convert.ToBase64String).ToList()); }
+        }
+
+
+        /// <summary>
+        /// Temporal - Defined by a filter that matches resources based on date and time attributes
         /// </summary>
         public bool? Temporal
         {
             get { return AttrToBool("Temporal"); }
-            set { SetAttrValue("Temporal", value.ToString()); }
+            set { 
+                SetAttrValue("Temporal", value.ToString());
+            }
         }
+
+
+        /// <summary>
+        /// Type - 
+        /// </summary>
+        [Required]
+        public string Type
+        {
+            get { return GetAttrValue("Type"); }
+            set {
+                SetAttrValue("Type", value); 
+            }
+        }
+
+
     }
 }

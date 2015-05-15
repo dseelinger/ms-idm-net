@@ -59,10 +59,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="IdmNetClientFactoryTests.cs" />
-    <Compile Include="Models\AttributeTypeDescriptionTests.cs" />
-    <Compile Include="Models\KeywordedResourceTests.cs" />
-    <Compile Include="Models\BindingDescriptionTests.cs" />
-    <Compile Include="Models\SetTests.cs" />
     <Compile Include="SearchCriteriaTests.cs" />
     <Compile Include="SoapFaultExceptionTests.cs" />
     <Compile Include="IdmSoapBindingTests.cs" />
@@ -71,11 +67,7 @@
     <Compile Include="Models\IdmResourceTests.cs" />
     <Compile Include="Models\IdmAttributeTests.cs" />
     <Compile Include="SoapFactoryModelsTests.cs" />
-    <Compile Include="Models\SecurityIdentifierResourceTests.cs" />
     <Compile Include="SoapResourceClientModelTests.cs" />
-    <Compile Include="Models\PersonTests.cs" />
-    <Compile Include="Models\GroupTests.cs" />
-    <Compile Include="AttributeInfoResourceTests.cs" />
     <Compile Include="TestUtils.cs" />
   </ItemGroup>
   <ItemGroup>
