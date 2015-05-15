@@ -59,6 +59,7 @@
     <Compile Include="Models\ObjectTypeDescription.cs" />
     <Compile Include="Models\Person.cs" />
     <Compile Include="Models\SecurityIdentifierResource.cs" />
+    <Compile Include="Models\Set.cs" />
     <Compile Include="SoapFaultException.cs" />
     <Compile Include="Models\IdmAttribute.cs" />
     <Compile Include="IdmNetClient.cs" />

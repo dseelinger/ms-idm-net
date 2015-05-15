@@ -363,8 +363,8 @@ namespace IdmNet.Models
         /// </summary>
         public List<string> ProxyAddressCollection
         {
-            get { return GetAttrValues("PostalCode"); }
-            set { SetAttrValues("PostalCode", value); }
+            get { return GetAttrValues("ProxyAddressCollection"); }
+            set { SetAttrValues("ProxyAddressCollection", value); }
         }
 
 
