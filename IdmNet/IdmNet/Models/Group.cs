@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public Group(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "Group";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "Group";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

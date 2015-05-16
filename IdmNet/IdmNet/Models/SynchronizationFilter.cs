@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public SynchronizationFilter(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "SynchronizationFilter";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "SynchronizationFilter";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

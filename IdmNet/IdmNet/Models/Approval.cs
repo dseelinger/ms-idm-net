@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public Approval(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "Approval";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "Approval";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

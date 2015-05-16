@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public FilterScope(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "FilterScope";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "FilterScope";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

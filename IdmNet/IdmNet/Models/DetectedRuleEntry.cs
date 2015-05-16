@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public DetectedRuleEntry(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "DetectedRuleEntry";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "DetectedRuleEntry";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public HomepageConfiguration(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "HomepageConfiguration";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "HomepageConfiguration";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

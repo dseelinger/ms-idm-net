@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public ConstantSpecifier(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "ConstantSpecifier";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "ConstantSpecifier";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

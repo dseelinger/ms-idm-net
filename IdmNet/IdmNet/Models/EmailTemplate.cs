@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public EmailTemplate(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "EmailTemplate";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "EmailTemplate";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

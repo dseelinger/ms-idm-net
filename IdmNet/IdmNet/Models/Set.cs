@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public Set(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "Set";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "Set";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

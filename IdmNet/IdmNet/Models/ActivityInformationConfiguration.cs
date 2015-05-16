@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public ActivityInformationConfiguration(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "ActivityInformationConfiguration";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "ActivityInformationConfiguration";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

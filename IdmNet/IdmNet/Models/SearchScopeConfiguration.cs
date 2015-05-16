@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public SearchScopeConfiguration(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "SearchScopeConfiguration";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "SearchScopeConfiguration";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

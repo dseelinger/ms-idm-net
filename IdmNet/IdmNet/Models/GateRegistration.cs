@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public GateRegistration(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "GateRegistration";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "GateRegistration";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

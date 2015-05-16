@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public msidmRequestContext(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "msidmRequestContext";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "msidmRequestContext";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

@@ -67,6 +67,7 @@
     <Compile Include="Models\Function.cs" />
     <Compile Include="Models\GateRegistration.cs" />
     <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\HomepageConfiguration.cs" />
     <Compile Include="Models\ma-data.cs" />
     <Compile Include="Models\ManagementPolicyRule.cs" />
     <Compile Include="Models\msidmCompositeType.cs" />

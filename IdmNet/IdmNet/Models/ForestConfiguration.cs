@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public ForestConfiguration(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "ForestConfiguration";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "ForestConfiguration";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

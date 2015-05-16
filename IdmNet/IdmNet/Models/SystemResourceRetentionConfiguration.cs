@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public SystemResourceRetentionConfiguration(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "SystemResourceRetentionConfiguration";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "SystemResourceRetentionConfiguration";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

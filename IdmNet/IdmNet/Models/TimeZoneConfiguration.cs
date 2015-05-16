@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public TimeZoneConfiguration(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "TimeZoneConfiguration";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "TimeZoneConfiguration";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

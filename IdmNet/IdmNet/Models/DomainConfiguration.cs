@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public DomainConfiguration(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "DomainConfiguration";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "DomainConfiguration";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

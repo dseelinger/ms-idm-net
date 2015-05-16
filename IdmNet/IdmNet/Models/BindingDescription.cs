@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public BindingDescription(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "BindingDescription";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "BindingDescription";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

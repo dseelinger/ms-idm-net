@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public msidmRequestTargetDetail(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "msidmRequestTargetDetail";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "msidmRequestTargetDetail";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

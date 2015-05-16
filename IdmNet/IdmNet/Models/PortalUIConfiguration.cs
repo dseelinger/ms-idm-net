@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public PortalUIConfiguration(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "PortalUIConfiguration";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "PortalUIConfiguration";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

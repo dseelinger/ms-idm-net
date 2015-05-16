@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public msidmSystemConfiguration(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "msidmSystemConfiguration";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "msidmSystemConfiguration";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

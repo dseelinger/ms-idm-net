@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public msidmCompositeType(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "msidmCompositeType";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "msidmCompositeType";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

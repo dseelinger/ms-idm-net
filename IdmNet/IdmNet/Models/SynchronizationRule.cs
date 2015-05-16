@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public SynchronizationRule(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "SynchronizationRule";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "SynchronizationRule";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

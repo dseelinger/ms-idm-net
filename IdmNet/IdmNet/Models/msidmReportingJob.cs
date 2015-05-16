@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public msidmReportingJob(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "msidmReportingJob";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "msidmReportingJob";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

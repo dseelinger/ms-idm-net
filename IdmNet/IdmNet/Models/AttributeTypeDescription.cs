@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public AttributeTypeDescription(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "AttributeTypeDescription";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "AttributeTypeDescription";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

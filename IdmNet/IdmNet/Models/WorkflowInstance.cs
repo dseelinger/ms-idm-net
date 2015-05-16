@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public WorkflowInstance(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "WorkflowInstance";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "WorkflowInstance";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

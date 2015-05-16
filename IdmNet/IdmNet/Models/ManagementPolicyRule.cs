@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public ManagementPolicyRule(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "ManagementPolicyRule";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "ManagementPolicyRule";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

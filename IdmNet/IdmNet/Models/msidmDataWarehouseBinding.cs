@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public msidmDataWarehouseBinding(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "msidmDataWarehouseBinding";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "msidmDataWarehouseBinding";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

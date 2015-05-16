@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public NavigationBarConfiguration(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "NavigationBarConfiguration";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "NavigationBarConfiguration";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

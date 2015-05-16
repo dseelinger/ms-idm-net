@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public mv_data(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "mv-data";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "mv-data";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;

@@ -25,8 +25,8 @@ namespace IdmNet.Models
         /// <param name="resource">base class</param>
         public ObjectVisualizationConfiguration(IdmResource resource)
         {
-            ObjectType = ForcedObjType = "ObjectVisualizationConfiguration";
             Attributes = resource.Attributes;
+            ObjectType = ForcedObjType = "ObjectVisualizationConfiguration";
             if (resource.Creator == null)
                 return;
             Creator = resource.Creator;
