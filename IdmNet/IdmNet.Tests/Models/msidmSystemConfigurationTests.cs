@@ -10,12 +10,17 @@ namespace IdmNet.Models.Tests
     [TestClass]
     public class msidmSystemConfigurationTests
     {
+        private msidmSystemConfiguration _it;
+
+        public msidmSystemConfigurationTests()
+        {
+            _it = new msidmSystemConfiguration();
+        }
+
         [TestMethod]
         public void It_has_a_paremeterless_constructor()
         {
-            var it = new msidmSystemConfiguration();
-
-            Assert.AreEqual("msidmSystemConfiguration", it.ObjectType);
+            Assert.AreEqual("msidmSystemConfiguration", _it.ObjectType);
         }
 
         [TestMethod]
@@ -50,7 +55,7 @@ namespace IdmNet.Models.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void It_throws_when_you_try_to_set_ObjectType_to_anything_other_than_its_primary_ObjectType()
         {
-            new msidmSystemConfiguration { ObjectType = "Incorrect Object Type" };
+            _it.ObjectType = "Invalid Object Type";
         }
 
     }

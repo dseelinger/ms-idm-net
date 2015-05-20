@@ -10,12 +10,17 @@ namespace IdmNet.Models.Tests
     [TestClass]
     public class NavigationBarConfigurationTests
     {
+        private NavigationBarConfiguration _it;
+
+        public NavigationBarConfigurationTests()
+        {
+            _it = new NavigationBarConfiguration();
+        }
+
         [TestMethod]
         public void It_has_a_paremeterless_constructor()
         {
-            var it = new NavigationBarConfiguration();
-
-            Assert.AreEqual("NavigationBarConfiguration", it.ObjectType);
+            Assert.AreEqual("NavigationBarConfiguration", _it.ObjectType);
         }
 
         [TestMethod]
@@ -50,8 +55,30 @@ namespace IdmNet.Models.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void It_throws_when_you_try_to_set_ObjectType_to_anything_other_than_its_primary_ObjectType()
         {
-            new NavigationBarConfiguration { ObjectType = "Incorrect Object Type" };
+            _it.ObjectType = "Invalid Object Type";
         }
+
+        [TestMethod]
+        public void It_can_get_and_set_NavigationUrl()
+        {
+            // Act
+            _it.NavigationUrl = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.NavigationUrl);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_CountXPath()
+        {
+            // Act
+            _it.CountXPath = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.CountXPath);
+        }
+
 
     }
 }

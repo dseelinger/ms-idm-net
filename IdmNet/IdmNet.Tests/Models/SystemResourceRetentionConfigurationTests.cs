@@ -10,12 +10,17 @@ namespace IdmNet.Models.Tests
     [TestClass]
     public class SystemResourceRetentionConfigurationTests
     {
+        private SystemResourceRetentionConfiguration _it;
+
+        public SystemResourceRetentionConfigurationTests()
+        {
+            _it = new SystemResourceRetentionConfiguration();
+        }
+
         [TestMethod]
         public void It_has_a_paremeterless_constructor()
         {
-            var it = new SystemResourceRetentionConfiguration();
-
-            Assert.AreEqual("SystemResourceRetentionConfiguration", it.ObjectType);
+            Assert.AreEqual("SystemResourceRetentionConfiguration", _it.ObjectType);
         }
 
         [TestMethod]
@@ -50,7 +55,7 @@ namespace IdmNet.Models.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void It_throws_when_you_try_to_set_ObjectType_to_anything_other_than_its_primary_ObjectType()
         {
-            new SystemResourceRetentionConfiguration { ObjectType = "Incorrect Object Type" };
+            _it.ObjectType = "Invalid Object Type";
         }
 
     }

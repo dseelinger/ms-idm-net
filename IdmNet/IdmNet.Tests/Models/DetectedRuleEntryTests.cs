@@ -10,12 +10,17 @@ namespace IdmNet.Models.Tests
     [TestClass]
     public class DetectedRuleEntryTests
     {
+        private DetectedRuleEntry _it;
+
+        public DetectedRuleEntryTests()
+        {
+            _it = new DetectedRuleEntry();
+        }
+
         [TestMethod]
         public void It_has_a_paremeterless_constructor()
         {
-            var it = new DetectedRuleEntry();
-
-            Assert.AreEqual("DetectedRuleEntry", it.ObjectType);
+            Assert.AreEqual("DetectedRuleEntry", _it.ObjectType);
         }
 
         [TestMethod]
@@ -50,8 +55,19 @@ namespace IdmNet.Models.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void It_throws_when_you_try_to_set_ObjectType_to_anything_other_than_its_primary_ObjectType()
         {
-            new DetectedRuleEntry { ObjectType = "Incorrect Object Type" };
+            _it.ObjectType = "Invalid Object Type";
         }
+
+        [TestMethod]
+        public void It_can_get_and_set_Connector()
+        {
+            // Act
+            _it.Connector = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.Connector);
+        }
+
 
     }
 }

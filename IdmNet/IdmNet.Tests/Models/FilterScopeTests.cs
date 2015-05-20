@@ -10,12 +10,17 @@ namespace IdmNet.Models.Tests
     [TestClass]
     public class FilterScopeTests
     {
+        private FilterScope _it;
+
+        public FilterScopeTests()
+        {
+            _it = new FilterScope();
+        }
+
         [TestMethod]
         public void It_has_a_paremeterless_constructor()
         {
-            var it = new FilterScope();
-
-            Assert.AreEqual("FilterScope", it.ObjectType);
+            Assert.AreEqual("FilterScope", _it.ObjectType);
         }
 
         [TestMethod]
@@ -50,7 +55,7 @@ namespace IdmNet.Models.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void It_throws_when_you_try_to_set_ObjectType_to_anything_other_than_its_primary_ObjectType()
         {
-            new FilterScope { ObjectType = "Incorrect Object Type" };
+            _it.ObjectType = "Invalid Object Type";
         }
 
     }

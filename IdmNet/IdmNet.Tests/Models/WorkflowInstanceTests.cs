@@ -10,12 +10,17 @@ namespace IdmNet.Models.Tests
     [TestClass]
     public class WorkflowInstanceTests
     {
+        private WorkflowInstance _it;
+
+        public WorkflowInstanceTests()
+        {
+            _it = new WorkflowInstance();
+        }
+
         [TestMethod]
         public void It_has_a_paremeterless_constructor()
         {
-            var it = new WorkflowInstance();
-
-            Assert.AreEqual("WorkflowInstance", it.ObjectType);
+            Assert.AreEqual("WorkflowInstance", _it.ObjectType);
         }
 
         [TestMethod]
@@ -50,8 +55,19 @@ namespace IdmNet.Models.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void It_throws_when_you_try_to_set_ObjectType_to_anything_other_than_its_primary_ObjectType()
         {
-            new WorkflowInstance { ObjectType = "Incorrect Object Type" };
+            _it.ObjectType = "Invalid Object Type";
         }
+
+        [TestMethod]
+        public void It_can_get_and_set_WorkflowStatus()
+        {
+            // Act
+            _it.WorkflowStatus = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.WorkflowStatus);
+        }
+
 
     }
 }

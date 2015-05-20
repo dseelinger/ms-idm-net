@@ -10,12 +10,17 @@ namespace IdmNet.Models.Tests
     [TestClass]
     public class RequestTests
     {
+        private Request _it;
+
+        public RequestTests()
+        {
+            _it = new Request();
+        }
+
         [TestMethod]
         public void It_has_a_paremeterless_constructor()
         {
-            var it = new Request();
-
-            Assert.AreEqual("Request", it.ObjectType);
+            Assert.AreEqual("Request", _it.ObjectType);
         }
 
         [TestMethod]
@@ -50,8 +55,63 @@ namespace IdmNet.Models.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void It_throws_when_you_try_to_set_ObjectType_to_anything_other_than_its_primary_ObjectType()
         {
-            new Request { ObjectType = "Incorrect Object Type" };
+            _it.ObjectType = "Invalid Object Type";
         }
+
+        [TestMethod]
+        public void It_can_get_and_set_Operation()
+        {
+            // Act
+            _it.Operation = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.Operation);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_RequestControl()
+        {
+            // Act
+            _it.RequestControl = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.RequestControl);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_RequestStatus()
+        {
+            // Act
+            _it.RequestStatus = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.RequestStatus);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_ServicePartitionName()
+        {
+            // Act
+            _it.ServicePartitionName = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.ServicePartitionName);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_TargetObjectType()
+        {
+            // Act
+            _it.TargetObjectType = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.TargetObjectType);
+        }
+
 
     }
 }

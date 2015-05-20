@@ -10,12 +10,17 @@ namespace IdmNet.Models.Tests
     [TestClass]
     public class msidmCompositeTypeTests
     {
+        private msidmCompositeType _it;
+
+        public msidmCompositeTypeTests()
+        {
+            _it = new msidmCompositeType();
+        }
+
         [TestMethod]
         public void It_has_a_paremeterless_constructor()
         {
-            var it = new msidmCompositeType();
-
-            Assert.AreEqual("msidmCompositeType", it.ObjectType);
+            Assert.AreEqual("msidmCompositeType", _it.ObjectType);
         }
 
         [TestMethod]
@@ -50,7 +55,7 @@ namespace IdmNet.Models.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void It_throws_when_you_try_to_set_ObjectType_to_anything_other_than_its_primary_ObjectType()
         {
-            new msidmCompositeType { ObjectType = "Incorrect Object Type" };
+            _it.ObjectType = "Invalid Object Type";
         }
 
     }

@@ -10,12 +10,17 @@ namespace IdmNet.Models.Tests
     [TestClass]
     public class HomepageConfigurationTests
     {
+        private HomepageConfiguration _it;
+
+        public HomepageConfigurationTests()
+        {
+            _it = new HomepageConfiguration();
+        }
+
         [TestMethod]
         public void It_has_a_paremeterless_constructor()
         {
-            var it = new HomepageConfiguration();
-
-            Assert.AreEqual("HomepageConfiguration", it.ObjectType);
+            Assert.AreEqual("HomepageConfiguration", _it.ObjectType);
         }
 
         [TestMethod]
@@ -50,8 +55,41 @@ namespace IdmNet.Models.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void It_throws_when_you_try_to_set_ObjectType_to_anything_other_than_its_primary_ObjectType()
         {
-            new HomepageConfiguration { ObjectType = "Incorrect Object Type" };
+            _it.ObjectType = "Invalid Object Type";
         }
+
+        [TestMethod]
+        public void It_can_get_and_set_ImageUrl()
+        {
+            // Act
+            _it.ImageUrl = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.ImageUrl);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_NavigationUrl()
+        {
+            // Act
+            _it.NavigationUrl = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.NavigationUrl);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_CountXPath()
+        {
+            // Act
+            _it.CountXPath = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.CountXPath);
+        }
+
 
     }
 }

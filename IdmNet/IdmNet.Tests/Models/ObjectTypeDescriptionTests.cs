@@ -10,12 +10,17 @@ namespace IdmNet.Models.Tests
     [TestClass]
     public class ObjectTypeDescriptionTests
     {
+        private ObjectTypeDescription _it;
+
+        public ObjectTypeDescriptionTests()
+        {
+            _it = new ObjectTypeDescription();
+        }
+
         [TestMethod]
         public void It_has_a_paremeterless_constructor()
         {
-            var it = new ObjectTypeDescription();
-
-            Assert.AreEqual("ObjectTypeDescription", it.ObjectType);
+            Assert.AreEqual("ObjectTypeDescription", _it.ObjectType);
         }
 
         [TestMethod]
@@ -50,8 +55,19 @@ namespace IdmNet.Models.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void It_throws_when_you_try_to_set_ObjectType_to_anything_other_than_its_primary_ObjectType()
         {
-            new ObjectTypeDescription { ObjectType = "Incorrect Object Type" };
+            _it.ObjectType = "Invalid Object Type";
         }
+
+        [TestMethod]
+        public void It_can_get_and_set_Name()
+        {
+            // Act
+            _it.Name = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.Name);
+        }
+
 
     }
 }

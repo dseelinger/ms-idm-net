@@ -10,12 +10,17 @@ namespace IdmNet.Models.Tests
     [TestClass]
     public class GroupTests
     {
+        private Group _it;
+
+        public GroupTests()
+        {
+            _it = new Group();
+        }
+
         [TestMethod]
         public void It_has_a_paremeterless_constructor()
         {
-            var it = new Group();
-
-            Assert.AreEqual("Group", it.ObjectType);
+            Assert.AreEqual("Group", _it.ObjectType);
         }
 
         [TestMethod]
@@ -50,8 +55,96 @@ namespace IdmNet.Models.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void It_throws_when_you_try_to_set_ObjectType_to_anything_other_than_its_primary_ObjectType()
         {
-            new Group { ObjectType = "Incorrect Object Type" };
+            _it.ObjectType = "Invalid Object Type";
         }
+
+        [TestMethod]
+        public void It_can_get_and_set_AccountName()
+        {
+            // Act
+            _it.AccountName = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.AccountName);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_Domain()
+        {
+            // Act
+            _it.Domain = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.Domain);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_Email()
+        {
+            // Act
+            _it.Email = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.Email);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_MailNickname()
+        {
+            // Act
+            _it.MailNickname = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.MailNickname);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_Filter()
+        {
+            // Act
+            _it.Filter = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.Filter);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_MembershipAddWorkflow()
+        {
+            // Act
+            _it.MembershipAddWorkflow = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.MembershipAddWorkflow);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_Scope()
+        {
+            // Act
+            _it.Scope = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.Scope);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_Type()
+        {
+            // Act
+            _it.Type = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.Type);
+        }
+
 
     }
 }

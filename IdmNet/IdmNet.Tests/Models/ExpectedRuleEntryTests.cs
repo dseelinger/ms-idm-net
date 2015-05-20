@@ -10,12 +10,17 @@ namespace IdmNet.Models.Tests
     [TestClass]
     public class ExpectedRuleEntryTests
     {
+        private ExpectedRuleEntry _it;
+
+        public ExpectedRuleEntryTests()
+        {
+            _it = new ExpectedRuleEntry();
+        }
+
         [TestMethod]
         public void It_has_a_paremeterless_constructor()
         {
-            var it = new ExpectedRuleEntry();
-
-            Assert.AreEqual("ExpectedRuleEntry", it.ObjectType);
+            Assert.AreEqual("ExpectedRuleEntry", _it.ObjectType);
         }
 
         [TestMethod]
@@ -50,8 +55,52 @@ namespace IdmNet.Models.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void It_throws_when_you_try_to_set_ObjectType_to_anything_other_than_its_primary_ObjectType()
         {
-            new ExpectedRuleEntry { ObjectType = "Incorrect Object Type" };
+            _it.ObjectType = "Invalid Object Type";
         }
+
+        [TestMethod]
+        public void It_can_get_and_set_ExpectedRuleEntryAction()
+        {
+            // Act
+            _it.ExpectedRuleEntryAction = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.ExpectedRuleEntryAction);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_StatusError()
+        {
+            // Act
+            _it.StatusError = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.StatusError);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_SynchronizationRuleName()
+        {
+            // Act
+            _it.SynchronizationRuleName = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.SynchronizationRuleName);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_SynchronizationRuleStatus()
+        {
+            // Act
+            _it.SynchronizationRuleStatus = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.SynchronizationRuleStatus);
+        }
+
 
     }
 }

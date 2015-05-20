@@ -10,12 +10,17 @@ namespace IdmNet.Models.Tests
     [TestClass]
     public class TimeZoneConfigurationTests
     {
+        private TimeZoneConfiguration _it;
+
+        public TimeZoneConfigurationTests()
+        {
+            _it = new TimeZoneConfiguration();
+        }
+
         [TestMethod]
         public void It_has_a_paremeterless_constructor()
         {
-            var it = new TimeZoneConfiguration();
-
-            Assert.AreEqual("TimeZoneConfiguration", it.ObjectType);
+            Assert.AreEqual("TimeZoneConfiguration", _it.ObjectType);
         }
 
         [TestMethod]
@@ -50,8 +55,19 @@ namespace IdmNet.Models.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void It_throws_when_you_try_to_set_ObjectType_to_anything_other_than_its_primary_ObjectType()
         {
-            new TimeZoneConfiguration { ObjectType = "Incorrect Object Type" };
+            _it.ObjectType = "Invalid Object Type";
         }
+
+        [TestMethod]
+        public void It_can_get_and_set_TimeZoneId()
+        {
+            // Act
+            _it.TimeZoneId = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.TimeZoneId);
+        }
+
 
     }
 }

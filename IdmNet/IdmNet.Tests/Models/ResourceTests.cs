@@ -10,12 +10,17 @@ namespace IdmNet.Models.Tests
     [TestClass]
     public class ResourceTests
     {
+        private Resource _it;
+
+        public ResourceTests()
+        {
+            _it = new Resource();
+        }
+
         [TestMethod]
         public void It_has_a_paremeterless_constructor()
         {
-            var it = new Resource();
-
-            Assert.AreEqual("Resource", it.ObjectType);
+            Assert.AreEqual("Resource", _it.ObjectType);
         }
 
         [TestMethod]
@@ -50,7 +55,7 @@ namespace IdmNet.Models.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void It_throws_when_you_try_to_set_ObjectType_to_anything_other_than_its_primary_ObjectType()
         {
-            new Resource { ObjectType = "Incorrect Object Type" };
+            _it.ObjectType = "Invalid Object Type";
         }
 
     }

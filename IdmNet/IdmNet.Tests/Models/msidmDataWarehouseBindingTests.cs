@@ -10,12 +10,17 @@ namespace IdmNet.Models.Tests
     [TestClass]
     public class msidmDataWarehouseBindingTests
     {
+        private msidmDataWarehouseBinding _it;
+
+        public msidmDataWarehouseBindingTests()
+        {
+            _it = new msidmDataWarehouseBinding();
+        }
+
         [TestMethod]
         public void It_has_a_paremeterless_constructor()
         {
-            var it = new msidmDataWarehouseBinding();
-
-            Assert.AreEqual("msidmDataWarehouseBinding", it.ObjectType);
+            Assert.AreEqual("msidmDataWarehouseBinding", _it.ObjectType);
         }
 
         [TestMethod]
@@ -50,8 +55,30 @@ namespace IdmNet.Models.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void It_throws_when_you_try_to_set_ObjectType_to_anything_other_than_its_primary_ObjectType()
         {
-            new msidmDataWarehouseBinding { ObjectType = "Incorrect Object Type" };
+            _it.ObjectType = "Invalid Object Type";
         }
+
+        [TestMethod]
+        public void It_can_get_and_set_msidmDataWarehouseBindingIdentity()
+        {
+            // Act
+            _it.msidmDataWarehouseBindingIdentity = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.msidmDataWarehouseBindingIdentity);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_msidmDataWarehouseMapping()
+        {
+            // Act
+            _it.msidmDataWarehouseMapping = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.msidmDataWarehouseMapping);
+        }
+
 
     }
 }

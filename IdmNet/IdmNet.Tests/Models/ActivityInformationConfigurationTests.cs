@@ -10,12 +10,17 @@ namespace IdmNet.Models.Tests
     [TestClass]
     public class ActivityInformationConfigurationTests
     {
+        private ActivityInformationConfiguration _it;
+
+        public ActivityInformationConfigurationTests()
+        {
+            _it = new ActivityInformationConfiguration();
+        }
+
         [TestMethod]
         public void It_has_a_paremeterless_constructor()
         {
-            var it = new ActivityInformationConfiguration();
-
-            Assert.AreEqual("ActivityInformationConfiguration", it.ObjectType);
+            Assert.AreEqual("ActivityInformationConfiguration", _it.ObjectType);
         }
 
         [TestMethod]
@@ -50,8 +55,41 @@ namespace IdmNet.Models.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void It_throws_when_you_try_to_set_ObjectType_to_anything_other_than_its_primary_ObjectType()
         {
-            new ActivityInformationConfiguration { ObjectType = "Incorrect Object Type" };
+            _it.ObjectType = "Invalid Object Type";
         }
+
+        [TestMethod]
+        public void It_can_get_and_set_ActivityName()
+        {
+            // Act
+            _it.ActivityName = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.ActivityName);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_AssemblyName()
+        {
+            // Act
+            _it.AssemblyName = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.AssemblyName);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_TypeName()
+        {
+            // Act
+            _it.TypeName = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.TypeName);
+        }
+
 
     }
 }

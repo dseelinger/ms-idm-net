@@ -10,12 +10,17 @@ namespace IdmNet.Models.Tests
     [TestClass]
     public class PortalUIConfigurationTests
     {
+        private PortalUIConfiguration _it;
+
+        public PortalUIConfigurationTests()
+        {
+            _it = new PortalUIConfiguration();
+        }
+
         [TestMethod]
         public void It_has_a_paremeterless_constructor()
         {
-            var it = new PortalUIConfiguration();
-
-            Assert.AreEqual("PortalUIConfiguration", it.ObjectType);
+            Assert.AreEqual("PortalUIConfiguration", _it.ObjectType);
         }
 
         [TestMethod]
@@ -50,8 +55,41 @@ namespace IdmNet.Models.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void It_throws_when_you_try_to_set_ObjectType_to_anything_other_than_its_primary_ObjectType()
         {
-            new PortalUIConfiguration { ObjectType = "Incorrect Object Type" };
+            _it.ObjectType = "Invalid Object Type";
         }
+
+        [TestMethod]
+        public void It_can_get_and_set_BrandingCenterText()
+        {
+            // Act
+            _it.BrandingCenterText = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.BrandingCenterText);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_BrandingLeftImage()
+        {
+            // Act
+            _it.BrandingLeftImage = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.BrandingLeftImage);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_BrandingRightImage()
+        {
+            // Act
+            _it.BrandingRightImage = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.BrandingRightImage);
+        }
+
 
     }
 }
