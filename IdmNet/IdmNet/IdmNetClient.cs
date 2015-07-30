@@ -53,22 +53,30 @@ namespace IdmNet
         /// <returns></returns>
         public async Task<IEnumerable<IdmResource>> SearchAsync(SearchCriteria criteria, int pageSize = 50)
         {
-            if (criteria.Selection.Contains("*"))
-            {
-                await SetupGetStar(criteria);
-            }
-
-            PullInfo pullInfo = await PreparePagedSearchAsync(criteria, pageSize);
-
-            // Pull all results
             var results = new List<IdmResource>();
-            PagedSearchResults pagedResults;
-            PagingContext pagingContext = pullInfo.PagingContext;
-            do
+
+            try
             {
-                pagedResults = await GetPagedResultsAsync(pageSize, pagingContext);
-                results.AddRange(pagedResults.Results);
-            } while (pagedResults.EndOfSequence == null);
+                if (criteria.Selection.Contains("*"))
+                {
+                    // Can throw the ArgumentOutOfRangeException if there are no results, in which case just return the empty list
+                    await SetupGetStar(criteria);
+                }
+
+                PullInfo pullInfo = await PreparePagedSearchAsync(criteria, pageSize);
+
+                // Pull all results
+                PagedSearchResults pagedResults;
+                PagingContext pagingContext = pullInfo.PagingContext;
+                do
+                {
+                    pagedResults = await GetPagedResultsAsync(pageSize, pagingContext);
+                    results.AddRange(pagedResults.Results);
+                } while (pagedResults.EndOfSequence == null);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+            }
 
             return results;
         }
@@ -146,7 +154,16 @@ namespace IdmNet
             Message getResponseMsg = await _resourceClient.GetAsync(getRequestMsg);
 
             if (getResponseMsg.IsFault)
+            {
+                var xml = getResponseMsg.ToString();
+                if (xml != null && xml.Contains("The target Resource does not exist"))
+                {
+                    throw new KeyNotFoundException("ObjectID " + objectID + " not found");
+                }
+                // 
                 throw new SoapFaultException("Get Fault: " + getResponseMsg);
+            }
+                
 
             var resource = ConvertGetResponseToIdmResource(getResponseMsg);
 

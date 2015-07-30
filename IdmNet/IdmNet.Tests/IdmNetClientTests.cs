@@ -173,7 +173,6 @@ namespace IdmNet.Tests
             Assert.AreEqual("Approval", result.DisplayName);
         }
 
-
         [TestMethod]
         [TestCategory("Integration")]
         public async Task T007_It_can_return_the_number_of_matching_records_for_a_given_search()
@@ -187,8 +186,6 @@ namespace IdmNet.Tests
             // Assert
             Assert.AreEqual(97, result);
         }
-
-
 
         [TestMethod]
         [TestCategory("Integration")]
@@ -209,7 +206,6 @@ namespace IdmNet.Tests
             // afterwards
             await it.DeleteAsync(createResult.ObjectID);
         }
-
 
         [TestMethod]
         [TestCategory("Integration")]
@@ -263,10 +259,7 @@ namespace IdmNet.Tests
             Assert.AreEqual("ObjectTypeDescription", result.Results[0].ObjectType);
         }
 
-
-
         [TestMethod]
-        [TestCategory("Integration")]
         public async Task T011_It_can_get_resources_back_from_a_search_a_page_at_a_time()
         {
             // Arrange
@@ -297,19 +290,6 @@ namespace IdmNet.Tests
             Assert.AreEqual(5, ((XmlNode[])(pagedResults.Items)).Length);
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         [TestMethod]
         [TestCategory("Integration")]
         public async Task It_can_return_the_entire_schema_for_a_particular_object_type()
@@ -321,7 +301,7 @@ namespace IdmNet.Tests
             // Act
             Schema result = await it.GetSchemaAsync("Person");
 
-            // Assert
+            //// Assert
             Assert.AreEqual("User", result.DisplayName);
             Assert.IsTrue(result.CreatedTime >= new DateTime(2010, 1, 1));
             Assert.AreEqual(null, result.Creator);
@@ -350,7 +330,6 @@ namespace IdmNet.Tests
             Assert.AreEqual("AccountName", result.BindingDescriptions[0].BoundAttributeType.Name);
             Assert.AreEqual(null, result.BindingDescriptions[0].BoundAttributeType.StringRegex);
             Assert.AreEqual("Microsoft.ResourceManagement.WebServices", result.BindingDescriptions[0].BoundAttributeType.UsageKeyword[0]);
-
         }
 
         [TestMethod]
@@ -381,24 +360,10 @@ namespace IdmNet.Tests
             Assert.AreEqual(5, ((XmlNode[])(pagedResults.Items)).Length);
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         [TestMethod]
         [TestCategory("Integration")]
         [ExpectedException(typeof (SoapFaultException))]
-        public async Task It_throws_an_exception_get_when_it_encounters_bad_xpath()
+        public async Task It_throws_an_exception_when_it_encounters_bad_xpath()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -420,7 +385,6 @@ namespace IdmNet.Tests
             // Act
             await it.SearchAsync(criteria);
         }
-
 
         [TestMethod]
         [ExpectedException(typeof (ArgumentNullException))]
@@ -446,8 +410,6 @@ namespace IdmNet.Tests
             await it.PostAsync(newUser);
         }
 
-
-
         [TestMethod]
         [ExpectedException(typeof (ArgumentNullException))]
         public async Task It_throws_when_attempting_to_delete_a_null_ObjectID()
@@ -470,8 +432,6 @@ namespace IdmNet.Tests
             // Act
             await it.DeleteAsync("bad object id");
         }
-
-
 
         [TestMethod]
         [TestCategory("Integration")]
@@ -498,7 +458,6 @@ namespace IdmNet.Tests
             }
 
         }
-
 
         [TestMethod]
         [TestCategory("Integration")]
@@ -535,8 +494,6 @@ namespace IdmNet.Tests
                 // Afterwards
                 it.DeleteAsync(testResource.ObjectID);
             }
-
-
         }
 
         [TestMethod]
@@ -717,11 +674,9 @@ namespace IdmNet.Tests
             }
         }
 
-
-
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task It_Agrees_both_GetCount_and_Search()
+        public async Task It_returns_the_same_number_for_both_GetCount_and_Search()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -731,10 +686,6 @@ namespace IdmNet.Tests
 
             Assert.AreEqual(count, searchResults.Count());
         }
-
-
-
-
 
         [TestMethod]
         [TestCategory("Integration")]
@@ -769,21 +720,72 @@ namespace IdmNet.Tests
                 it.DeleteAsync(createResult.ObjectID);
             }
             // Act
-
         }
 
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task It_returns_0_records_when_no_records_match_search()
+        {
+            // Arrange
+            var it = IdmNetClientFactory.BuildClient();
 
-        // TODO: Test for AttributeTypeDescriotions, BindingDescriptions, ObjectTypeDescriptions that you can't mess with their object types
+            var searchResults = await it.SearchAsync(new SearchCriteria("/Configuration"), 25);
 
+            Assert.AreEqual(0, searchResults.Count());
+        }
 
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task It_returns_0_records_when_no_records_match_SELECT_STAR_search()
+        {
+            // Arrange
+            var it = IdmNetClientFactory.BuildClient();
 
+            var searchResults = await it.SearchAsync(new SearchCriteria("/Configuration") { Selection = new List<string> { "*" } }, 25);
 
+            Assert.AreEqual(0, searchResults.Count());
+        }
 
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task It_throws_an_exception_when_GetAsync_is_called_but_no_match_for_the_object_ID()
+        {
+            // Arrange
+            var it = IdmNetClientFactory.BuildClient();
 
+            // Act
+            try
+            {
+                IdmResource result = await it.GetAsync("c51c9ef3-f00d-4d4e-b30b-c1a18e79c56e", null);
+                Assert.IsTrue(false, "Should have encountered a KeyNotFoundException");
+            }
+            catch (KeyNotFoundException)
+            {
+                // Expected Exception
+            }
+        }
 
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task It_throws_an_exception_when_GetAsync_is_called_but_no_match_for_the_object_ID_and_SELECT_STAR()
+        {
+            // Arrange
+            var it = IdmNetClientFactory.BuildClient();
 
+            // Act
+            try
+            {
+                IdmResource result = await it.GetAsync("c51c9ef3-f00d-4d4e-b30b-c1a18e79c56e", new List<string> {"*"});
+                Assert.IsTrue(false, "Should have encountered a KeyNotFoundException");
+            }
+            catch (KeyNotFoundException)
+            {
+                // Expected Exception
+            }
+        }
 
-       // TODO 001: Implement Approvals
+        // TODO 002: Test for AttributeTypeDescriptions, BindingDescriptions, ObjectTypeDescriptions that you can't mess with their object types
+        // TODO 001: Implement Approvals
         // TODO -999: Implement the STS endpoint
 
         private static async Task<IdmResource> CreateTestPerson(IdmNetClient it)
