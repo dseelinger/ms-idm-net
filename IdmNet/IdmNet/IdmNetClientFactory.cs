@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Net;
 using System.ServiceModel;
 using IdmNet.SoapModels;
@@ -18,7 +19,7 @@ namespace IdmNet
         public static IdmNetClient BuildClient()
         {
             var soapBinding = new IdmSoapBinding();
-            string fqdn = GetEnv("MIM_fqdn");
+            string fqdn = GetEnvironmentSetting("MIM_fqdn");
             var endpointIdentity = EndpointIdentity.CreateSpnIdentity("FIMSERVICE/" + fqdn);
 
 
@@ -39,9 +40,9 @@ namespace IdmNet
 
 
             var credentials = new NetworkCredential(
-                GetEnv("MIM_username"),
-                GetEnv("MIM_pwd"),
-                GetEnv("MIM_domain"));
+                GetEnvironmentSetting("MIM_username"),
+                GetEnvironmentSetting("MIM_pwd"),
+                GetEnvironmentSetting("MIM_domain"));
 
             searchClient.ClientCredentials.Windows.ClientCredential = credentials;
             factoryClient.ClientCredentials.Windows.ClientCredential = credentials;
@@ -56,16 +57,20 @@ namespace IdmNet
         /// <summary>
         /// Get an environment variable
         /// </summary>
-        /// <param name="environmentVariableName">Name of the environment variable</param>
+        /// <param name="environmentSettingName">Name of the environment variable</param>
         /// <returns>Environment variable value</returns>
-        public static string GetEnv(string environmentVariableName)
+        public static string GetEnvironmentSetting(string environmentSettingName)
         {
-            var environmentVariable = Environment.GetEnvironmentVariable(environmentVariableName);
-            if (environmentVariable == null)
+            var environmentSettingValue = Environment.GetEnvironmentVariable(environmentSettingName);
+            if (environmentSettingValue == null)
             {
-                throw new ApplicationException("Missing Environment Variable: " + environmentVariableName);
+                environmentSettingValue = ConfigurationManager.AppSettings[environmentSettingName];
+                if (environmentSettingValue == null)
+                {
+                    throw new ApplicationException("Missing Environment Variable: " + environmentSettingName);
+                }
             }
-            return environmentVariable;
+            return environmentSettingValue;
         }
 
     }

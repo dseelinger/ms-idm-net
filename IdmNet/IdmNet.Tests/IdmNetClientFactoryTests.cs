@@ -1,26 +1,32 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace IdmNet.Tests
 {
-    [TestClass]
     public class IdmNetClientFactoryTests
     {
-        [TestMethod]
+       [Fact]
         public void It_can_build_and_initialize_an_IdmNetClient_instance()
         {
             var client = IdmNetClientFactory.BuildClient();
 
-            Assert.IsNotNull(client);
+            Assert.NotNull(client);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ApplicationException))]
-        public void It_throws_when_an_environment_variable_is_missing()
+        [Fact]
+        public void It_throws_when_an_environment_setting_cannot_be_found()
         {
-            IdmNetClientFactory.GetEnv("foo");
+
+            Assert.Throws<ApplicationException>(() => { IdmNetClientFactory.GetEnvironmentSetting("foo"); });
         }
 
+        [Fact]
+        public void It_does_not_throw_when_an_environment_variable_is_not_present_but_an_app_doc_config_setting_is_present()
+        {
 
+            var result = IdmNetClientFactory.GetEnvironmentSetting("bar");
+
+            Assert.Equal("value", result);
+        }
     }
 }
