@@ -227,7 +227,7 @@ namespace IdmNet.Tests
                 await it.GetAsync(toDelete.ObjectID, new List<string> { "DisplayName" });
                 Assert.Fail("Should not make it here");
             }
-            catch (SoapFaultException)
+            catch (KeyNotFoundException)
             {
                 // OK
             }
