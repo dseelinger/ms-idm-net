@@ -578,7 +578,7 @@ namespace IdmNet.Models
         /// </summary>
         public List<byte[]> SIDHistory
         {
-            get { return GetAttr("SIDHistory").ToBinaries(); }
+            get { return GetAttr("SIDHistory") == null ? new List<byte[]>() : GetAttr("SIDHistory").ToBinaries(); }
             set { SetAttrValues("SIDHistory", value.Select(Convert.ToBase64String).ToList()); }
         }
 
