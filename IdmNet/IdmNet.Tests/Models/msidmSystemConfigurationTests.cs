@@ -58,5 +58,91 @@ namespace IdmNet.Models.Tests
             _it.ObjectType = "Invalid Object Type";
         }
 
+        [TestMethod]
+        public void It_has_msidmCreateCriteriaBasedGroupsAsDeferredByDefault_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.msidmCreateCriteriaBasedGroupsAsDeferredByDefault);
+        }
+
+        [TestMethod]
+        public void It_has_msidmCreateCriteriaBasedGroupsAsDeferredByDefault_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.msidmCreateCriteriaBasedGroupsAsDeferredByDefault = true;
+
+            // Act
+            _it.msidmCreateCriteriaBasedGroupsAsDeferredByDefault = null;
+
+            // Assert
+            Assert.IsNull(_it.msidmCreateCriteriaBasedGroupsAsDeferredByDefault);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_msidmCreateCriteriaBasedGroupsAsDeferredByDefault()
+        {
+            // Act
+            _it.msidmCreateCriteriaBasedGroupsAsDeferredByDefault = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.msidmCreateCriteriaBasedGroupsAsDeferredByDefault);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_IsConfigurationType()
+        {
+            // Act
+            _it.IsConfigurationType = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.IsConfigurationType);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_msidmReportingLoggingEnabled()
+        {
+            // Act
+            _it.msidmReportingLoggingEnabled = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.msidmReportingLoggingEnabled);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_msidmRequestMaximumActiveDuration()
+        {
+            // Act
+            _it.msidmRequestMaximumActiveDuration = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.msidmRequestMaximumActiveDuration);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_msidmRequestMaximumCancelingDuration()
+        {
+            // Act
+            _it.msidmRequestMaximumCancelingDuration = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.msidmRequestMaximumCancelingDuration);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_msidmSystemThrottleLevel()
+        {
+            // Act
+            _it.msidmSystemThrottleLevel = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.msidmSystemThrottleLevel);
+        }
+
+
     }
 }

@@ -487,7 +487,7 @@ namespace IdmNet.Models
         public byte[] Photo
         {
             get { return GetAttr("Photo") == null ? null : GetAttr("Photo").ToBinary(); }
-            set { SetAttrValue("Photo", Convert.ToBase64String(value)); }
+            set { SetAttrValue("Photo", value == null ? null : Convert.ToBase64String(value)); }
         }
 
 
@@ -569,7 +569,7 @@ namespace IdmNet.Models
         public byte[] ObjectSID
         {
             get { return GetAttr("ObjectSID") == null ? null : GetAttr("ObjectSID").ToBinary(); }
-            set { SetAttrValue("ObjectSID", Convert.ToBase64String(value)); }
+            set { SetAttrValue("ObjectSID", value == null ? null : Convert.ToBase64String(value)); }
         }
 
 
@@ -578,8 +578,8 @@ namespace IdmNet.Models
         /// </summary>
         public List<byte[]> SIDHistory
         {
-            get { return GetAttr("SIDHistory") == null ? new List<byte[]>() : GetAttr("SIDHistory").ToBinaries(); }
-            set { SetAttrValues("SIDHistory", value.Select(Convert.ToBase64String).ToList()); }
+            get { return GetAttr("SIDHistory")?.ToBinaries(); }
+            set { SetAttrValues("SIDHistory", value?.Select(Convert.ToBase64String).ToList()); }
         }
 
 

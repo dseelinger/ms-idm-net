@@ -58,5 +58,52 @@ namespace IdmNet.Models.Tests
             _it.ObjectType = "Invalid Object Type";
         }
 
+        [TestMethod]
+        public void It_has_IsConfigurationType_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.IsConfigurationType);
+        }
+
+        [TestMethod]
+        public void It_has_IsConfigurationType_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.IsConfigurationType = true;
+
+            // Act
+            _it.IsConfigurationType = null;
+
+            // Assert
+            Assert.IsNull(_it.IsConfigurationType);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_IsConfigurationType()
+        {
+            // Act
+            _it.IsConfigurationType = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.IsConfigurationType);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_SupportedLanguageCode()
+        {
+            var subObject1 = "foo1";
+            var subObject2 = "foo2";
+            var list = new List<string> { subObject1, subObject2 };
+
+            // Act
+            _it.SupportedLanguageCode = list; 
+
+            // Assert
+            Assert.AreEqual("foo1", _it.SupportedLanguageCode[0]);
+            Assert.AreEqual("foo2", _it.SupportedLanguageCode[1]);
+        }
+
+
     }
 }

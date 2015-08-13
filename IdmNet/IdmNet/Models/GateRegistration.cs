@@ -56,7 +56,7 @@ namespace IdmNet.Models
         public byte[] GateData
         {
             get { return GetAttr("GateData") == null ? null : GetAttr("GateData").ToBinary(); }
-            set { SetAttrValue("GateData", Convert.ToBase64String(value)); }
+            set { SetAttrValue("GateData", value == null ? null : Convert.ToBase64String(value)); }
         }
 
 

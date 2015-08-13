@@ -58,5 +58,16 @@ namespace IdmNet.Models.Tests
             _it.ObjectType = "Invalid Object Type";
         }
 
+        [TestMethod]
+        public void It_can_get_and_set_RetentionPeriod()
+        {
+            // Act
+            _it.RetentionPeriod = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.RetentionPeriod);
+        }
+
+
     }
 }

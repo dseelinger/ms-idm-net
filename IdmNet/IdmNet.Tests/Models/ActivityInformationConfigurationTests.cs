@@ -81,6 +81,50 @@ namespace IdmNet.Models.Tests
 
 
         [TestMethod]
+        public void It_can_get_and_set_IsActionActivity()
+        {
+            // Act
+            _it.IsActionActivity = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.IsActionActivity);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_IsAuthenticationActivity()
+        {
+            // Act
+            _it.IsAuthenticationActivity = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.IsAuthenticationActivity);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_IsAuthorizationActivity()
+        {
+            // Act
+            _it.IsAuthorizationActivity = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.IsAuthorizationActivity);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_IsConfigurationType()
+        {
+            // Act
+            _it.IsConfigurationType = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.IsConfigurationType);
+        }
+
+
+        [TestMethod]
         public void It_can_get_and_set_TypeName()
         {
             // Act

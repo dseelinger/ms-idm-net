@@ -59,6 +59,39 @@ namespace IdmNet.Models.Tests
         }
 
         [TestMethod]
+        public void It_has_BoundAttributeType_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.BoundAttributeType);
+        }
+
+        [TestMethod]
+        public void It_has_BoundAttributeType_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var testAttributeTypeDescription = new AttributeTypeDescription { DisplayName = "Test AttributeTypeDescription" };			
+            _it.BoundAttributeType = testAttributeTypeDescription; 
+
+            // Act
+            _it.BoundAttributeType = null;
+
+            // Assert
+            Assert.IsNull(_it.BoundAttributeType);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_BoundAttributeType()
+        {
+            // Act
+			var testAttributeTypeDescription = new AttributeTypeDescription { DisplayName = "Test AttributeTypeDescription" };			
+            _it.BoundAttributeType = testAttributeTypeDescription; 
+
+            // Assert
+            Assert.AreEqual(testAttributeTypeDescription.DisplayName, _it.BoundAttributeType.DisplayName);
+        }
+
+
+        [TestMethod]
         public void It_can_get_and_set_ConstantValueKey()
         {
             // Act
@@ -66,6 +99,39 @@ namespace IdmNet.Models.Tests
 
             // Assert
             Assert.AreEqual("A string", _it.ConstantValueKey);
+        }
+
+
+        [TestMethod]
+        public void It_has_BoundObjectType_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.BoundObjectType);
+        }
+
+        [TestMethod]
+        public void It_has_BoundObjectType_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var testObjectTypeDescription = new ObjectTypeDescription { DisplayName = "Test ObjectTypeDescription" };			
+            _it.BoundObjectType = testObjectTypeDescription; 
+
+            // Act
+            _it.BoundObjectType = null;
+
+            // Assert
+            Assert.IsNull(_it.BoundObjectType);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_BoundObjectType()
+        {
+            // Act
+			var testObjectTypeDescription = new ObjectTypeDescription { DisplayName = "Test ObjectTypeDescription" };			
+            _it.BoundObjectType = testObjectTypeDescription; 
+
+            // Assert
+            Assert.AreEqual(testObjectTypeDescription.DisplayName, _it.BoundObjectType.DisplayName);
         }
 
 

@@ -98,8 +98,6 @@ namespace IdmNet.Models
             set { SetMultiValuedAttr("DetectedRulesList", out _detectedRulesList, value); }
         }
 
-
-
         /// <summary>
         /// (aka Display Name) Display name for the resource.
         /// </summary>
@@ -196,9 +194,7 @@ namespace IdmNet.Models
         public List<string> GetAttrValues(string attrName)
         {
             IdmAttribute attr = GetAttr(attrName);
-            if (attr == null)
-                return null;
-            return attr.Values;
+            return attr?.Values;
         }
 
         /// <summary>
@@ -333,12 +329,7 @@ namespace IdmNet.Models
         /// Resource Indexer - get's the attribute of the resource object as indexed by name.
         /// </summary>
         /// <param name="attributeName">Index by attribute name</param>
-        public IdmAttribute this[string attributeName]
-        {
-            get { return GetAttr(attributeName); }
-        }
-
-
+        public IdmAttribute this[string attributeName] => GetAttr(attributeName);
 
         /// <summary>
         /// Convert the named attribute to a DateTime value
@@ -347,7 +338,9 @@ namespace IdmNet.Models
         /// <returns>DateTime value (Nullable)</returns>
         protected DateTime? AttrToNullableDateTime(string attrName)
         {
-            return GetAttr(attrName) != null ? GetAttr(attrName).ToDateTime() : null;
+            return (GetAttr(attrName) == null || GetAttrValue(attrName) == "")
+                ? null 
+                : GetAttr(attrName).ToDateTime();
         }
 
         /// <summary>
@@ -357,7 +350,9 @@ namespace IdmNet.Models
         /// <returns>Boolean value (Nullable)</returns>
         protected bool? AttrToNullableBool(string attrName)
         {
-            return GetAttr(attrName) == null ? null : GetAttr(attrName).ToBool();
+            return (GetAttr(attrName) == null || GetAttrValue(attrName) == "")
+                ? null
+                : GetAttr(attrName).ToBool();
         }
 
         /// <summary>
@@ -367,13 +362,10 @@ namespace IdmNet.Models
         /// <returns>Integer value (Nullable)</returns>
         protected int? AttrToNullableInteger(string attrName)
         {
-            return GetAttr(attrName) == null ? null : GetAttr(attrName).ToInteger();
+            return (GetAttr(attrName) == null || GetAttrValue(attrName) == "")
+                ? null
+                : GetAttr(attrName).ToInteger();
         }
-
-
-
-
-
 
         /// <summary>
         /// Convert the named attribute to a DateTime value
@@ -405,12 +397,6 @@ namespace IdmNet.Models
             return int.Parse(GetAttrValue(attrName));
         }
 
-
-
-
-
-
-
         /// <summary>
         /// Returns the ObjectID of the resource or NULL if the resource value is null
         /// </summary>
@@ -418,9 +404,7 @@ namespace IdmNet.Models
         /// <returns>The resource's ObjectID or null if the resource itself is null</returns>
         protected static string ObjectIdOrNull(IdmResource value)
         {
-            return value == null ? null : value.ObjectID;
+            return value?.ObjectID;
         }
-
-
     }
 }

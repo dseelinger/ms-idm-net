@@ -70,6 +70,37 @@ namespace IdmNet.Models.Tests
 
 
         [TestMethod]
+        public void It_has_SyncConfig_format_version_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.SyncConfig_format_version);
+        }
+
+        [TestMethod]
+        public void It_has_SyncConfig_format_version_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.SyncConfig_format_version = 123;
+
+            // Act
+            _it.SyncConfig_format_version = null;
+
+            // Assert
+            Assert.IsNull(_it.SyncConfig_format_version);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_SyncConfig_format_version()
+        {
+            // Act
+            _it.SyncConfig_format_version = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.SyncConfig_format_version);
+        }
+
+
+        [TestMethod]
         public void It_can_get_and_set_SyncConfig_import_attribute_flow()
         {
             // Act
@@ -88,6 +119,37 @@ namespace IdmNet.Models.Tests
 
             // Assert
             Assert.AreEqual("A string", _it.SyncConfig_mv_deletion);
+        }
+
+
+        [TestMethod]
+        public void It_has_SyncConfig_password_change_history_size_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.SyncConfig_password_change_history_size);
+        }
+
+        [TestMethod]
+        public void It_has_SyncConfig_password_change_history_size_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.SyncConfig_password_change_history_size = 123;
+
+            // Act
+            _it.SyncConfig_password_change_history_size = null;
+
+            // Assert
+            Assert.IsNull(_it.SyncConfig_password_change_history_size);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_SyncConfig_password_change_history_size()
+        {
+            // Act
+            _it.SyncConfig_password_change_history_size = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.SyncConfig_password_change_history_size);
         }
 
 
@@ -132,6 +194,37 @@ namespace IdmNet.Models.Tests
 
             // Assert
             Assert.AreEqual("A string", _it.SyncConfig_schema);
+        }
+
+
+        [TestMethod]
+        public void It_has_SyncConfig_version_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.SyncConfig_version);
+        }
+
+        [TestMethod]
+        public void It_has_SyncConfig_version_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.SyncConfig_version = 123;
+
+            // Act
+            _it.SyncConfig_version = null;
+
+            // Assert
+            Assert.IsNull(_it.SyncConfig_version);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_SyncConfig_version()
+        {
+            // Act
+            _it.SyncConfig_version = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.SyncConfig_version);
         }
 
 

@@ -59,6 +59,41 @@ namespace IdmNet.Models.Tests
         }
 
         [TestMethod]
+        public void It_has_msidmCompletedTime_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.msidmCompletedTime);
+        }
+
+        [TestMethod]
+        public void It_has_msidmCompletedTime_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var now = DateTime.Now;
+            var testTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+            _it.msidmCompletedTime = testTime;
+
+            // Act
+            _it.msidmCompletedTime = null;
+
+            // Assert
+            Assert.IsNull(_it.msidmCompletedTime);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_msidmCompletedTime()
+        {
+            // Act
+            var now = DateTime.Now;
+            var testTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+            _it.msidmCompletedTime = testTime;
+
+            // Assert
+            Assert.AreEqual(testTime, _it.msidmCompletedTime);
+        }
+
+
+        [TestMethod]
         public void It_can_get_and_set_msidmReportingJobDetails()
         {
             // Act
@@ -88,6 +123,41 @@ namespace IdmNet.Models.Tests
 
             // Assert
             Assert.AreEqual("A string", _it.msidmReportingJobType);
+        }
+
+
+        [TestMethod]
+        public void It_has_msidmStartTime_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.msidmStartTime);
+        }
+
+        [TestMethod]
+        public void It_has_msidmStartTime_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var now = DateTime.Now;
+            var testTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+            _it.msidmStartTime = testTime;
+
+            // Act
+            _it.msidmStartTime = null;
+
+            // Assert
+            Assert.IsNull(_it.msidmStartTime);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_msidmStartTime()
+        {
+            // Act
+            var now = DateTime.Now;
+            var testTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+            _it.msidmStartTime = testTime;
+
+            // Assert
+            Assert.AreEqual(testTime, _it.msidmStartTime);
         }
 
 

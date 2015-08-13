@@ -58,5 +58,93 @@ namespace IdmNet.Models.Tests
             _it.ObjectType = "Invalid Object Type";
         }
 
+        [TestMethod]
+        public void It_has_AllowedAttributes_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.AllowedAttributes);
+        }
+
+        [TestMethod]
+        public void It_has_AllowedAttributes_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var list = new List<AttributeTypeDescription>
+            {
+                new AttributeTypeDescription { DisplayName = "Test AttributeTypeDescription1", ObjectID = "guid1" },
+                new AttributeTypeDescription { DisplayName = "Test AttributeTypeDescription2", ObjectID = "guid2" }
+            };
+            _it.AllowedAttributes = list;
+
+            // Act
+            _it.AllowedAttributes = null;
+
+            // Assert
+            Assert.IsNull(_it.AllowedAttributes);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_AllowedAttributes()
+        {
+            // Arrange
+            var list = new List<AttributeTypeDescription>
+            {
+                new AttributeTypeDescription { DisplayName = "Test AttributeTypeDescription1", ObjectID = "guid1" },
+                new AttributeTypeDescription { DisplayName = "Test AttributeTypeDescription2", ObjectID = "guid2" }
+            };
+
+            // Act
+            _it.AllowedAttributes = list;
+
+            // Assert
+            Assert.AreEqual(list[0].DisplayName, _it.AllowedAttributes[0].DisplayName);
+            Assert.AreEqual(list[1].DisplayName, _it.AllowedAttributes[1].DisplayName);
+        }
+
+
+        [TestMethod]
+        public void It_has_AllowedMembershipReferences_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.AllowedMembershipReferences);
+        }
+
+        [TestMethod]
+        public void It_has_AllowedMembershipReferences_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var list = new List<Set>
+            {
+                new Set { DisplayName = "Test Set1", ObjectID = "guid1" },
+                new Set { DisplayName = "Test Set2", ObjectID = "guid2" }
+            };
+            _it.AllowedMembershipReferences = list;
+
+            // Act
+            _it.AllowedMembershipReferences = null;
+
+            // Assert
+            Assert.IsNull(_it.AllowedMembershipReferences);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_AllowedMembershipReferences()
+        {
+            // Arrange
+            var list = new List<Set>
+            {
+                new Set { DisplayName = "Test Set1", ObjectID = "guid1" },
+                new Set { DisplayName = "Test Set2", ObjectID = "guid2" }
+            };
+
+            // Act
+            _it.AllowedMembershipReferences = list;
+
+            // Assert
+            Assert.AreEqual(list[0].DisplayName, _it.AllowedMembershipReferences[0].DisplayName);
+            Assert.AreEqual(list[1].DisplayName, _it.AllowedMembershipReferences[1].DisplayName);
+        }
+
+
     }
 }

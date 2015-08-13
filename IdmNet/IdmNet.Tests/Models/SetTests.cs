@@ -59,6 +59,50 @@ namespace IdmNet.Models.Tests
         }
 
         [TestMethod]
+        public void It_has_ComputedMember_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.ComputedMember);
+        }
+
+        [TestMethod]
+        public void It_has_ComputedMember_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var list = new List<IdmResource>
+            {
+                new IdmResource { DisplayName = "Test IdmResource1", ObjectID = "guid1" },
+                new IdmResource { DisplayName = "Test IdmResource2", ObjectID = "guid2" }
+            };
+            _it.ComputedMember = list;
+
+            // Act
+            _it.ComputedMember = null;
+
+            // Assert
+            Assert.IsNull(_it.ComputedMember);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_ComputedMember()
+        {
+            // Arrange
+            var list = new List<IdmResource>
+            {
+                new IdmResource { DisplayName = "Test IdmResource1", ObjectID = "guid1" },
+                new IdmResource { DisplayName = "Test IdmResource2", ObjectID = "guid2" }
+            };
+
+            // Act
+            _it.ComputedMember = list;
+
+            // Assert
+            Assert.AreEqual(list[0].DisplayName, _it.ComputedMember[0].DisplayName);
+            Assert.AreEqual(list[1].DisplayName, _it.ComputedMember[1].DisplayName);
+        }
+
+
+        [TestMethod]
         public void It_can_get_and_set_Filter()
         {
             // Act
@@ -66,6 +110,81 @@ namespace IdmNet.Models.Tests
 
             // Assert
             Assert.AreEqual("A string", _it.Filter);
+        }
+
+
+        [TestMethod]
+        public void It_has_ExplicitMember_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.ExplicitMember);
+        }
+
+        [TestMethod]
+        public void It_has_ExplicitMember_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var list = new List<IdmResource>
+            {
+                new IdmResource { DisplayName = "Test IdmResource1", ObjectID = "guid1" },
+                new IdmResource { DisplayName = "Test IdmResource2", ObjectID = "guid2" }
+            };
+            _it.ExplicitMember = list;
+
+            // Act
+            _it.ExplicitMember = null;
+
+            // Assert
+            Assert.IsNull(_it.ExplicitMember);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_ExplicitMember()
+        {
+            // Arrange
+            var list = new List<IdmResource>
+            {
+                new IdmResource { DisplayName = "Test IdmResource1", ObjectID = "guid1" },
+                new IdmResource { DisplayName = "Test IdmResource2", ObjectID = "guid2" }
+            };
+
+            // Act
+            _it.ExplicitMember = list;
+
+            // Assert
+            Assert.AreEqual(list[0].DisplayName, _it.ExplicitMember[0].DisplayName);
+            Assert.AreEqual(list[1].DisplayName, _it.ExplicitMember[1].DisplayName);
+        }
+
+
+        [TestMethod]
+        public void It_has_Temporal_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.Temporal);
+        }
+
+        [TestMethod]
+        public void It_has_Temporal_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.Temporal = true;
+
+            // Act
+            _it.Temporal = null;
+
+            // Assert
+            Assert.IsNull(_it.Temporal);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_Temporal()
+        {
+            // Act
+            _it.Temporal = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.Temporal);
         }
 
 

@@ -69,5 +69,71 @@ namespace IdmNet.Models.Tests
         }
 
 
+        [TestMethod]
+        public void It_has_ResourceParent_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.ResourceParent);
+        }
+
+        [TestMethod]
+        public void It_has_ResourceParent_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var testIdmResource = new IdmResource { DisplayName = "Test IdmResource" };			
+            _it.ResourceParent = testIdmResource; 
+
+            // Act
+            _it.ResourceParent = null;
+
+            // Assert
+            Assert.IsNull(_it.ResourceParent);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_ResourceParent()
+        {
+            // Act
+			var testIdmResource = new IdmResource { DisplayName = "Test IdmResource" };			
+            _it.ResourceParent = testIdmResource; 
+
+            // Assert
+            Assert.AreEqual(testIdmResource.DisplayName, _it.ResourceParent.DisplayName);
+        }
+
+
+        [TestMethod]
+        public void It_has_SynchronizationRuleID_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.SynchronizationRuleID);
+        }
+
+        [TestMethod]
+        public void It_has_SynchronizationRuleID_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var testSynchronizationRule = new SynchronizationRule { DisplayName = "Test SynchronizationRule" };			
+            _it.SynchronizationRuleID = testSynchronizationRule; 
+
+            // Act
+            _it.SynchronizationRuleID = null;
+
+            // Assert
+            Assert.IsNull(_it.SynchronizationRuleID);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_SynchronizationRuleID()
+        {
+            // Act
+			var testSynchronizationRule = new SynchronizationRule { DisplayName = "Test SynchronizationRule" };			
+            _it.SynchronizationRuleID = testSynchronizationRule; 
+
+            // Assert
+            Assert.AreEqual(testSynchronizationRule.DisplayName, _it.SynchronizationRuleID.DisplayName);
+        }
+
+
     }
 }

@@ -58,5 +58,49 @@ namespace IdmNet.Models.Tests
             _it.ObjectType = "Invalid Object Type";
         }
 
+        [TestMethod]
+        public void It_has_msidmElement_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.msidmElement);
+        }
+
+        [TestMethod]
+        public void It_has_msidmElement_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var list = new List<IdmResource>
+            {
+                new IdmResource { DisplayName = "Test IdmResource1", ObjectID = "guid1" },
+                new IdmResource { DisplayName = "Test IdmResource2", ObjectID = "guid2" }
+            };
+            _it.msidmElement = list;
+
+            // Act
+            _it.msidmElement = null;
+
+            // Assert
+            Assert.IsNull(_it.msidmElement);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_msidmElement()
+        {
+            // Arrange
+            var list = new List<IdmResource>
+            {
+                new IdmResource { DisplayName = "Test IdmResource1", ObjectID = "guid1" },
+                new IdmResource { DisplayName = "Test IdmResource2", ObjectID = "guid2" }
+            };
+
+            // Act
+            _it.msidmElement = list;
+
+            // Assert
+            Assert.AreEqual(list[0].DisplayName, _it.msidmElement[0].DisplayName);
+            Assert.AreEqual(list[1].DisplayName, _it.msidmElement[1].DisplayName);
+        }
+
+
     }
 }

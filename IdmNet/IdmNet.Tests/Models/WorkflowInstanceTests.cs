@@ -59,6 +59,138 @@ namespace IdmNet.Models.Tests
         }
 
         [TestMethod]
+        public void It_has_Request_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.Request);
+        }
+
+        [TestMethod]
+        public void It_has_Request_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var testRequest = new Request { DisplayName = "Test Request" };			
+            _it.Request = testRequest; 
+
+            // Act
+            _it.Request = null;
+
+            // Assert
+            Assert.IsNull(_it.Request);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_Request()
+        {
+            // Act
+			var testRequest = new Request { DisplayName = "Test Request" };			
+            _it.Request = testRequest; 
+
+            // Assert
+            Assert.AreEqual(testRequest.DisplayName, _it.Request.DisplayName);
+        }
+
+
+        [TestMethod]
+        public void It_has_Requestor_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.Requestor);
+        }
+
+        [TestMethod]
+        public void It_has_Requestor_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var testIdmResource = new IdmResource { DisplayName = "Test IdmResource" };			
+            _it.Requestor = testIdmResource; 
+
+            // Act
+            _it.Requestor = null;
+
+            // Assert
+            Assert.IsNull(_it.Requestor);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_Requestor()
+        {
+            // Act
+			var testIdmResource = new IdmResource { DisplayName = "Test IdmResource" };			
+            _it.Requestor = testIdmResource; 
+
+            // Assert
+            Assert.AreEqual(testIdmResource.DisplayName, _it.Requestor.DisplayName);
+        }
+
+
+        [TestMethod]
+        public void It_has_Target_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.Target);
+        }
+
+        [TestMethod]
+        public void It_has_Target_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var testIdmResource = new IdmResource { DisplayName = "Test IdmResource" };			
+            _it.Target = testIdmResource; 
+
+            // Act
+            _it.Target = null;
+
+            // Assert
+            Assert.IsNull(_it.Target);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_Target()
+        {
+            // Act
+			var testIdmResource = new IdmResource { DisplayName = "Test IdmResource" };			
+            _it.Target = testIdmResource; 
+
+            // Assert
+            Assert.AreEqual(testIdmResource.DisplayName, _it.Target.DisplayName);
+        }
+
+
+        [TestMethod]
+        public void It_has_WorkflowDefinition_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.WorkflowDefinition);
+        }
+
+        [TestMethod]
+        public void It_has_WorkflowDefinition_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var testWorkflowDefinition = new WorkflowDefinition { DisplayName = "Test WorkflowDefinition" };			
+            _it.WorkflowDefinition = testWorkflowDefinition; 
+
+            // Act
+            _it.WorkflowDefinition = null;
+
+            // Assert
+            Assert.IsNull(_it.WorkflowDefinition);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_WorkflowDefinition()
+        {
+            // Act
+			var testWorkflowDefinition = new WorkflowDefinition { DisplayName = "Test WorkflowDefinition" };			
+            _it.WorkflowDefinition = testWorkflowDefinition; 
+
+            // Assert
+            Assert.AreEqual(testWorkflowDefinition.DisplayName, _it.WorkflowDefinition.DisplayName);
+        }
+
+
+        [TestMethod]
         public void It_can_get_and_set_WorkflowStatus()
         {
             // Act
@@ -66,6 +198,45 @@ namespace IdmNet.Models.Tests
 
             // Assert
             Assert.AreEqual("A string", _it.WorkflowStatus);
+        }
+
+
+        [TestMethod]
+        public void It_has_WorkflowStatusDetail_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.WorkflowStatusDetail);
+        }
+
+        [TestMethod]
+        public void It_has_WorkflowStatusDetail_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var subObject1 = "foo1";
+            var subObject2 = "foo2";
+            var list = new List<string> { subObject1, subObject2 };
+            _it.WorkflowStatusDetail = list; 
+
+            // Act
+            _it.WorkflowStatusDetail = null;
+
+            // Assert
+            Assert.IsNull(_it.WorkflowStatusDetail);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_WorkflowStatusDetail()
+        {
+            var subObject1 = "foo1";
+            var subObject2 = "foo2";
+            var list = new List<string> { subObject1, subObject2 };
+
+            // Act
+            _it.WorkflowStatusDetail = list; 
+
+            // Assert
+            Assert.AreEqual("foo1", _it.WorkflowStatusDetail[0]);
+            Assert.AreEqual("foo2", _it.WorkflowStatusDetail[1]);
         }
 
 

@@ -59,6 +59,37 @@ namespace IdmNet.Models.Tests
         }
 
         [TestMethod]
+        public void It_has_IsConfigurationType_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.IsConfigurationType);
+        }
+
+        [TestMethod]
+        public void It_has_IsConfigurationType_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.IsConfigurationType = true;
+
+            // Act
+            _it.IsConfigurationType = null;
+
+            // Assert
+            Assert.IsNull(_it.IsConfigurationType);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_IsConfigurationType()
+        {
+            // Act
+            _it.IsConfigurationType = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.IsConfigurationType);
+        }
+
+
+        [TestMethod]
         public void It_can_get_and_set_NavigationUrl()
         {
             // Act
@@ -70,6 +101,28 @@ namespace IdmNet.Models.Tests
 
 
         [TestMethod]
+        public void It_can_get_and_set_Order()
+        {
+            // Act
+            _it.Order = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.Order);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_ParentOrder()
+        {
+            // Act
+            _it.ParentOrder = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.ParentOrder);
+        }
+
+
+        [TestMethod]
         public void It_can_get_and_set_CountXPath()
         {
             // Act
@@ -77,6 +130,45 @@ namespace IdmNet.Models.Tests
 
             // Assert
             Assert.AreEqual("A string", _it.CountXPath);
+        }
+
+
+        [TestMethod]
+        public void It_has_UsageKeyword_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.UsageKeyword);
+        }
+
+        [TestMethod]
+        public void It_has_UsageKeyword_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var subObject1 = "foo1";
+            var subObject2 = "foo2";
+            var list = new List<string> { subObject1, subObject2 };
+            _it.UsageKeyword = list; 
+
+            // Act
+            _it.UsageKeyword = null;
+
+            // Assert
+            Assert.IsNull(_it.UsageKeyword);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_UsageKeyword()
+        {
+            var subObject1 = "foo1";
+            var subObject2 = "foo2";
+            var list = new List<string> { subObject1, subObject2 };
+
+            // Act
+            _it.UsageKeyword = list; 
+
+            // Assert
+            Assert.AreEqual("foo1", _it.UsageKeyword[0]);
+            Assert.AreEqual("foo2", _it.UsageKeyword[1]);
         }
 
 

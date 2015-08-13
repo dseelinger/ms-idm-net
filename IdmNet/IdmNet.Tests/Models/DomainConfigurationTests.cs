@@ -69,5 +69,102 @@ namespace IdmNet.Models.Tests
         }
 
 
+        [TestMethod]
+        public void It_has_ForeignSecurityPrincipalSet_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.ForeignSecurityPrincipalSet);
+        }
+
+        [TestMethod]
+        public void It_has_ForeignSecurityPrincipalSet_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var testSet = new Set { DisplayName = "Test Set" };			
+            _it.ForeignSecurityPrincipalSet = testSet; 
+
+            // Act
+            _it.ForeignSecurityPrincipalSet = null;
+
+            // Assert
+            Assert.IsNull(_it.ForeignSecurityPrincipalSet);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_ForeignSecurityPrincipalSet()
+        {
+            // Act
+			var testSet = new Set { DisplayName = "Test Set" };			
+            _it.ForeignSecurityPrincipalSet = testSet; 
+
+            // Assert
+            Assert.AreEqual(testSet.DisplayName, _it.ForeignSecurityPrincipalSet.DisplayName);
+        }
+
+
+        [TestMethod]
+        public void It_has_ForestConfiguration_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.ForestConfiguration);
+        }
+
+        [TestMethod]
+        public void It_has_ForestConfiguration_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var testForestConfiguration = new ForestConfiguration { DisplayName = "Test ForestConfiguration" };			
+            _it.ForestConfiguration = testForestConfiguration; 
+
+            // Act
+            _it.ForestConfiguration = null;
+
+            // Assert
+            Assert.IsNull(_it.ForestConfiguration);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_ForestConfiguration()
+        {
+            // Act
+			var testForestConfiguration = new ForestConfiguration { DisplayName = "Test ForestConfiguration" };			
+            _it.ForestConfiguration = testForestConfiguration; 
+
+            // Assert
+            Assert.AreEqual(testForestConfiguration.DisplayName, _it.ForestConfiguration.DisplayName);
+        }
+
+
+        [TestMethod]
+        public void It_has_IsConfigurationType_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.IsConfigurationType);
+        }
+
+        [TestMethod]
+        public void It_has_IsConfigurationType_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.IsConfigurationType = true;
+
+            // Act
+            _it.IsConfigurationType = null;
+
+            // Assert
+            Assert.IsNull(_it.IsConfigurationType);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_IsConfigurationType()
+        {
+            // Act
+            _it.IsConfigurationType = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.IsConfigurationType);
+        }
+
+
     }
 }

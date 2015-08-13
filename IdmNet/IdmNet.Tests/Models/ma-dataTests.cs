@@ -70,6 +70,37 @@ namespace IdmNet.Models.Tests
 
 
         [TestMethod]
+        public void It_has_SyncConfig_capabilities_mask_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.SyncConfig_capabilities_mask);
+        }
+
+        [TestMethod]
+        public void It_has_SyncConfig_capabilities_mask_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.SyncConfig_capabilities_mask = 123;
+
+            // Act
+            _it.SyncConfig_capabilities_mask = null;
+
+            // Assert
+            Assert.IsNull(_it.SyncConfig_capabilities_mask);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_SyncConfig_capabilities_mask()
+        {
+            // Act
+            _it.SyncConfig_capabilities_mask = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.SyncConfig_capabilities_mask);
+        }
+
+
+        [TestMethod]
         public void It_can_get_and_set_SyncConfig_category()
         {
             // Act
@@ -147,6 +178,37 @@ namespace IdmNet.Models.Tests
 
 
         [TestMethod]
+        public void It_has_SyncConfig_export_type_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.SyncConfig_export_type);
+        }
+
+        [TestMethod]
+        public void It_has_SyncConfig_export_type_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.SyncConfig_export_type = 123;
+
+            // Act
+            _it.SyncConfig_export_type = null;
+
+            // Assert
+            Assert.IsNull(_it.SyncConfig_export_type);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_SyncConfig_export_type()
+        {
+            // Act
+            _it.SyncConfig_export_type = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.SyncConfig_export_type);
+        }
+
+
+        [TestMethod]
         public void It_can_get_and_set_SyncConfig_extension()
         {
             // Act
@@ -158,6 +220,37 @@ namespace IdmNet.Models.Tests
 
 
         [TestMethod]
+        public void It_has_SyncConfig_format_version_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.SyncConfig_format_version);
+        }
+
+        [TestMethod]
+        public void It_has_SyncConfig_format_version_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.SyncConfig_format_version = 123;
+
+            // Act
+            _it.SyncConfig_format_version = null;
+
+            // Assert
+            Assert.IsNull(_it.SyncConfig_format_version);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_SyncConfig_format_version()
+        {
+            // Act
+            _it.SyncConfig_format_version = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.SyncConfig_format_version);
+        }
+
+
+        [TestMethod]
         public void It_can_get_and_set_SyncConfig_id()
         {
             // Act
@@ -165,6 +258,37 @@ namespace IdmNet.Models.Tests
 
             // Assert
             Assert.AreEqual("A string", _it.SyncConfig_id);
+        }
+
+
+        [TestMethod]
+        public void It_has_SyncConfig_internal_version_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.SyncConfig_internal_version);
+        }
+
+        [TestMethod]
+        public void It_has_SyncConfig_internal_version_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.SyncConfig_internal_version = 123;
+
+            // Act
+            _it.SyncConfig_internal_version = null;
+
+            // Assert
+            Assert.IsNull(_it.SyncConfig_internal_version);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_SyncConfig_internal_version()
+        {
+            // Act
+            _it.SyncConfig_internal_version = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.SyncConfig_internal_version);
         }
 
 
@@ -213,6 +337,84 @@ namespace IdmNet.Models.Tests
 
 
         [TestMethod]
+        public void It_has_SyncConfig_ma_partition_data_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.SyncConfig_ma_partition_data);
+        }
+
+        [TestMethod]
+        public void It_has_SyncConfig_ma_partition_data_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var subObject1 = "foo1";
+            var subObject2 = "foo2";
+            var list = new List<string> { subObject1, subObject2 };
+            _it.SyncConfig_ma_partition_data = list; 
+
+            // Act
+            _it.SyncConfig_ma_partition_data = null;
+
+            // Assert
+            Assert.IsNull(_it.SyncConfig_ma_partition_data);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_SyncConfig_ma_partition_data()
+        {
+            var subObject1 = "foo1";
+            var subObject2 = "foo2";
+            var list = new List<string> { subObject1, subObject2 };
+
+            // Act
+            _it.SyncConfig_ma_partition_data = list; 
+
+            // Assert
+            Assert.AreEqual("foo1", _it.SyncConfig_ma_partition_data[0]);
+            Assert.AreEqual("foo2", _it.SyncConfig_ma_partition_data[1]);
+        }
+
+
+        [TestMethod]
+        public void It_has_SyncConfig_ma_run_data_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.SyncConfig_ma_run_data);
+        }
+
+        [TestMethod]
+        public void It_has_SyncConfig_ma_run_data_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var subObject1 = "foo1";
+            var subObject2 = "foo2";
+            var list = new List<string> { subObject1, subObject2 };
+            _it.SyncConfig_ma_run_data = list; 
+
+            // Act
+            _it.SyncConfig_ma_run_data = null;
+
+            // Assert
+            Assert.IsNull(_it.SyncConfig_ma_run_data);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_SyncConfig_ma_run_data()
+        {
+            var subObject1 = "foo1";
+            var subObject2 = "foo2";
+            var list = new List<string> { subObject1, subObject2 };
+
+            // Act
+            _it.SyncConfig_ma_run_data = list; 
+
+            // Assert
+            Assert.AreEqual("foo1", _it.SyncConfig_ma_run_data[0]);
+            Assert.AreEqual("foo2", _it.SyncConfig_ma_run_data[1]);
+        }
+
+
+        [TestMethod]
         public void It_can_get_and_set_SyncConfig_ma_ui_settings()
         {
             // Act
@@ -231,6 +433,37 @@ namespace IdmNet.Models.Tests
 
             // Assert
             Assert.AreEqual("A string", _it.SyncConfig_password_sync);
+        }
+
+
+        [TestMethod]
+        public void It_has_SyncConfig_password_sync_allowed_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.SyncConfig_password_sync_allowed);
+        }
+
+        [TestMethod]
+        public void It_has_SyncConfig_password_sync_allowed_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.SyncConfig_password_sync_allowed = 123;
+
+            // Act
+            _it.SyncConfig_password_sync_allowed = null;
+
+            // Assert
+            Assert.IsNull(_it.SyncConfig_password_sync_allowed);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_SyncConfig_password_sync_allowed()
+        {
+            // Act
+            _it.SyncConfig_password_sync_allowed = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.SyncConfig_password_sync_allowed);
         }
 
 
@@ -279,6 +512,37 @@ namespace IdmNet.Models.Tests
 
 
         [TestMethod]
+        public void It_has_SyncConfig_refresh_schema_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.SyncConfig_refresh_schema);
+        }
+
+        [TestMethod]
+        public void It_has_SyncConfig_refresh_schema_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.SyncConfig_refresh_schema = 123;
+
+            // Act
+            _it.SyncConfig_refresh_schema = null;
+
+            // Assert
+            Assert.IsNull(_it.SyncConfig_refresh_schema);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_SyncConfig_refresh_schema()
+        {
+            // Act
+            _it.SyncConfig_refresh_schema = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.SyncConfig_refresh_schema);
+        }
+
+
+        [TestMethod]
         public void It_can_get_and_set_SyncConfig_schema()
         {
             // Act
@@ -308,6 +572,37 @@ namespace IdmNet.Models.Tests
 
             // Assert
             Assert.AreEqual("A string", _it.SyncConfig_sub_type);
+        }
+
+
+        [TestMethod]
+        public void It_has_SyncConfig_version_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.SyncConfig_version);
+        }
+
+        [TestMethod]
+        public void It_has_SyncConfig_version_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.SyncConfig_version = 123;
+
+            // Act
+            _it.SyncConfig_version = null;
+
+            // Assert
+            Assert.IsNull(_it.SyncConfig_version);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_SyncConfig_version()
+        {
+            // Act
+            _it.SyncConfig_version = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.SyncConfig_version);
         }
 
 

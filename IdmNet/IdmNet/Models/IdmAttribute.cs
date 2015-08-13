@@ -147,9 +147,9 @@ namespace IdmNet.Models
         /// in the Identity Manager resource</returns>
         public List<byte[]> ToBinaries()
         {
-            var results = Values.Select(Convert.FromBase64String).ToList();
+            var results = Values?.Select(Convert.FromBase64String).ToList();
 
-            if (results.Count == 0)
+            if (results == null || results.Count == 0)
                 return null;
             return results;
         }

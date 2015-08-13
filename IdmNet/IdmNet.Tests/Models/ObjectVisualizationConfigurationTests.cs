@@ -59,6 +59,39 @@ namespace IdmNet.Models.Tests
         }
 
         [TestMethod]
+        public void It_can_get_and_set_AppliesToCreate()
+        {
+            // Act
+            _it.AppliesToCreate = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.AppliesToCreate);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_AppliesToEdit()
+        {
+            // Act
+            _it.AppliesToEdit = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.AppliesToEdit);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_AppliesToView()
+        {
+            // Act
+            _it.AppliesToView = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.AppliesToView);
+        }
+
+
+        [TestMethod]
         public void It_can_get_and_set_ConfigurationData()
         {
             // Act
@@ -66,6 +99,37 @@ namespace IdmNet.Models.Tests
 
             // Assert
             Assert.AreEqual("A string", _it.ConfigurationData);
+        }
+
+
+        [TestMethod]
+        public void It_has_IsConfigurationType_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.IsConfigurationType);
+        }
+
+        [TestMethod]
+        public void It_has_IsConfigurationType_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.IsConfigurationType = true;
+
+            // Act
+            _it.IsConfigurationType = null;
+
+            // Assert
+            Assert.IsNull(_it.IsConfigurationType);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_IsConfigurationType()
+        {
+            // Act
+            _it.IsConfigurationType = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.IsConfigurationType);
         }
 
 

@@ -59,6 +59,37 @@ namespace IdmNet.Models.Tests
         }
 
         [TestMethod]
+        public void It_has_ClearRegistration_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.ClearRegistration);
+        }
+
+        [TestMethod]
+        public void It_has_ClearRegistration_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.ClearRegistration = true;
+
+            // Act
+            _it.ClearRegistration = null;
+
+            // Assert
+            Assert.IsNull(_it.ClearRegistration);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_ClearRegistration()
+        {
+            // Act
+            _it.ClearRegistration = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.ClearRegistration);
+        }
+
+
+        [TestMethod]
         public void It_can_get_and_set_RequestPhase()
         {
             // Act
@@ -77,6 +108,37 @@ namespace IdmNet.Models.Tests
 
             // Assert
             Assert.AreEqual("A string", _it.Rules);
+        }
+
+
+        [TestMethod]
+        public void It_has_RunOnPolicyUpdate_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.RunOnPolicyUpdate);
+        }
+
+        [TestMethod]
+        public void It_has_RunOnPolicyUpdate_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.RunOnPolicyUpdate = true;
+
+            // Act
+            _it.RunOnPolicyUpdate = null;
+
+            // Assert
+            Assert.IsNull(_it.RunOnPolicyUpdate);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_RunOnPolicyUpdate()
+        {
+            // Act
+            _it.RunOnPolicyUpdate = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.RunOnPolicyUpdate);
         }
 
 

@@ -70,6 +70,39 @@ namespace IdmNet.Models.Tests
 
 
         [TestMethod]
+        public void It_has_ResourceParent_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.ResourceParent);
+        }
+
+        [TestMethod]
+        public void It_has_ResourceParent_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var testIdmResource = new IdmResource { DisplayName = "Test IdmResource" };			
+            _it.ResourceParent = testIdmResource; 
+
+            // Act
+            _it.ResourceParent = null;
+
+            // Assert
+            Assert.IsNull(_it.ResourceParent);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_ResourceParent()
+        {
+            // Act
+			var testIdmResource = new IdmResource { DisplayName = "Test IdmResource" };			
+            _it.ResourceParent = testIdmResource; 
+
+            // Assert
+            Assert.AreEqual(testIdmResource.DisplayName, _it.ResourceParent.DisplayName);
+        }
+
+
+        [TestMethod]
         public void It_can_get_and_set_StatusError()
         {
             // Act
@@ -77,6 +110,78 @@ namespace IdmNet.Models.Tests
 
             // Assert
             Assert.AreEqual("A string", _it.StatusError);
+        }
+
+
+        [TestMethod]
+        public void It_has_SynchronizationRuleData_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.SynchronizationRuleData);
+        }
+
+        [TestMethod]
+        public void It_has_SynchronizationRuleData_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var subObject1 = "foo1";
+            var subObject2 = "foo2";
+            var list = new List<string> { subObject1, subObject2 };
+            _it.SynchronizationRuleData = list; 
+
+            // Act
+            _it.SynchronizationRuleData = null;
+
+            // Assert
+            Assert.IsNull(_it.SynchronizationRuleData);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_SynchronizationRuleData()
+        {
+            var subObject1 = "foo1";
+            var subObject2 = "foo2";
+            var list = new List<string> { subObject1, subObject2 };
+
+            // Act
+            _it.SynchronizationRuleData = list; 
+
+            // Assert
+            Assert.AreEqual("foo1", _it.SynchronizationRuleData[0]);
+            Assert.AreEqual("foo2", _it.SynchronizationRuleData[1]);
+        }
+
+
+        [TestMethod]
+        public void It_has_SynchronizationRuleID_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.SynchronizationRuleID);
+        }
+
+        [TestMethod]
+        public void It_has_SynchronizationRuleID_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var testSynchronizationRule = new SynchronizationRule { DisplayName = "Test SynchronizationRule" };			
+            _it.SynchronizationRuleID = testSynchronizationRule; 
+
+            // Act
+            _it.SynchronizationRuleID = null;
+
+            // Assert
+            Assert.IsNull(_it.SynchronizationRuleID);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_SynchronizationRuleID()
+        {
+            // Act
+			var testSynchronizationRule = new SynchronizationRule { DisplayName = "Test SynchronizationRule" };			
+            _it.SynchronizationRuleID = testSynchronizationRule; 
+
+            // Assert
+            Assert.AreEqual(testSynchronizationRule.DisplayName, _it.SynchronizationRuleID.DisplayName);
         }
 
 

@@ -91,5 +91,135 @@ namespace IdmNet.Models.Tests
         }
 
 
+        [TestMethod]
+        public void It_can_get_and_set_UICacheTime()
+        {
+            // Act
+            _it.UICacheTime = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.UICacheTime);
+        }
+
+
+        [TestMethod]
+        public void It_has_IsConfigurationType_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.IsConfigurationType);
+        }
+
+        [TestMethod]
+        public void It_has_IsConfigurationType_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.IsConfigurationType = true;
+
+            // Act
+            _it.IsConfigurationType = null;
+
+            // Assert
+            Assert.IsNull(_it.IsConfigurationType);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_IsConfigurationType()
+        {
+            // Act
+            _it.IsConfigurationType = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.IsConfigurationType);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_ListViewCacheTimeOut()
+        {
+            // Act
+            _it.ListViewCacheTimeOut = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.ListViewCacheTimeOut);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_ListViewPageSize()
+        {
+            // Act
+            _it.ListViewPageSize = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.ListViewPageSize);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_ListViewPagesToCache()
+        {
+            // Act
+            _it.ListViewPagesToCache = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.ListViewPagesToCache);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_UICountCacheTime()
+        {
+            // Act
+            _it.UICountCacheTime = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.UICountCacheTime);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_UIUserCacheTime()
+        {
+            // Act
+            _it.UIUserCacheTime = 123;
+
+            // Assert
+            Assert.AreEqual(123, _it.UIUserCacheTime);
+        }
+
+
+        [TestMethod]
+        public void It_has_TimeZone_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.TimeZone);
+        }
+
+        [TestMethod]
+        public void It_has_TimeZone_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var testTimeZoneConfiguration = new TimeZoneConfiguration { DisplayName = "Test TimeZoneConfiguration" };			
+            _it.TimeZone = testTimeZoneConfiguration; 
+
+            // Act
+            _it.TimeZone = null;
+
+            // Assert
+            Assert.IsNull(_it.TimeZone);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_TimeZone()
+        {
+            // Act
+			var testTimeZoneConfiguration = new TimeZoneConfiguration { DisplayName = "Test TimeZoneConfiguration" };			
+            _it.TimeZone = testTimeZoneConfiguration; 
+
+            // Assert
+            Assert.AreEqual(testTimeZoneConfiguration.DisplayName, _it.TimeZone.DisplayName);
+        }
+
+
     }
 }

@@ -69,5 +69,44 @@ namespace IdmNet.Models.Tests
         }
 
 
+        [TestMethod]
+        public void It_has_UsageKeyword_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.UsageKeyword);
+        }
+
+        [TestMethod]
+        public void It_has_UsageKeyword_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var subObject1 = "foo1";
+            var subObject2 = "foo2";
+            var list = new List<string> { subObject1, subObject2 };
+            _it.UsageKeyword = list; 
+
+            // Act
+            _it.UsageKeyword = null;
+
+            // Assert
+            Assert.IsNull(_it.UsageKeyword);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_UsageKeyword()
+        {
+            var subObject1 = "foo1";
+            var subObject2 = "foo2";
+            var list = new List<string> { subObject1, subObject2 };
+
+            // Act
+            _it.UsageKeyword = list; 
+
+            // Assert
+            Assert.AreEqual("foo1", _it.UsageKeyword[0]);
+            Assert.AreEqual("foo2", _it.UsageKeyword[1]);
+        }
+
+
     }
 }
