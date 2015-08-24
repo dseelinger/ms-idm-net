@@ -42,6 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml" />
@@ -123,6 +124,7 @@
     <Compile Include="Models\IdmAttributeTests.cs" />
     <Compile Include="SoapFactoryModelsTests.cs" />
     <Compile Include="SoapResourceClientModelTests.cs" />
+    <Compile Include="Spikes\ApprovalSpikes.cs" />
     <Compile Include="TestUtils.cs" />
   </ItemGroup>
   <ItemGroup>
