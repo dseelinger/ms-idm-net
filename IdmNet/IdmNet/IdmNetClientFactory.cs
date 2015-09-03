@@ -18,8 +18,24 @@ namespace IdmNet
         /// <returns>Newly initialized IdmNet Client</returns>
         public static IdmNetClient BuildClient()
         {
-            var soapBinding = new IdmSoapBinding();
             string fqdn = GetEnvironmentSetting("MIM_fqdn");
+            string username = GetEnvironmentSetting("MIM_username");
+            string password = GetEnvironmentSetting("MIM_pwd");
+            string domain = GetEnvironmentSetting("MIM_domain");
+
+            return BuildClient(new IdmConnectionInfo
+            {
+                Domain = domain,
+                Password = password,
+                Username = username,
+                Server = fqdn
+            });
+        }
+
+        public static IdmNetClient BuildClient(IdmConnectionInfo connectionInfo)
+        {
+            var soapBinding = new IdmSoapBinding();
+            string fqdn = connectionInfo.Server;
             var endpointIdentity = EndpointIdentity.CreateSpnIdentity("FIMSERVICE/" + fqdn);
 
 
@@ -40,9 +56,9 @@ namespace IdmNet
 
 
             var credentials = new NetworkCredential(
-                GetEnvironmentSetting("MIM_username"),
-                GetEnvironmentSetting("MIM_pwd"),
-                GetEnvironmentSetting("MIM_domain"));
+                connectionInfo.Username,
+                connectionInfo.Password,
+                connectionInfo.Domain);
 
             searchClient.ClientCredentials.Windows.ClientCredential = credentials;
             factoryClient.ClientCredentials.Windows.ClientCredential = credentials;

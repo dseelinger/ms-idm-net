@@ -560,7 +560,7 @@ namespace IdmNet
 
             Message putResponseMsg = await _resourceClient.PutAsync(putRequestMsg);
 
-            if (putResponseMsg.IsFault)
+            if (putResponseMsg.IsFault && !(putResponseMsg.ToString().Contains("AuthorizationRequiredFault")))
                 throw new SoapFaultException("Put Fault: " + putResponseMsg);
 
             return putResponseMsg;

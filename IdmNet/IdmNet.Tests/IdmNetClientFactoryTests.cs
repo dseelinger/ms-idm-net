@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
+using IdmNet.Tests.TestModels;
 using Xunit;
 
 namespace IdmNet.Tests
 {
-    public class IdmNetClientFactoryTests
+    public class IdmNetClientFactoryTests : PortalTestBase
     {
        [Fact]
         public void It_can_build_and_initialize_an_IdmNetClient_instance()
@@ -28,5 +30,36 @@ namespace IdmNet.Tests
 
             Assert.Equal("value", result);
         }
+
+        [Fact]
+        public async Task It_can_take_connection_information_in_the_ctor()
+        {
+            // Arrange
+            TestUserInfo testUser = null;
+            try
+            {
+                testUser = await CreateTestUser("con03");
+                string fqdn = IdmNetClientFactory.GetEnvironmentSetting("MIM_fqdn");
+                string username = IdmNetClientFactory.GetEnvironmentSetting("MIM_username");
+                string password = IdmNetClientFactory.GetEnvironmentSetting("MIM_pwd");
+                string domain = IdmNetClientFactory.GetEnvironmentSetting("MIM_domain");
+                IdmConnectionInfo connectionInfo = new IdmConnectionInfo
+                {
+                    Server = fqdn,
+                    Username = username,
+                    Password = password,
+                    Domain = domain
+                };
+
+                var it = IdmNetClientFactory.BuildClient(connectionInfo);
+
+            }
+            finally
+            {
+                // Afterwards
+                await DeleteUser(testUser);
+            }
+        }
+
     }
 }

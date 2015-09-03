@@ -42,6 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
@@ -115,6 +116,7 @@
     <Compile Include="Models\TimeZoneConfigurationTests.cs" />
     <Compile Include="Models\WorkflowDefinitionTests.cs" />
     <Compile Include="Models\WorkflowInstanceTests.cs" />
+    <Compile Include="PortalTestBase.cs" />
     <Compile Include="SearchCriteriaTests.cs" />
     <Compile Include="SoapFaultExceptionTests.cs" />
     <Compile Include="IdmSoapBindingTests.cs" />
@@ -125,6 +127,7 @@
     <Compile Include="SoapFactoryModelsTests.cs" />
     <Compile Include="SoapResourceClientModelTests.cs" />
     <Compile Include="Spikes\ApprovalSpikes.cs" />
+    <Compile Include="TestModels\TestUserInfo.cs" />
     <Compile Include="TestUtils.cs" />
   </ItemGroup>
   <ItemGroup>

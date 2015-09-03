@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Channels;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using IdmNet.Models;
 using IdmNet.SoapModels;
+using IdmNet.Tests.TestModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+// ReSharper disable UnusedVariable
 
 #pragma warning disable 4014
 
@@ -15,7 +19,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace IdmNet.Tests
 {
     [TestClass]
-    public class IdmNetClientTests
+    public class IdmNetClientTests : PortalTestBase
     {
         [TestMethod]
         [TestCategory("Integration")]
@@ -48,7 +52,7 @@ namespace IdmNet.Tests
                 (await
                     it.SearchAsync(new SearchCriteria("/ObjectTypeDescription")
                     {
-                        Selection = new List<string> { "DisplayName", "Name" }
+                        Selection = new List<string> {"DisplayName", "Name"}
                     })).ToArray();
 
             // Assert
@@ -84,7 +88,9 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task T004_It_can_Search_for_resources_and_Sort_the_results_by_multiple_attributes_in_Ascending_or_Descending_order()
+        public async Task
+            T004_It_can_Search_for_resources_and_Sort_the_results_by_multiple_attributes_in_Ascending_or_Descending_order
+            ()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -94,7 +100,7 @@ namespace IdmNet.Tests
                 (await
                     it.SearchAsync(new SearchCriteria("/BindingDescription")
                     {
-                        Selection = new List<string> { "*" },
+                        Selection = new List<string> {"*"},
                         Sorting = new Sorting
                         {
                             SortingAttributes = new[]
@@ -118,7 +124,7 @@ namespace IdmNet.Tests
 
             Assert.AreEqual("c51c9ef3-2de0-4d4e-b30b-c1a18e79c56e", bindings[20].BoundObjectType.ObjectID);
 
-            var attributes = new List<string> { "DisplayName" };
+            var attributes = new List<string> {"DisplayName"};
             var objType1 = await it.GetAsync(bindings[0].BoundObjectType.ObjectID, attributes);
             Assert.AreEqual("Activity Information Configuration", objType1.DisplayName);
 
@@ -127,7 +133,7 @@ namespace IdmNet.Tests
 
 
             // Sub-sort is by attribute type - descending (note that ObjectID appears "before" ActivityName"
-            var attributes2 = new List<string> { "Name" };
+            var attributes2 = new List<string> {"Name"};
             var objType3 = await it.GetAsync(bindings[0].BoundAttributeType.ObjectID, attributes2);
             Assert.AreEqual("TypeName", objType3.GetAttrValue("Name"));
 
@@ -164,7 +170,7 @@ namespace IdmNet.Tests
             var it = IdmNetClientFactory.BuildClient();
 
             // Act
-            IdmResource result = await it.GetAsync("c51c9ef3-2de0-4d4e-b30b-c1a18e79c56e", new List<string> { "*" });
+            IdmResource result = await it.GetAsync("c51c9ef3-2de0-4d4e-b30b-c1a18e79c56e", new List<string> {"*"});
 
             // Assert
             Assert.AreEqual(6, result.Attributes.Count);
@@ -195,12 +201,12 @@ namespace IdmNet.Tests
             var it = IdmNetClientFactory.BuildClient();
 
             // Act
-            var newUser = new IdmResource { ObjectType = "Person", DisplayName = "Test User" };
+            var newUser = new IdmResource {ObjectType = "Person", DisplayName = "Test User"};
             IdmResource createResult = await it.PostAsync(newUser);
             Assert.AreEqual(newUser.DisplayName, createResult.DisplayName);
 
             // assert
-            var result = await it.GetAsync(createResult.ObjectID, new List<string> { "DisplayName" });
+            var result = await it.GetAsync(createResult.ObjectID, new List<string> {"DisplayName"});
             Assert.AreEqual(newUser.DisplayName, result.DisplayName);
 
             // afterwards
@@ -214,7 +220,7 @@ namespace IdmNet.Tests
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
             IdmResource toDelete =
-                await it.PostAsync(new IdmResource { ObjectType = "Person", DisplayName = "Test User" });
+                await it.PostAsync(new IdmResource {ObjectType = "Person", DisplayName = "Test User"});
 
             // Act
             Message result = await it.DeleteAsync(toDelete.ObjectID);
@@ -224,7 +230,7 @@ namespace IdmNet.Tests
             Assert.IsFalse(result.IsFault);
             try
             {
-                await it.GetAsync(toDelete.ObjectID, new List<string> { "DisplayName" });
+                await it.GetAsync(toDelete.ObjectID, new List<string> {"DisplayName"});
                 Assert.Fail("Should not make it here");
             }
             catch (KeyNotFoundException)
@@ -235,7 +241,8 @@ namespace IdmNet.Tests
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task T010_It_can_do_a_search_and_return_the_first_page_of_results_and_info_on_retrieving_subsequent_pages_if_any()
+        public async Task
+            T010_It_can_do_a_search_and_return_the_first_page_of_results_and_info_on_retrieving_subsequent_pages_if_any()
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
@@ -287,7 +294,44 @@ namespace IdmNet.Tests
 
             Assert.AreEqual(null, pagedResults.EndOfSequence);
             Assert.AreEqual(true, pagedResults.Items is XmlNode[]);
-            Assert.AreEqual(5, ((XmlNode[])(pagedResults.Items)).Length);
+            Assert.AreEqual(5, ((XmlNode[]) (pagedResults.Items)).Length);
+        }
+
+        [TestMethod]
+        public async Task T011_It_can_approve_requests()
+        {
+            // Arrange
+            TestUserInfo ownerUser = null;
+            TestUserInfo joiningUser = null;
+            string groupId = "";
+            try
+            {
+                ownerUser = await CreateTestUser("Owner01");
+                joiningUser = await CreateTestUser("Joiner01");
+
+                try
+                {
+                    groupId = await CreateGroup(ownerUser, "02");
+
+                    await CreateJoinRequest(joiningUser, groupId);
+
+                    // Act
+                    //ApproveRequest();
+
+                    // Assert
+                    //AssertUserIsInGroupNow();
+                }
+                finally
+                {
+                    DeleteGroup(groupId);
+                }
+            }
+            finally
+            {
+                // Afterwards
+                await DeleteUser(joiningUser);
+                await DeleteUser(ownerUser);
+            }
         }
 
         [TestMethod]
@@ -305,7 +349,8 @@ namespace IdmNet.Tests
             Assert.AreEqual("User", result.DisplayName);
             Assert.IsTrue(result.CreatedTime >= new DateTime(2010, 1, 1));
             Assert.AreEqual(null, result.Creator);
-            Assert.AreEqual("This resource defines applicable policies to manage incoming requests. ", result.Description);
+            Assert.AreEqual("This resource defines applicable policies to manage incoming requests. ",
+                result.Description);
             Assert.AreEqual("Person", result.Name);
             Assert.AreEqual(personOid, result.ObjectID);
             Assert.AreEqual("ObjectTypeDescription", result.ObjectType);
@@ -318,7 +363,8 @@ namespace IdmNet.Tests
             {
                 Assert.AreEqual(personOid, result.BindingDescriptions[i].BoundObjectType.ObjectID);
             }
-            Assert.AreEqual("3e04bbbf-014f-413c-8d07-6276cd383be8", result.BindingDescriptions[0].BoundAttributeType.ObjectID);
+            Assert.AreEqual("3e04bbbf-014f-413c-8d07-6276cd383be8",
+                result.BindingDescriptions[0].BoundAttributeType.ObjectID);
             Assert.AreEqual(false, result.BindingDescriptions[0].Required);
 
             Assert.AreEqual("String", result.BindingDescriptions[0].BoundAttributeType.DataType);
@@ -329,7 +375,8 @@ namespace IdmNet.Tests
             Assert.AreEqual(null, result.BindingDescriptions[0].BoundAttributeType.IntegerMinimum);
             Assert.AreEqual("AccountName", result.BindingDescriptions[0].BoundAttributeType.Name);
             Assert.AreEqual(null, result.BindingDescriptions[0].BoundAttributeType.StringRegex);
-            Assert.AreEqual("Microsoft.ResourceManagement.WebServices", result.BindingDescriptions[0].BoundAttributeType.UsageKeyword[0]);
+            Assert.AreEqual("Microsoft.ResourceManagement.WebServices",
+                result.BindingDescriptions[0].BoundAttributeType.UsageKeyword[0]);
         }
 
         [TestMethod]
@@ -342,7 +389,7 @@ namespace IdmNet.Tests
             {
                 CurrentIndex = 0,
                 Filter = "/ObjectTypeDescription",
-                Selection = new[] { "ObjectID", "ObjectType", "DisplayName" },
+                Selection = new[] {"ObjectID", "ObjectType", "DisplayName"},
                 Sorting = new Sorting(),
                 EnumerationDirection = "Forwards",
                 Expires = "9999-12-31T23:59:59.9999999"
@@ -357,7 +404,7 @@ namespace IdmNet.Tests
 
             Assert.AreEqual(null, pagedResults.EndOfSequence);
             Assert.AreEqual(true, pagedResults.Items is XmlNode[]);
-            Assert.AreEqual(5, ((XmlNode[])(pagedResults.Items)).Length);
+            Assert.AreEqual(5, ((XmlNode[]) (pagedResults.Items)).Length);
         }
 
         [TestMethod]
@@ -702,7 +749,7 @@ namespace IdmNet.Tests
                     Attributes = new List<IdmAttribute>
                     {
                         new IdmAttribute {Name = "ObjectType", Values = new List<string> {"Person"}},
-                        new IdmAttribute {Name = "ObjectID", Values = new List<string> {}},
+                        new IdmAttribute {Name = "ObjectID", Values = new List<string>()},
                         new IdmAttribute {Name = "DisplayName", Values = new List<string> {"_Test User"}},
                     }
                 };
@@ -711,7 +758,7 @@ namespace IdmNet.Tests
                 // assert
                 Assert.AreEqual(3, createResult.Attributes.Count);
                 Assert.AreEqual(newUser.DisplayName, createResult.DisplayName);
-                var result = await it.GetAsync(createResult.ObjectID, new List<string> { "DisplayName" });
+                var result = await it.GetAsync(createResult.ObjectID, new List<string> {"DisplayName"});
                 Assert.AreEqual(newUser.DisplayName, result.DisplayName);
             }
             finally
@@ -741,7 +788,8 @@ namespace IdmNet.Tests
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
 
-            var searchResults = await it.SearchAsync(new SearchCriteria("/Configuration") { Selection = new List<string> { "*" } }, 25);
+            var searchResults =
+                await it.SearchAsync(new SearchCriteria("/Configuration") {Selection = new List<string> {"*"}}, 25);
 
             Assert.AreEqual(0, searchResults.Count());
         }
@@ -841,5 +889,24 @@ namespace IdmNet.Tests
                 it.DeleteAsync(testResource.ObjectID);
             }
         }
+
+        private async Task CreateJoinRequest(TestUserInfo testUser, string groupId)
+        {
+            string fqdn = IdmNetClientFactory.GetEnvironmentSetting("MIM_fqdn");
+            var client =
+                IdmNetClientFactory.BuildClient(new IdmConnectionInfo
+                {
+                    Domain = testUser.Domain,
+                    Server = fqdn,
+                    Username = testUser.AccountName,
+                    Password = testUser.Password
+                });
+
+            var testUserObj = await client.GetAsync(testUser.ObjectId, new List<string> { "DisplayName" });
+
+
+            await client.AddValueAsync(groupId, "ExplicitMember", testUserObj.ObjectID); 
+        }
+
     }
 }

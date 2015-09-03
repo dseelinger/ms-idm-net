@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IdmConnectionInfo.cs" />
     <Compile Include="IdmNetClientFactory.cs" />
     <Compile Include="IdmNetUtils.cs" />
     <Compile Include="Models\ActivityInformationConfiguration.cs" />
