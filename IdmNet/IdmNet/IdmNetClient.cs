@@ -142,7 +142,7 @@ namespace IdmNet
         public async Task<IdmResource> GetAsync(string objectID, List<string> selection)
         {
             if (String.IsNullOrWhiteSpace(objectID))
-                throw new ArgumentNullException("objectID");
+                throw new ArgumentNullException(nameof(objectID));
 
             if (selection != null && selection.Contains("*"))
             {
@@ -190,28 +190,19 @@ namespace IdmNet
         /// </summary>
         /// <param name="resource">Resource to be created</param>
         /// <returns>Resource with its newly assigned ObjectID</returns>
-        public async Task<IdmResource> PostAsync(IdmResource resource)
+        public async Task<Message> CreateAsync(IdmResource resource)
         {
-            if (resource == null)
-                throw new ArgumentNullException("resource");
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-            var createRequestMessage = BuildCreateRequestMessage(resource);
+            var creationRequestMsg = BuildCreationRequestMessage(resource);
 
-            // Add the required header for the Create action
-            createRequestMessage.Headers.Add(MessageHeader.CreateHeader("IdentityManagementOperation", SoapConstants.DirectoryAccess, null, true));
+            AddIdmHeaderToCreationMessage(creationRequestMsg);
 
+            Message creationResponseMsg = await _factoryClient.CreateAsync(creationRequestMsg);
 
-            Message addResponseMsg = await _factoryClient.CreateAsync(createRequestMessage);
+            if (creationResponseMsg.IsFault) throw new SoapFaultException("Create Fault: " + creationResponseMsg);
 
-            if (addResponseMsg.IsFault)
-                throw new SoapFaultException("Create Fault: " + addResponseMsg);
-
-            // Deserialize the Add response
-            ResourceCreated resourceCreatedObject = addResponseMsg.GetBody<ResourceCreated>(new SoapXmlSerializer(typeof(ResourceCreated)));
-
-            resource.ObjectID = resourceCreatedObject.EndpointReference.ReferenceProperties.ResourceReferenceProperty.Value.Substring(9);;
-
-            return resource;
+            return creationResponseMsg;
         }
 
         /// <summary>
@@ -221,8 +212,8 @@ namespace IdmNet
         /// <returns></returns>
         public async Task<Message> DeleteAsync(string objectID)
         {
-            if (String.IsNullOrWhiteSpace(objectID))
-                throw new ArgumentNullException("objectID");
+            if (string.IsNullOrWhiteSpace(objectID))
+                throw new ArgumentNullException(nameof(objectID));
 
             Message deleteRequestMsg = Message.CreateMessage(MessageVersion.Default, SoapConstants.DeleteAction);
 
@@ -314,13 +305,54 @@ namespace IdmNet
 
         }
 
+        /// <summary>
+        /// Get the ObjectID for a newly created resource from the response message
+        /// </summary>
+        /// <param name="resourceCreationResponseMessage">Response message from the CreateAsync method</param>
+        /// <returns>New object id</returns>
+        public string GetNewObjectId(Message resourceCreationResponseMessage)
+        {
+            var resourceCreationResponse = DeserializeCreationResponse(resourceCreationResponseMessage);
+            return resourceCreationResponse.EndpointReference.ReferenceProperties.ResourceReferenceProperty.Value.Substring(9);
+        }
 
+        /// <summary>
+        /// Approve or reject a particular request
+        /// </summary>
+        /// <param name="approvalObjectId">ObjectID of the Approval object to either approve or reject</param>
+        /// <param name="approve">If true, approve the request, otherwise reject</param>
+        /// <returns>SOAP Message from the resulting Approval Response created.</returns>
+        public Task<Message> ApproveOrRejectRequest(string approvalObjectId, bool approve)
+        {
+            if (approvalObjectId == null) throw new ArgumentNullException(nameof(approvalObjectId));
+            return null;
+        }
+
+        /// <summary>
+        /// Approve a particular request
+        /// </summary>
+        /// <param name="approvalObjectId">ObjectID of the Approval object to approve</param>
+        /// <returns>SOAP Message from the resulting Approval Response created.</returns>
+        public Task<Message> ApproveRequest(string approvalObjectId)
+        {
+            return ApproveOrRejectRequest(approvalObjectId, true);
+        }
+
+        /// <summary>
+        /// Reject a particular request
+        /// </summary>
+        /// <param name="approvalObjectId">ObjectID of the Approval object to reject</param>
+        /// <returns>SOAP Message from the resulting Approval Response created.</returns>
+        public Task<Message> RejectRequest(string approvalObjectId)
+        {
+            return ApproveOrRejectRequest(approvalObjectId, false);
+        }
 
 
 
         private async Task AddBindingDescriptions(Schema result)
         {
-            var bindingCriteria = new SearchCriteria(String.Format("/BindingDescription[BoundObjectType='{0}']", result.ObjectID))
+            var bindingCriteria = new SearchCriteria($"/BindingDescription[BoundObjectType='{result.ObjectID}']")
             {
                 Selection =
                     new List<string>
@@ -374,7 +406,7 @@ namespace IdmNet
 
         private async Task<Schema> BuildSchemaObject(string objectType)
         {
-            var criteria = new SearchCriteria(String.Format("/ObjectTypeDescription[Name='{0}']", objectType))
+            var criteria = new SearchCriteria($"/ObjectTypeDescription[Name='{objectType}']")
             {
                 Selection =
                     new List<string>
@@ -506,16 +538,16 @@ namespace IdmNet
                 resource.Attributes.Add(new IdmAttribute { Name = name, Value = val });
         }
 
-        private static Message BuildCreateRequestMessage(IdmResource resource)
+        private static Message BuildCreationRequestMessage(IdmResource resource)
         {
             var factoryRequest = BuildFactoryRequest(resource);
 
-            var createRequestMessage = CreateSoapMessage(factoryRequest);
+            var createRequestMessage = CreateSoapFactoryCreateMessage(factoryRequest);
 
             return createRequestMessage;
         }
 
-        private static Message CreateSoapMessage(AddRequest factoryRequest)
+        private static Message CreateSoapFactoryCreateMessage(AddRequest factoryRequest)
         {
             var createRequestMessage = Message.CreateMessage(MessageVersion.Default,
                 SoapConstants.CreateAction,
@@ -560,7 +592,8 @@ namespace IdmNet
 
             Message putResponseMsg = await _resourceClient.PutAsync(putRequestMsg);
 
-            if (putResponseMsg.IsFault && !(putResponseMsg.ToString().Contains("AuthorizationRequiredFault")))
+            var responseStr = putResponseMsg.ToString();
+            if (responseStr != null && (putResponseMsg.IsFault && !(responseStr.Contains("AuthorizationRequiredFault"))))
                 throw new SoapFaultException("Put Fault: " + putResponseMsg);
 
             return putResponseMsg;
@@ -582,6 +615,17 @@ namespace IdmNet
             return pullMessage;
         }
 
+        private static void AddIdmHeaderToCreationMessage(Message createRequestMessage)
+        {
+            createRequestMessage.Headers.Add(MessageHeader.CreateHeader("IdentityManagementOperation",
+                SoapConstants.DirectoryAccess, null, true));
+        }
 
+        private static ResourceCreated DeserializeCreationResponse(Message creationResponseMsg)
+        {
+            ResourceCreated resourceCreatedObject =
+                creationResponseMsg.GetBody<ResourceCreated>(new SoapXmlSerializer(typeof(ResourceCreated)));
+            return resourceCreatedObject;
+        }
     }
 }

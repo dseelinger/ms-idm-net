@@ -52,8 +52,8 @@ namespace IdmNet.SoapModels
             get { return _attrName; }
             set
             {
-                if (String.IsNullOrWhiteSpace(value) || value.Any(Char.IsWhiteSpace) || !(Char.IsLetter(value[0])))
-                    throw new ArgumentException("Cannot be Null, Empty, or Whitespace", "value");
+                if (string.IsNullOrWhiteSpace(value) || value.Any(char.IsWhiteSpace) || !(char.IsLetter(value[0])))
+                    throw new ArgumentException("Cannot be Null, Empty, or Whitespace", nameof(value));
 
                 _attrName = value;
             }
@@ -157,4 +157,51 @@ namespace IdmNet.SoapModels
         [XmlText(Type = typeof (string))]
         public string Value { get; set; }
     }
+
+    /// <summary>
+    /// Yet another SOAP Model (for approving requests)
+    /// </summary>
+    [XmlRoot(ElementName = "ApprovalResponse", Namespace = SoapConstants.RmNamespace)]
+    public class ApprovalResponse
+    {
+        /// <summary>
+        /// Part of a SOAP model
+        /// </summary>
+        [XmlElement(ElementName = "Approval", Namespace = SoapConstants.RmNamespace)]
+        public string Approval { get; set; }
+
+        /// <summary>
+        /// Part of a SOAP model
+        /// </summary>
+        [XmlElement(ElementName = "Decision", Namespace = SoapConstants.RmNamespace)]
+        public string Decision { get; set; }
+
+        /// <summary>
+        /// Part of a SOAP model
+        /// </summary>
+        [XmlElement(ElementName = "ObjectType", Namespace = SoapConstants.RmNamespace)]
+        public string ObjectType { get; set; }
+
+        /// <summary>
+        /// Part of a SOAP model
+        /// </summary>
+        [XmlElement(ElementName = "Reason", Namespace = SoapConstants.RmNamespace)]
+        public string Reason { get; set; }
+
+        /// <summary>
+        /// Part of a SOAP model
+        /// </summary>
+        [XmlIgnore]
+        public string WorkflowInstanceID { get; set; }
+
+        /// <summary>
+        /// SOAP Model constructor
+        /// </summary>
+        public ApprovalResponse()
+        {
+            ObjectType = "ApprovalResponse";
+        }
+
+    }
 }
+

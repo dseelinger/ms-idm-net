@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
 using IdmNet.Tests.TestModels;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Xunit;
+using Assert = Xunit.Assert;
 
 namespace IdmNet.Tests
 {
+    [TestClass]
     public class IdmNetClientFactoryTests : PortalTestBase
     {
-       [Fact]
+        [Fact]
         public void It_can_build_and_initialize_an_IdmNetClient_instance()
         {
             var client = IdmNetClientFactory.BuildClient();
@@ -31,7 +34,8 @@ namespace IdmNet.Tests
             Assert.Equal("value", result);
         }
 
-        [Fact]
+        [TestMethod]
+        [TestCategory("Integration")]
         public async Task It_can_take_connection_information_in_the_ctor()
         {
             // Arrange

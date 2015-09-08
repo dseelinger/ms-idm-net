@@ -23,14 +23,7 @@ namespace IdmNet.Tests
             string accountName = $"_TU_{disambiguator}";
             var up = new UserPrincipal(ouContex) { SamAccountName = accountName, Enabled = true };
             up.SetPassword("Password1");
-            try
-            {
-                up.Save(ouContex);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            up.Save(ouContex);
 
             var user = UserPrincipal.FindByIdentity(ouContex, accountName);
             var sidBytes = new byte[28];
@@ -47,7 +40,8 @@ namespace IdmNet.Tests
                 ObjectSID = sidBytes
             };
 
-            var result = await idmClient.PostAsync(person);
+            var result = await idmClient.CreateAsync(person);
+            var objectId = idmClient.GetNewObjectId(result);
 
             return new TestUserInfo
             {
@@ -56,7 +50,7 @@ namespace IdmNet.Tests
                 AccountName = person.AccountName,
                 Domain = shortDomain,
                 Password = "Password1",
-                ObjectId = result.ObjectID
+                ObjectId = objectId
             };
         }
 
@@ -72,7 +66,7 @@ namespace IdmNet.Tests
             {
                 // Delete the user from AD
                 testUser.AdUser.Delete();
-            }
+            } 
         }
 
         protected async Task<string> CreateGroup(TestUserInfo ownerUser, string disambiguator)
@@ -117,8 +111,9 @@ namespace IdmNet.Tests
                 Type = "Distribution"
             };
 
-            var result = await ownerClient.PostAsync(fimObj);
-            return result.ObjectID;
+            var result = await ownerClient.CreateAsync(fimObj);
+            var objectId = ownerClient.GetNewObjectId(result);
+            return objectId;
         }
 
         protected async Task DeleteGroup(string objectId)

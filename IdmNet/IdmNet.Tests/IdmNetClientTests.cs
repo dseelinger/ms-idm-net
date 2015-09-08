@@ -199,18 +199,18 @@ namespace IdmNet.Tests
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
+            var newUser = new IdmResource { ObjectType = "Person", DisplayName = "Test User" };
 
             // Act
-            var newUser = new IdmResource {ObjectType = "Person", DisplayName = "Test User"};
-            IdmResource createResult = await it.PostAsync(newUser);
-            Assert.AreEqual(newUser.DisplayName, createResult.DisplayName);
+            Message createResult = await it.CreateAsync(newUser);
 
             // assert
-            var result = await it.GetAsync(createResult.ObjectID, new List<string> {"DisplayName"});
+            string objectId = it.GetNewObjectId(createResult);
+            var result = await it.GetAsync(objectId, new List<string> { "DisplayName" });
             Assert.AreEqual(newUser.DisplayName, result.DisplayName);
 
             // afterwards
-            await it.DeleteAsync(createResult.ObjectID);
+            await it.DeleteAsync(objectId);
         }
 
         [TestMethod]
@@ -219,18 +219,19 @@ namespace IdmNet.Tests
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
-            IdmResource toDelete =
-                await it.PostAsync(new IdmResource {ObjectType = "Person", DisplayName = "Test User"});
+            Message toDelete =
+                await it.CreateAsync(new IdmResource {ObjectType = "Person", DisplayName = "Test User"});
+            var objectId = it.GetNewObjectId(toDelete);
 
             // Act
-            Message result = await it.DeleteAsync(toDelete.ObjectID);
+            Message result = await it.DeleteAsync(objectId);
 
 
             // Assert
             Assert.IsFalse(result.IsFault);
             try
             {
-                await it.GetAsync(toDelete.ObjectID, new List<string> {"DisplayName"});
+                await it.GetAsync(objectId, new List<string> {"DisplayName"});
                 Assert.Fail("Should not make it here");
             }
             catch (KeyNotFoundException)
@@ -267,6 +268,7 @@ namespace IdmNet.Tests
         }
 
         [TestMethod]
+        [TestCategory("Integration")]
         public async Task T011_It_can_get_resources_back_from_a_search_a_page_at_a_time()
         {
             // Arrange
@@ -298,6 +300,7 @@ namespace IdmNet.Tests
         }
 
         [TestMethod]
+        [TestCategory("Integration")] 
         public async Task T011_It_can_approve_requests()
         {
             // Arrange
@@ -313,7 +316,7 @@ namespace IdmNet.Tests
                 {
                     groupId = await CreateGroup(ownerUser, "02");
 
-                    await CreateJoinRequest(joiningUser, groupId);
+                    await AddExplicitMember(joiningUser, groupId);
 
                     // Act
                     //ApproveRequest();
@@ -441,7 +444,7 @@ namespace IdmNet.Tests
             var it = IdmNetClientFactory.BuildClient();
 
             // Act
-            await it.PostAsync(null);
+            await it.CreateAsync(null);
         }
 
         [TestMethod]
@@ -454,7 +457,7 @@ namespace IdmNet.Tests
 
             // Act
             var newUser = new IdmResource();
-            await it.PostAsync(newUser);
+            await it.CreateAsync(newUser);
         }
 
         [TestMethod]
@@ -489,19 +492,20 @@ namespace IdmNet.Tests
             const string attrName = "FirstName";
             const string attrValue = "Testing";
             var it = IdmNetClientFactory.BuildClient();
-            IdmResource testResource = await CreateTestPerson(it);
+            Message testResource = await CreateTestPerson(it);
+            var objectId = it.GetNewObjectId(testResource);
 
             // Act
             try
             {
-                Message result = await it.AddValueAsync(testResource.ObjectID, attrName, attrValue);
+                Message result = await it.AddValueAsync(objectId, attrName, attrValue);
 
                 Assert.IsFalse(result.IsFault);
             }
             finally
             {
                 // Afterwards
-                it.DeleteAsync(testResource.ObjectID);
+                it.DeleteAsync(objectId);
             }
 
         }
@@ -515,12 +519,13 @@ namespace IdmNet.Tests
             const string attrName = "SearchScopeContext";
             const string attrValue = "FirstName";
             var it = IdmNetClientFactory.BuildClient();
-            IdmResource testResource = await CreateTestSearchScope(it);
+            Message testResource = await CreateTestSearchScope(it);
+            var objectId = it.GetNewObjectId(testResource);
 
             // Act
             try
             {
-                await it.AddValueAsync(testResource.ObjectID, attrName, attrValue);
+                await it.AddValueAsync(objectId, attrName, attrValue);
 
                 // Assert
                 var searchResult =
@@ -530,7 +535,7 @@ namespace IdmNet.Tests
                             Filter =
                                 new Filter
                                 {
-                                    Query = "/SearchScopeConfiguration[ObjectID='" + testResource.ObjectID + "']"
+                                    Query = "/SearchScopeConfiguration[ObjectID='" + objectId + "']"
                                 },
                             Selection = new List<string> {"SearchScopeContext"}
                         });
@@ -539,7 +544,7 @@ namespace IdmNet.Tests
             finally
             {
                 // Afterwards
-                it.DeleteAsync(testResource.ObjectID);
+                it.DeleteAsync(objectId);
             }
         }
 
@@ -551,12 +556,13 @@ namespace IdmNet.Tests
             const string attrName = "ProxyAddressCollection";
             const string attrValue = "joecool@nowhere.net";
             var it = IdmNetClientFactory.BuildClient();
-            IdmResource testResource = await CreateTestPerson(it);
+            Message testResource = await CreateTestPerson(it);
+            var objectId = it.GetNewObjectId(testResource);
 
             // Act
             try
             {
-                await it.AddValueAsync(testResource.ObjectID, attrName, attrValue);
+                await it.AddValueAsync(objectId, attrName, attrValue);
 
                 // Assert
                 var searchResult =
@@ -566,7 +572,7 @@ namespace IdmNet.Tests
                             Filter =
                                 new Filter
                                 {
-                                    Query = "/Person[ObjectID='" + testResource.ObjectID + "']"
+                                    Query = "/Person[ObjectID='" + objectId + "']"
                                 },
                             Selection = new List<string> {"ProxyAddressCollection"}
                         });
@@ -576,7 +582,7 @@ namespace IdmNet.Tests
             finally
             {
                 // Afterwards
-                it.DeleteAsync(testResource.ObjectID);
+                it.DeleteAsync(objectId);
             }
         }
 
@@ -589,15 +595,16 @@ namespace IdmNet.Tests
             const string attrValue1 = "joecool@nowhere.net";
             const string attrValue2 = "joecool@nowhere.lab";
             var it = IdmNetClientFactory.BuildClient();
-            IdmResource testResource = await CreateTestPerson(it);
+            Message testResource = await CreateTestPerson(it);
+            var objectId = it.GetNewObjectId(testResource);
 
             try
             {
-                await it.AddValueAsync(testResource.ObjectID, attrName, attrValue1);
-                await it.AddValueAsync(testResource.ObjectID, attrName, attrValue2);
+                await it.AddValueAsync(objectId, attrName, attrValue1);
+                await it.AddValueAsync(objectId, attrName, attrValue2);
 
                 // Act
-                Message result = await it.RemoveValueAsync(testResource.ObjectID, attrName, attrValue2);
+                Message result = await it.RemoveValueAsync(objectId, attrName, attrValue2);
 
                 // Assert
                 Assert.IsFalse(result.IsFault);
@@ -608,7 +615,7 @@ namespace IdmNet.Tests
                             Filter =
                                 new Filter
                                 {
-                                    Query = "/Person[ObjectID='" + testResource.ObjectID + "']"
+                                    Query = "/Person[ObjectID='" + objectId + "']"
                                 },
                             Selection = new List<string> {"ProxyAddressCollection"}
                         });
@@ -618,7 +625,7 @@ namespace IdmNet.Tests
             finally
             {
                 // Afterwards
-                it.DeleteAsync(testResource.ObjectID);
+                it.DeleteAsync(objectId);
             }
         }
 
@@ -630,12 +637,13 @@ namespace IdmNet.Tests
             const string attrName = "FirstName";
             const string attrValue = "TestFirstName";
             var it = IdmNetClientFactory.BuildClient();
-            IdmResource testResource = await CreateTestPerson(it);
+            Message testResource = await CreateTestPerson(it);
+            var objectId = it.GetNewObjectId(testResource);
 
             try
             {
                 // Act
-                Message result = await it.ReplaceValueAsync(testResource.ObjectID, attrName, attrValue);
+                Message result = await it.ReplaceValueAsync(objectId, attrName, attrValue);
 
                 // Assert
                 Assert.IsFalse(result.IsFault);
@@ -646,7 +654,7 @@ namespace IdmNet.Tests
                             Filter =
                                 new Filter
                                 {
-                                    Query = "/Person[ObjectID='" + testResource.ObjectID + "']"
+                                    Query = "/Person[ObjectID='" + objectId + "']"
                                 },
                             Selection = new List<string> {attrName}
                         });
@@ -656,7 +664,7 @@ namespace IdmNet.Tests
             finally
             {
                 // Afterwards
-                it.DeleteAsync(testResource.ObjectID);
+                it.DeleteAsync(objectId);
             }
         }
 
@@ -680,7 +688,8 @@ namespace IdmNet.Tests
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
-            IdmResource testResource = await CreateTestPerson(it);
+            Message testResource = await CreateTestPerson(it);
+            var objectId = it.GetNewObjectId(testResource);
             var changes1 = new[]
             {
                 new Change(ModeType.Replace, "FirstName", "FirstNameTest"),
@@ -692,7 +701,7 @@ namespace IdmNet.Tests
             try
             {
                 // Act
-                Message result = await it.ChangeMultipleAttrbutes(testResource.ObjectID, changes1);
+                Message result = await it.ChangeMultipleAttrbutes(objectId, changes1);
 
                 // Assert
                 Assert.IsFalse(result.IsFault);
@@ -703,7 +712,7 @@ namespace IdmNet.Tests
                             Filter =
                                 new Filter
                                 {
-                                    Query = "/Person[ObjectID='" + testResource.ObjectID + "']"
+                                    Query = "/Person[ObjectID='" + objectId + "']"
                                 },
                             Selection = new List<string> {"FirstName", "LastName", "ProxyAddressCollection"}
                         });
@@ -717,7 +726,7 @@ namespace IdmNet.Tests
             finally
             {
                 // Afterwards
-                it.DeleteAsync(testResource.ObjectID);
+                it.DeleteAsync(objectId);
             }
         }
 
@@ -740,7 +749,7 @@ namespace IdmNet.Tests
         {
             // Arrange
             var it = IdmNetClientFactory.BuildClient();
-            IdmResource createResult = null;
+            string newObjectId = null;
 
             try
             {
@@ -753,18 +762,17 @@ namespace IdmNet.Tests
                         new IdmAttribute {Name = "DisplayName", Values = new List<string> {"_Test User"}},
                     }
                 };
-                createResult = await it.PostAsync(newUser);
+                var createResult = await it.CreateAsync(newUser);
 
                 // assert
-                Assert.AreEqual(3, createResult.Attributes.Count);
-                Assert.AreEqual(newUser.DisplayName, createResult.DisplayName);
-                var result = await it.GetAsync(createResult.ObjectID, new List<string> {"DisplayName"});
+                newObjectId = it.GetNewObjectId(createResult);
+                var result = await it.GetAsync(newObjectId, new List<string> {"DisplayName"});
                 Assert.AreEqual(newUser.DisplayName, result.DisplayName);
             }
             finally
             {
                 // afterwards
-                it.DeleteAsync(createResult.ObjectID);
+                it.DeleteAsync(newObjectId);
             }
             // Act
         }
@@ -832,18 +840,16 @@ namespace IdmNet.Tests
             }
         }
 
-        // TODO 002: Test for AttributeTypeDescriptions, BindingDescriptions, ObjectTypeDescriptions that you can't mess with their object types
-        // TODO 001: Implement Approvals
         // TODO -999: Implement the STS endpoint
 
-        private static async Task<IdmResource> CreateTestPerson(IdmNetClient it)
+        private static async Task<Message> CreateTestPerson(IdmNetClient it)
         {
-            return await it.PostAsync(new IdmResource {ObjectType = "Person", DisplayName = "Test User"});
+            return await it.CreateAsync(new IdmResource {ObjectType = "Person", DisplayName = "Test User"});
         }
 
-        private static async Task<IdmResource> CreateTestSearchScope(IdmNetClient it)
+        private static async Task<Message> CreateTestSearchScope(IdmNetClient it)
         {
-            return await it.PostAsync(new IdmResource
+            return await it.CreateAsync(new IdmResource
             {
                 Attributes = new List<IdmAttribute>
                 {
@@ -861,13 +867,14 @@ namespace IdmNet.Tests
         private static async Task AssertReplaceOk(string attrName, string attrValue1, string attrValue2)
         {
             var it = IdmNetClientFactory.BuildClient();
-            IdmResource testResource = await CreateTestPerson(it);
+            Message testResource = await CreateTestPerson(it);
+            var objectId = it.GetNewObjectId(testResource);
 
             try
             {
                 // Act
-                await it.ReplaceValueAsync(testResource.ObjectID, attrName, attrValue1);
-                await it.ReplaceValueAsync(testResource.ObjectID, attrName, attrValue2);
+                await it.ReplaceValueAsync(objectId, attrName, attrValue1);
+                await it.ReplaceValueAsync(objectId, attrName, attrValue2);
 
                 // Assert
                 var searchResult =
@@ -876,7 +883,7 @@ namespace IdmNet.Tests
                         Filter =
                             new Filter
                             {
-                                Query = "/Person[ObjectID='" + testResource.ObjectID + "']"
+                                Query = "/Person[ObjectID='" + objectId + "']"
                             },
                         Selection = new List<string> {attrName}
                     });
@@ -886,11 +893,11 @@ namespace IdmNet.Tests
             finally
             {
                 // Afterwards
-                it.DeleteAsync(testResource.ObjectID);
+                it.DeleteAsync(objectId);
             }
         }
 
-        private async Task CreateJoinRequest(TestUserInfo testUser, string groupId)
+        private async Task AddExplicitMember(TestUserInfo testUser, string groupId)
         {
             string fqdn = IdmNetClientFactory.GetEnvironmentSetting("MIM_fqdn");
             var client =
