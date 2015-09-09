@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel.Channels;
 using System.Threading.Tasks;
@@ -319,34 +320,56 @@ namespace IdmNet
         /// <summary>
         /// Approve or reject a particular request
         /// </summary>
-        /// <param name="approvalObjectId">ObjectID of the Approval object to either approve or reject</param>
+        /// <param name="approvalObjectId">ObjectID of a pending approval</param>
         /// <param name="approve">If true, approve the request, otherwise reject</param>
         /// <returns>SOAP Message from the resulting Approval Response created.</returns>
-        public Task<Message> ApproveOrRejectRequest(string approvalObjectId, bool approve)
+        public async Task<Message> ApproveOrRejectRequest(string approvalObjectId, bool approve)
         {
             if (approvalObjectId == null) throw new ArgumentNullException(nameof(approvalObjectId));
+
             return null;
         }
 
         /// <summary>
         /// Approve a particular request
         /// </summary>
-        /// <param name="approvalObjectId">ObjectID of the Approval object to approve</param>
+        /// <param name="approvalObjectId">ObjectID of a pending approval</param>
         /// <returns>SOAP Message from the resulting Approval Response created.</returns>
-        public Task<Message> ApproveRequest(string approvalObjectId)
+        public async Task<Message> ApproveRequest(string approvalObjectId)
         {
-            return ApproveOrRejectRequest(approvalObjectId, true);
+            return await ApproveOrRejectRequest(approvalObjectId, true);
         }
 
         /// <summary>
         /// Reject a particular request
         /// </summary>
-        /// <param name="approvalObjectId">ObjectID of the Approval object to reject</param>
+        /// <param name="approvalObjectId">ObjectID of a pending approval</param>
         /// <returns>SOAP Message from the resulting Approval Response created.</returns>
-        public Task<Message> RejectRequest(string approvalObjectId)
+        public async Task<Message> RejectRequest(string approvalObjectId)
         {
-            return ApproveOrRejectRequest(approvalObjectId, false);
+            return await ApproveOrRejectRequest(approvalObjectId, false);
         }
+
+        /// <summary>
+        /// Returns the Approval object for a given request
+        /// </summary>
+        /// <param name="requestObjectId">ObjectID for a given request that should have an approval associated with it.</param>
+        /// <returns>An Approval object with both "EndpointAddress" and "WorkflowInstance" populated, or NULL if no Approvals exist for a given request</returns>
+        public async Task<List<Approval>> GetApprovalsForRequest(string requestObjectId)
+        {
+            var searchApprovals =
+                await
+                    SearchAsync(new SearchCriteria($"/Approval[Request = '{requestObjectId}']")
+                    {
+                        Selection = new List<string> {"EndpointAddress", "WorkflowInstance"}
+                    });
+
+            var approvals = from a in searchApprovals
+                select new Approval(a);
+
+            return approvals.ToList();
+        }
+
 
 
 
@@ -626,6 +649,26 @@ namespace IdmNet
             ResourceCreated resourceCreatedObject =
                 creationResponseMsg.GetBody<ResourceCreated>(new SoapXmlSerializer(typeof(ResourceCreated)));
             return resourceCreatedObject;
+        }
+
+        /// <summary>
+        /// Returns the ResourceReferenceProperty (eg. Approval ObjectID) associated with a particular message returned
+        /// from an create/update-type operation
+        /// </summary>
+        /// <param name="soapMessageString">The SOAP message in a string format (msg.ToString())</param>
+        /// <returns>The ObjectID of the associated resource/Approval, otherwise NULL</returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public string GetResourceReferenceProperty(string soapMessageString)
+        {
+            var searchValue =
+                @"<ResourceReferenceProperty xmlns=""http://schemas.microsoft.com/2006/11/ResourceManagement"">urn:uuid:";
+            int startIndex =
+                soapMessageString.IndexOf(searchValue, StringComparison.Ordinal) + searchValue.Length;
+            int endIndex = soapMessageString.IndexOf("</ResourceReferenceProperty>", StringComparison.Ordinal);
+
+            var returnValue = soapMessageString.Substring(startIndex, endIndex - startIndex);
+
+            return returnValue;
         }
     }
 }

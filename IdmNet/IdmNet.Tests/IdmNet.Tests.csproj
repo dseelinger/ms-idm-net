@@ -127,6 +127,7 @@
     <Compile Include="SoapFactoryModelsTests.cs" />
     <Compile Include="SoapResourceClientModelTests.cs" />
     <Compile Include="Spikes\ApprovalSpikes.cs" />
+    <Compile Include="TestConstants.cs" />
     <Compile Include="TestModels\TestUserInfo.cs" />
     <Compile Include="TestUtils.cs" />
   </ItemGroup>

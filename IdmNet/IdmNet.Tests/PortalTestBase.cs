@@ -21,7 +21,7 @@ namespace IdmNet.Tests
 
             var ouContex = new PrincipalContext(ContextType.Domain, fullDomain, fullDomainLdap);
             string accountName = $"_TU_{disambiguator}";
-            var up = new UserPrincipal(ouContex) { SamAccountName = accountName, Enabled = true };
+            var up = new UserPrincipal(ouContex) { SamAccountName = accountName, Enabled = true, DisplayName = accountName};
             up.SetPassword("Password1");
             up.Save(ouContex);
 

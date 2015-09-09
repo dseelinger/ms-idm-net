@@ -300,8 +300,8 @@ namespace IdmNet.Tests
         }
 
         [TestMethod]
-        [TestCategory("Integration")] 
-        public async Task T011_It_can_approve_requests()
+        [TestCategory("Integration")]
+        public async Task T012_It_can_approve_requests()
         {
             // Arrange
             TestUserInfo ownerUser = null;
@@ -323,6 +323,49 @@ namespace IdmNet.Tests
 
                     // Assert
                     //AssertUserIsInGroupNow();
+                }
+                finally
+                {
+                    DeleteGroup(groupId);
+                }
+            }
+            finally
+            {
+                // Afterwards
+                await DeleteUser(joiningUser);
+                await DeleteUser(ownerUser);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task T012_It_can_return_the_approval_objects_associated_with_a_particular_request()
+        {
+            // Arrange
+            TestUserInfo ownerUser = null;
+            TestUserInfo joiningUser = null;
+            string groupId = "";
+            try
+            {
+                ownerUser = await CreateTestUser("Owner01");
+                joiningUser = await CreateTestUser("Joiner01");
+
+                try
+                {
+                    groupId = await CreateGroup(ownerUser, "02");
+
+                    var soapMessage = await AddExplicitMember(joiningUser, groupId);
+                    var it = IdmNetClientFactory.BuildClient();
+                    var requestId = it.GetResourceReferenceProperty(soapMessage.ToString());
+
+                    // Act
+                    List<Approval> result = await it.GetApprovalsForRequest(requestId);
+
+                    // Assert
+                    Assert.IsNotNull(result);
+                    Assert.AreEqual(1, result.Count);
+                    Assert.IsNotNull(result[0].EndpointAddress);
+                    Assert.IsNotNull(result[0].WorkflowInstance);
                 }
                 finally
                 {
@@ -840,6 +883,18 @@ namespace IdmNet.Tests
             }
         }
 
+        [TestMethod]
+        public void It_can_return_a_ReferenceResourceProperty_if_one_is_present_in_a_SOAP_Message_string()
+        {
+            var expectedString = "f7453c35-fda7-4e78-bd9d-b3ae77eaa26c";
+            var it = IdmNetClientFactory.BuildClient();
+
+            string result = it.GetResourceReferenceProperty(TestConstants.SoapMessageWithResourceReferenceProperty);
+
+            Assert.AreEqual(expectedString, result);
+
+        }
+
         // TODO -999: Implement the STS endpoint
 
         private static async Task<Message> CreateTestPerson(IdmNetClient it)
@@ -897,7 +952,7 @@ namespace IdmNet.Tests
             }
         }
 
-        private async Task AddExplicitMember(TestUserInfo testUser, string groupId)
+        private async Task<Message> AddExplicitMember(TestUserInfo testUser, string groupId)
         {
             string fqdn = IdmNetClientFactory.GetEnvironmentSetting("MIM_fqdn");
             var client =
@@ -912,7 +967,8 @@ namespace IdmNet.Tests
             var testUserObj = await client.GetAsync(testUser.ObjectId, new List<string> { "DisplayName" });
 
 
-            await client.AddValueAsync(groupId, "ExplicitMember", testUserObj.ObjectID); 
+            var msg = await client.AddValueAsync(groupId, "ExplicitMember", testUserObj.ObjectID);
+            return msg;
         }
 
     }
