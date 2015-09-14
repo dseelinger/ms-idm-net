@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Threading.Tasks;
 using System.Xml;
 using IdmNet.Models;
 using IdmNet.SoapModels;
+// ReSharper disable PossibleNullReferenceException
 
 // ReSharper disable InconsistentNaming
 
@@ -320,34 +322,64 @@ namespace IdmNet
         /// <summary>
         /// Approve or reject a particular request
         /// </summary>
-        /// <param name="approvalObjectId">ObjectID of a pending approval</param>
+        /// <param name="pendingApproval">A pending approval object - EndpointAddress and WorkflowInstance must be populated.</param>
         /// <param name="approve">If true, approve the request, otherwise reject</param>
         /// <returns>SOAP Message from the resulting Approval Response created.</returns>
-        public async Task<Message> ApproveOrRejectRequest(string approvalObjectId, bool approve)
+        public async Task<Message> ApproveOrRejectAsync(Approval pendingApproval, string reason, bool approve)
         {
-            if (approvalObjectId == null) throw new ArgumentNullException(nameof(approvalObjectId));
+            if (pendingApproval == null) throw new ArgumentNullException(nameof(pendingApproval));
 
-            return null;
+            string approvalEndpoint = "";
+            foreach (string endpointAddress in pendingApproval.EndpointAddress)
+            {
+                if (endpointAddress.StartsWith("http:"))
+                    approvalEndpoint = endpointAddress;
+            }
+
+            var approvalResponse = new ApprovalResponseSoapModel(
+                pendingApproval.ObjectID,
+                approve ? "Approved" : "Rejected",
+                reason);
+
+            var soapBinding = new IdmSoapBinding();
+            var factoryEndpoint = new EndpointAddress(new Uri(approvalEndpoint), _factoryClient.Endpoint.Address.Identity);
+            var factoryClient = new ResourceFactoryClient(soapBinding, factoryEndpoint);
+            factoryClient.ClientCredentials.Windows.ClientCredential = _factoryClient.ClientCredentials.Windows.ClientCredential;
+
+            Message approvalResponseMessage = Message.CreateMessage(
+                MessageVersion.Default,
+                "http://schemas.xmlsoap.org/ws/2004/09/transfer/Create",
+                approvalResponse,
+                new SoapXmlSerializer(typeof(ApprovalResponseSoapModel)));
+
+            approvalResponseMessage.Headers.Add(new ContextHeader(pendingApproval.WorkflowInstance.ObjectID)); 
+
+            Message creationResponseMsg = await factoryClient.CreateAsync(approvalResponseMessage);
+
+            if (creationResponseMsg.IsFault)
+                throw new SoapFaultException("Create Fault: " + creationResponseMsg);
+
+            return creationResponseMsg;
         }
 
         /// <summary>
         /// Approve a particular request
         /// </summary>
-        /// <param name="approvalObjectId">ObjectID of a pending approval</param>
+        /// <param name="pendingApproval">A pending approval object - EndpointAddress and WorkflowInstance must be populated.</param>
         /// <returns>SOAP Message from the resulting Approval Response created.</returns>
-        public async Task<Message> ApproveRequest(string approvalObjectId)
+        public async Task<Message> ApproveAsync(Approval pendingApproval)
         {
-            return await ApproveOrRejectRequest(approvalObjectId, true);
+            return await ApproveOrRejectAsync(pendingApproval, "because I said so", true);
         }
 
         /// <summary>
         /// Reject a particular request
         /// </summary>
-        /// <param name="approvalObjectId">ObjectID of a pending approval</param>
+        /// <param name="pendingApproval">A pending approval object - EndpointAddress and WorkflowInstance must be populated.</param>
         /// <returns>SOAP Message from the resulting Approval Response created.</returns>
-        public async Task<Message> RejectRequest(string approvalObjectId)
+        public async Task<Message> RejectAsync(Approval pendingApproval)
         {
-            return await ApproveOrRejectRequest(approvalObjectId, false);
+            return await ApproveOrRejectAsync(pendingApproval, "because I said so", false);
         }
 
         /// <summary>

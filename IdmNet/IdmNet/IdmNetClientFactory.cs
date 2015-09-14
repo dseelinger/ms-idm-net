@@ -54,7 +54,6 @@ namespace IdmNet
             var resourceClient = new ResourceClient(soapBinding, resourceEndpoint);
 
 
-
             var credentials = new NetworkCredential(
                 connectionInfo.Username,
                 connectionInfo.Password,

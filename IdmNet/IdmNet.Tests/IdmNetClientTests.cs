@@ -316,10 +316,14 @@ namespace IdmNet.Tests
                 {
                     groupId = await CreateGroup(ownerUser, "02");
 
-                    await AddExplicitMember(joiningUser, groupId);
+                    var approvals = await GenerateApproval(joiningUser, groupId);
+                    string fqdn = IdmNetClientFactory.GetEnvironmentSetting("MIM_fqdn");
+                    var ownerClient =
+                        IdmNetClientFactory.BuildClient();
+
 
                     // Act
-                    //ApproveRequest();
+                    var result = await ownerClient.ApproveAsync(approvals[0]);
 
                     // Assert
                     //AssertUserIsInGroupNow();
@@ -354,18 +358,15 @@ namespace IdmNet.Tests
                 {
                     groupId = await CreateGroup(ownerUser, "02");
 
-                    var soapMessage = await AddExplicitMember(joiningUser, groupId);
-                    var it = IdmNetClientFactory.BuildClient();
-                    var requestId = it.GetResourceReferenceProperty(soapMessage.ToString());
-
                     // Act
-                    List<Approval> result = await it.GetApprovalsForRequest(requestId);
+                    var approvals = await GenerateApproval(joiningUser, groupId);
 
                     // Assert
-                    Assert.IsNotNull(result);
-                    Assert.AreEqual(1, result.Count);
-                    Assert.IsNotNull(result[0].EndpointAddress);
-                    Assert.IsNotNull(result[0].WorkflowInstance);
+                    Assert.IsNotNull(approvals);
+                    Assert.AreEqual(1, approvals.Count);
+                    Assert.IsNotNull(approvals[0].EndpointAddress);
+                    Assert.IsNotNull(approvals[0].WorkflowInstance);
+                    
                 }
                 finally
                 {
@@ -378,6 +379,25 @@ namespace IdmNet.Tests
                 await DeleteUser(joiningUser);
                 await DeleteUser(ownerUser);
             }
+        }
+
+        [TestMethod]
+        public async Task It_throws_when_ApproveOrReject_is_called_with_a_null_approval()
+        {
+            // Arrange
+            var it = IdmNetClientFactory.BuildClient();
+
+            // Act
+            try
+            {
+                await it.ApproveOrRejectAsync(null, "because I said so", true);
+                Assert.Fail("Should not reach here");
+            }
+            catch (ArgumentNullException)
+            {
+                // OK
+            }
+            // Assert
         }
 
         [TestMethod]
@@ -969,6 +989,15 @@ namespace IdmNet.Tests
 
             var msg = await client.AddValueAsync(groupId, "ExplicitMember", testUserObj.ObjectID);
             return msg;
+        }
+
+        private async Task<List<Approval>> GenerateApproval(TestUserInfo joiningUser, string groupId)
+        {
+            var soapMessage = await AddExplicitMember(joiningUser, groupId);
+            var it = IdmNetClientFactory.BuildClient();
+            var requestId = it.GetResourceReferenceProperty(soapMessage.ToString());
+            List<Approval> approvals = await it.GetApprovalsForRequest(requestId);
+            return approvals;
         }
 
     }

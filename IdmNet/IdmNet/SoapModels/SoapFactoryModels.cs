@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.ServiceModel.Channels;
 using System.Xml;
 using System.Xml.Serialization;
+// ReSharper disable InconsistentNaming
 
 
 namespace IdmNet.SoapModels
@@ -159,49 +161,102 @@ namespace IdmNet.SoapModels
     }
 
     /// <summary>
-    /// Yet another SOAP Model (for approving requests)
+    /// SOAP Model
     /// </summary>
-    [XmlRoot(ElementName = "ApprovalResponse", Namespace = SoapConstants.RmNamespace)]
-    public class ApprovalResponse
+    public sealed class ContextHeader : MessageHeader
     {
         /// <summary>
-        /// Part of a SOAP model
+        /// Par of a SOAP Model
+        /// </summary>
+        public string WorkflowInstanceID { get; set; }
+
+        /// <summary>
+        /// Par of a SOAP Model
+        /// </summary>
+        public override string Name => "Context";
+
+        /// <summary>
+        /// Par of a SOAP Model
+        /// </summary>
+        public override string Namespace => "http://schemas.microsoft.com/ws/2006/05/context";
+
+
+        /// <summary>
+        /// SOAP Model Ctor
+        /// </summary>
+        public ContextHeader(string WorkflowInstanceID)
+        {
+            this.WorkflowInstanceID = WorkflowInstanceID;
+        }
+
+        /// <summary>
+        /// SOAP Model Serialization helper
+        /// </summary>
+        protected override void OnWriteHeaderContents(XmlDictionaryWriter writer, MessageVersion messageVersion)
+        {
+            writer.WriteStartElement("Property", Namespace);
+            // ReSharper disable once AssignNullToNotNullAttribute
+            writer.WriteAttributeString("name", null, "instanceId");
+            writer.WriteValue(WorkflowInstanceID);
+            writer.WriteEndElement();
+        }
+    }
+
+    /// <summary>
+    /// Approval Response SOAP Model
+    /// <remarks>
+    /// Don't assume that this can be replaced by simply creating an ApprovalResposne FIM Object. It can't.
+    /// </remarks>
+    /// </summary>
+    [XmlRoot(ElementName = "ApprovalResponse", Namespace = SoapConstants.RmNamespace)]
+    public class ApprovalResponseSoapModel
+    {
+        /// <summary>
+        /// Approval ID (with the "urn:uuid") to be approved
         /// </summary>
         [XmlElement(ElementName = "Approval", Namespace = SoapConstants.RmNamespace)]
         public string Approval { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// "Approved" or "Rejected"
         /// </summary>
         [XmlElement(ElementName = "Decision", Namespace = SoapConstants.RmNamespace)]
         public string Decision { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// Can only be "ApprovalResponse"
         /// </summary>
         [XmlElement(ElementName = "ObjectType", Namespace = SoapConstants.RmNamespace)]
         public string ObjectType { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// Reason for the Rejection (or approval, I suppose)
         /// </summary>
         [XmlElement(ElementName = "Reason", Namespace = SoapConstants.RmNamespace)]
         public string Reason { get; set; }
 
         /// <summary>
-        /// Part of a SOAP model
+        /// Default CTOR
         /// </summary>
-        [XmlIgnore]
-        public string WorkflowInstanceID { get; set; }
-
-        /// <summary>
-        /// SOAP Model constructor
-        /// </summary>
-        public ApprovalResponse()
+        public ApprovalResponseSoapModel()
         {
-            ObjectType = "ApprovalResponse";
+
         }
 
+        /// <summary>
+        /// Primary CTOR
+        /// </summary>
+        /// <param name="approvalObjectId">Approval ObjectID (without the "urn:uuid:")</param>
+        /// <param name="decision">Can only be "Approved" or "Rejected"</param>
+        /// <param name="reason">Optional reason for approval or rejection</param>
+        public ApprovalResponseSoapModel(string approvalObjectId, string decision, string reason)
+        {
+            Approval = "urn:uuid:" + approvalObjectId;
+            Decision = decision;
+            Reason = reason;
+            ObjectType = "ApprovalResponse";
+        }
     }
+
 }
 

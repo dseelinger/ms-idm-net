@@ -71,6 +71,16 @@ namespace IdmNet.Tests
 
         protected async Task<string> CreateGroup(TestUserInfo ownerUser, string disambiguator)
         {
+            // Troubleshooting
+            ownerUser = new TestUserInfo
+            {
+                Domain = "FIMDOM",
+                ObjectId = "7fb2b853-24f0-4498-9534-4e10589723c4",
+                Password = ".....1dM.....",
+                DisplayName = "doug",
+                AccountName = "doug"
+            };
+
             // Create the user in identity manager
             var shortDomain = ConfigurationManager.AppSettings["short_domain"];
             string fqdn = IdmNetClientFactory.GetEnvironmentSetting("MIM_fqdn");
