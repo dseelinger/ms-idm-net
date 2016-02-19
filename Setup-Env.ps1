@@ -47,7 +47,7 @@ if($Environment -eq "Machine")
 
 [Environment]::SetEnvironmentVariable("MIM_fqdn", "$fqdn", "$Environment") #used for both the Identity Manager Service address and SPN
 [Environment]::SetEnvironmentVariable("MIM_domain", "$domain", "$Environment")
-[Environment]::SetEnvironmentVariable("MIM_pwd", "$username", "$Environment")
-[Environment]::SetEnvironmentVariable("MIM_username", "$password", "$Environment")
+[Environment]::SetEnvironmentVariable("MIM_username", "$username", "$Environment")
+[Environment]::SetEnvironmentVariable("MIM_pwd", "$password", "$Environment")
 		 
 Write-Host "Script Complete"
