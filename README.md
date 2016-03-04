@@ -12,3 +12,5 @@ Or, you can set the following values manually as either environment variables or
 - MIM_username - Account name that will be used to access the MIM/FIM Service
 - MIM_pwd - Password for the account
 - MIM_domain - Account's domain
+
+The best place to go for examples on how to use the various features of this API is https://github.com/dseelinger/ms-idm-net/blob/master/IdmNet/IdmNet.Tests/IdmNetClientTests.cs
