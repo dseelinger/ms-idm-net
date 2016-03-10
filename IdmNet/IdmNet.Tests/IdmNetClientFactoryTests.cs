@@ -38,6 +38,7 @@ namespace IdmNet.Tests
         [TestCategory("Integration")]
         public async Task It_can_take_connection_information_in_the_ctor()
         {
+            // Note: you must have MIM on the box on which this is running in order for it to pass.
             // Arrange
             TestUserInfo testUser = null;
             try
