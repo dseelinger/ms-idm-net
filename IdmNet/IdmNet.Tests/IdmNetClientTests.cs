@@ -302,7 +302,7 @@ namespace IdmNet.Tests
         [TestCategory("Integration")]
         public async Task T012_It_can_approve_requests()
         {
-            // Note: for this test to pass you have to enable the MPRs for Distribution Group Management 
+            // Note: for this test to pass you have to enable the MPRs for Distribution Group Management, and run from a machine with MIM on it.
             // Arrange
             TestUserInfo ownerUser = null;
             TestUserInfo joiningUser = null;
@@ -345,7 +345,7 @@ namespace IdmNet.Tests
         [TestCategory("Integration")]
         public async Task T013_It_can_return_the_approval_objects_associated_with_a_particular_request()
         {
-            // Note: for this test to pass you have to enable the MPRs for Distribution Group Management 
+            // Note: for this test to pass you have to enable the MPRs for Distribution Group Management, and run from a machine with MIM on it.
             // Arrange
             TestUserInfo ownerUser = null;
             TestUserInfo joiningUser = null;
