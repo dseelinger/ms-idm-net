@@ -916,8 +916,6 @@ namespace IdmNet.Tests
 
         }
 
-        // TODO -999: Implement the STS endpoint
-
         private static async Task<Message> CreateTestPerson(IdmNetClient it)
         {
             return await it.CreateAsync(new IdmResource {ObjectType = "Person", DisplayName = "Test User"});
