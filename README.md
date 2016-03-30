@@ -13,4 +13,6 @@ Or, you can set the following values manually as either environment variables or
 - MIM_pwd - Password for the account
 - MIM_domain - Account's domain
 
+MSDN-type documentation can be found at http://dseelinger.github.io/ms-idm-net
+
 The best place to go for examples on how to use the various features of this API is https://github.com/dseelinger/ms-idm-net/blob/master/IdmNet/IdmNet.Tests/IdmNetClientTests.cs
