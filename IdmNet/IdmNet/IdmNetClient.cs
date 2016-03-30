@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
@@ -323,6 +322,7 @@ namespace IdmNet
         /// Approve or reject a particular request
         /// </summary>
         /// <param name="pendingApproval">A pending approval object - EndpointAddress and WorkflowInstance must be populated.</param>
+        /// <param name="reason">Reason for approving or denying the request.</param>
         /// <param name="approve">If true, approve the request, otherwise reject</param>
         /// <returns>SOAP Message from the resulting Approval Response created.</returns>
         public async Task<Message> ApproveOrRejectAsync(Approval pendingApproval, string reason, bool approve)

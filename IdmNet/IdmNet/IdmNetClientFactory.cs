@@ -32,6 +32,11 @@ namespace IdmNet
             });
         }
 
+        /// <summary>
+        /// Build a client from given connection information.
+        /// </summary>
+        /// <param name="connectionInfo">The information that defines how to connect to the MIM server</param>
+        /// <returns>IdmNetClient for the given connection information.</returns>
         public static IdmNetClient BuildClient(IdmConnectionInfo connectionInfo)
         {
             var soapBinding = new IdmSoapBinding();
