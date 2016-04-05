@@ -410,6 +410,18 @@ namespace IdmNet.Models
 
 
         /// <summary>
+        /// MFA PIN Code - The PIN code that should be used during Multi-Factor Authentication process
+        /// </summary>
+        public string msidmMFAPINCode
+        {
+            get { return GetAttrValue("msidmMFAPINCode"); }
+            set {
+                SetAttrValue("msidmMFAPINCode", value); 
+            }
+        }
+
+
+        /// <summary>
         /// Middle Name - 
         /// </summary>
         public string MiddleName
@@ -477,6 +489,33 @@ namespace IdmNet.Models
             get { return GetAttrValue("msidmOneTimePasswordMobilePhone"); }
             set {
                 SetAttrValue("msidmOneTimePasswordMobilePhone", value); 
+            }
+        }
+
+
+        /// <summary>
+        /// PAM Linked User - The User Identity for PAM requests to use
+        /// </summary>
+        public IdmResource msidmPamLinkedUser
+        {
+            get { return GetAttr("msidmPamLinkedUser", _themsidmPamLinkedUser); }
+            set 
+            { 
+                _themsidmPamLinkedUser = value;
+                SetAttrValue("msidmPamLinkedUser", ObjectIdOrNull(value)); 
+            }
+        }
+        private IdmResource _themsidmPamLinkedUser;
+
+
+        /// <summary>
+        /// Phone Gate Phone Number - Phone number used to Phone Gate Authentication.
+        /// </summary>
+        public string msidmPhoneGatePhoneNumber
+        {
+            get { return GetAttrValue("msidmPhoneGatePhoneNumber"); }
+            set {
+                SetAttrValue("msidmPhoneGatePhoneNumber", value); 
             }
         }
 

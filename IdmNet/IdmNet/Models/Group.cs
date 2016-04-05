@@ -212,6 +212,52 @@ namespace IdmNet.Models
 
 
         /// <summary>
+        /// PAM Enabled - A boolean value that specifies if a Group is enabled for PAM.
+        /// </summary>
+        public bool? msidmPamEnabled
+        {
+            get { return AttrToNullableBool("msidmPamEnabled"); }
+            set { 
+                SetAttrValue("msidmPamEnabled", value.ToString());
+            }
+        }
+
+
+        /// <summary>
+        /// PAM Group Source Domain Name - The Source domain of a PAM group.
+        /// </summary>
+        public string msidmPamSourceDomainName
+        {
+            get { return GetAttrValue("msidmPamSourceDomainName"); }
+            set {
+                SetAttrValue("msidmPamSourceDomainName", value); 
+            }
+        }
+
+
+        /// <summary>
+        /// PAM Group Source SID - A binary value that specifies the Source security identifier (SID) of a PAM Group. The SID is a unique value used to identify the group as a security principal.
+        /// </summary>
+        public byte[] msidmPamSourceSid
+        {
+            get { return GetAttr("msidmPamSourceSid") == null ? null : GetAttr("msidmPamSourceSid").ToBinary(); }
+            set { SetAttrValue("msidmPamSourceSid", value == null ? null : Convert.ToBase64String(value)); }
+        }
+
+
+        /// <summary>
+        /// PAM Source Group Name - The name of the group that is shadowed by this group
+        /// </summary>
+        public string msidmPamSourceGroupName
+        {
+            get { return GetAttrValue("msidmPamSourceGroupName"); }
+            set {
+                SetAttrValue("msidmPamSourceGroupName", value); 
+            }
+        }
+
+
+        /// <summary>
         /// Resource SID - A binary value that specifies the security identifier (SID) of the user. The SID is a unique value used to identify the user as a security principal.
         /// </summary>
         public byte[] ObjectSID
@@ -265,6 +311,18 @@ namespace IdmNet.Models
             get { return GetAttrValue("Type"); }
             set {
                 SetAttrValue("Type", value); 
+            }
+        }
+
+
+        /// <summary>
+        /// Uses SID history - Indicates if the PAM Group uses SID history.
+        /// </summary>
+        public bool? msidmPamUsesSIDHistory
+        {
+            get { return AttrToNullableBool("msidmPamUsesSIDHistory"); }
+            set { 
+                SetAttrValue("msidmPamUsesSIDHistory", value.ToString());
             }
         }
 
