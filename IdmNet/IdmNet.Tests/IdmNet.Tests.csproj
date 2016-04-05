@@ -95,6 +95,9 @@
     <Compile Include="Models\ManagementPolicyRuleTests.cs" />
     <Compile Include="Models\msidmCompositeTypeTests.cs" />
     <Compile Include="Models\msidmDataWarehouseBindingTests.cs" />
+    <Compile Include="Models\msidmPamConfigurationTests.cs" />
+    <Compile Include="Models\msidmPamRequestTests.cs" />
+    <Compile Include="Models\msidmPamRoleTests.cs" />
     <Compile Include="Models\msidmReportingJobTests.cs" />
     <Compile Include="Models\msidmRequestContextTests.cs" />
     <Compile Include="Models\msidmRequestTargetDetailTests.cs" />

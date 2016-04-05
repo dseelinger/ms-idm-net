@@ -74,6 +74,9 @@
     <Compile Include="Models\ManagementPolicyRule.cs" />
     <Compile Include="Models\msidmCompositeType.cs" />
     <Compile Include="Models\msidmDataWarehouseBinding.cs" />
+    <Compile Include="Models\msidmPamConfiguration.cs" />
+    <Compile Include="Models\msidmPamRequest.cs" />
+    <Compile Include="Models\msidmPamRole.cs" />
     <Compile Include="Models\msidmReportingJob.cs" />
     <Compile Include="Models\msidmRequestContext.cs" />
     <Compile Include="Models\msidmRequestTargetDetail.cs" />

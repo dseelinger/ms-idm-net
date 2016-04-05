@@ -365,6 +365,99 @@ namespace IdmNet.Models.Tests
 
 
         [TestMethod]
+        public void It_has_msidmPamEnabled_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.msidmPamEnabled);
+        }
+
+        [TestMethod]
+        public void It_has_msidmPamEnabled_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.msidmPamEnabled = true;
+
+            // Act
+            _it.msidmPamEnabled = null;
+
+            // Assert
+            Assert.IsNull(_it.msidmPamEnabled);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_msidmPamEnabled()
+        {
+            // Act
+            _it.msidmPamEnabled = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.msidmPamEnabled);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_msidmPamSourceDomainName()
+        {
+            // Act
+            _it.msidmPamSourceDomainName = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.msidmPamSourceDomainName);
+        }
+
+
+        [TestMethod]
+        public void It_has_msidmPamSourceSid_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.msidmPamSourceSid);
+        }
+
+        [TestMethod]
+        public void It_has_msidmPamSourceSid_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var stringReprentation = @"/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAoHBwkHBgoJCAkLCwoMDxkQDw4ODx4WFxIZJCAmJSMgIyIoLTkwKCo2KyIjMkQyNjs9QEBAJjBGS0U+Sjk/QD3/2wBDAQsLCw8NDx0QEB09KSMpPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT3/wAARCAAyADIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2CS6t42KvPGrDqCwBpv221/5+Yf8AvsV494+O3xpfgZGPL7/9M1rnsn1P51i6tnY+pw/DqrUYVPaW5knt3XqfQDXdqf8Al4h/77FcBoHjKPS9dvNOvmAs3uZDFLj/AFZLHr6g+vb6V59uPrRuO7Oec5zUuo2d+H4fp04ThOXMpeVreZ9DowYZBBUjIIPWnV5Z4L8anTymn6m5a0J2xSt/yy9if7v8vpXqKuGAKkFSMgg9a2jJSR8rjsBUwdTknt0fcfRSUVRwni/j/wD5HXUP+2f/AKLWudrovH//ACOuof8AbP8A9FrXO1yS3Z+nYD/dKX+GP5IKKKKk6xQcGu18GeNTpzJp2pvm0biOVusR9D/s/wAq4quu8F+Dn1iVb29QixjbhT/y2I7fT1NXC99Dzs0jhnh5fWNvxv5ef9bHqI1K1IBE8WP94UUz+ybD/nzg/wC/YorqPz21Lz/A8k8e8eMr/wD7Z/8Aota57Nez6n4L0nVtQlu7qKRppMbiJCBwABx9BVX/AIVxoX/PvL/3+NYSpSbbPrcLn+FpUIU5J3SS27L1PIutBGK9e/4VzoOP9RLn/rsa4rRfB0ms+ILqLDR6fbTMjv3wGPyj3x+VQ6ckd9DOsLWjKaulHe4zwd4RfX7nz7oMlhEfmYcGQ/3R/U16/DBHBCkUKCONAAqqMACmWlpDZ26W9tGI4Y1Cqi9ABU/WuiEeVHx2Y5jPHVOZ6RWy/rqFFLRVHnBRRRQA09DWP4aH/EumPf7TN/6GaKKSOin/AAJ+q/U2aWiimc4UUUUAf//Z";
+            var byteArray = Convert.FromBase64String(stringReprentation);
+            _it.msidmPamSourceSid = byteArray; 
+
+            // Act
+            _it.msidmPamSourceSid = null;
+
+            // Assert
+            Assert.IsNull(_it.msidmPamSourceSid);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_msidmPamSourceSid()
+        {
+            // Arrange
+            var stringReprentation = @"/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAoHBwkHBgoJCAkLCwoMDxkQDw4ODx4WFxIZJCAmJSMgIyIoLTkwKCo2KyIjMkQyNjs9QEBAJjBGS0U+Sjk/QD3/2wBDAQsLCw8NDx0QEB09KSMpPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT3/wAARCAAyADIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2CS6t42KvPGrDqCwBpv221/5+Yf8AvsV494+O3xpfgZGPL7/9M1rnsn1P51i6tnY+pw/DqrUYVPaW5knt3XqfQDXdqf8Al4h/77FcBoHjKPS9dvNOvmAs3uZDFLj/AFZLHr6g+vb6V59uPrRuO7Oec5zUuo2d+H4fp04ThOXMpeVreZ9DowYZBBUjIIPWnV5Z4L8anTymn6m5a0J2xSt/yy9if7v8vpXqKuGAKkFSMgg9a2jJSR8rjsBUwdTknt0fcfRSUVRwni/j/wD5HXUP+2f/AKLWudrovH//ACOuof8AbP8A9FrXO1yS3Z+nYD/dKX+GP5IKKKKk6xQcGu18GeNTpzJp2pvm0biOVusR9D/s/wAq4quu8F+Dn1iVb29QixjbhT/y2I7fT1NXC99Dzs0jhnh5fWNvxv5ef9bHqI1K1IBE8WP94UUz+ybD/nzg/wC/YorqPz21Lz/A8k8e8eMr/wD7Z/8Aota57Nez6n4L0nVtQlu7qKRppMbiJCBwABx9BVX/AIVxoX/PvL/3+NYSpSbbPrcLn+FpUIU5J3SS27L1PIutBGK9e/4VzoOP9RLn/rsa4rRfB0ms+ILqLDR6fbTMjv3wGPyj3x+VQ6ckd9DOsLWjKaulHe4zwd4RfX7nz7oMlhEfmYcGQ/3R/U16/DBHBCkUKCONAAqqMACmWlpDZ26W9tGI4Y1Cqi9ABU/WuiEeVHx2Y5jPHVOZ6RWy/rqFFLRVHnBRRRQA09DWP4aH/EumPf7TN/6GaKKSOin/AAJ+q/U2aWiimc4UUUUAf//Z";
+            var byteArray = Convert.FromBase64String(stringReprentation);
+
+            // Act
+            _it.msidmPamSourceSid = byteArray; 
+
+            // Assert
+            Assert.AreEqual(byteArray[0], _it.msidmPamSourceSid[0]);
+            Assert.AreEqual(byteArray[1], _it.msidmPamSourceSid[1]);
+            Assert.AreEqual(byteArray[2], _it.msidmPamSourceSid[2]);
+            Assert.AreEqual(byteArray[byteArray.Length - 1], _it.msidmPamSourceSid[_it.msidmPamSourceSid.Length - 1]);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_msidmPamSourceGroupName()
+        {
+            // Act
+            _it.msidmPamSourceGroupName = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.msidmPamSourceGroupName);
+        }
+
+
+        [TestMethod]
         public void It_has_ObjectSID_which_is_null_by_default()
         {
             // Assert
@@ -506,6 +599,37 @@ namespace IdmNet.Models.Tests
 
             // Assert
             Assert.AreEqual("A string", _it.Type);
+        }
+
+
+        [TestMethod]
+        public void It_has_msidmPamUsesSIDHistory_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.msidmPamUsesSIDHistory);
+        }
+
+        [TestMethod]
+        public void It_has_msidmPamUsesSIDHistory_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            _it.msidmPamUsesSIDHistory = true;
+
+            // Act
+            _it.msidmPamUsesSIDHistory = null;
+
+            // Assert
+            Assert.IsNull(_it.msidmPamUsesSIDHistory);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_msidmPamUsesSIDHistory()
+        {
+            // Act
+            _it.msidmPamUsesSIDHistory = true;
+
+            // Assert
+            Assert.AreEqual(true, _it.msidmPamUsesSIDHistory);
         }
 
 

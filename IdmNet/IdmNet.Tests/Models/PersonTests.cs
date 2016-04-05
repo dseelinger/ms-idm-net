@@ -666,6 +666,17 @@ namespace IdmNet.Models.Tests
 
 
         [TestMethod]
+        public void It_can_get_and_set_msidmMFAPINCode()
+        {
+            // Act
+            _it.msidmMFAPINCode = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.msidmMFAPINCode);
+        }
+
+
+        [TestMethod]
         public void It_can_get_and_set_MiddleName()
         {
             // Act
@@ -728,6 +739,50 @@ namespace IdmNet.Models.Tests
 
             // Assert
             Assert.AreEqual("A string", _it.msidmOneTimePasswordMobilePhone);
+        }
+
+
+        [TestMethod]
+        public void It_has_msidmPamLinkedUser_which_is_null_by_default()
+        {
+            // Assert
+            Assert.IsNull(_it.msidmPamLinkedUser);
+        }
+
+        [TestMethod]
+        public void It_has_msidmPamLinkedUser_which_can_be_set_back_to_null()
+        {
+            // Arrange
+            var testIdmResource = new IdmResource { DisplayName = "Test IdmResource" };			
+            _it.msidmPamLinkedUser = testIdmResource; 
+
+            // Act
+            _it.msidmPamLinkedUser = null;
+
+            // Assert
+            Assert.IsNull(_it.msidmPamLinkedUser);
+        }
+
+        [TestMethod]
+        public void It_can_get_and_set_msidmPamLinkedUser()
+        {
+            // Act
+			var testIdmResource = new IdmResource { DisplayName = "Test IdmResource" };			
+            _it.msidmPamLinkedUser = testIdmResource; 
+
+            // Assert
+            Assert.AreEqual(testIdmResource.DisplayName, _it.msidmPamLinkedUser.DisplayName);
+        }
+
+
+        [TestMethod]
+        public void It_can_get_and_set_msidmPhoneGatePhoneNumber()
+        {
+            // Act
+            _it.msidmPhoneGatePhoneNumber = "A string";
+
+            // Assert
+            Assert.AreEqual("A string", _it.msidmPhoneGatePhoneNumber);
         }
 
 
