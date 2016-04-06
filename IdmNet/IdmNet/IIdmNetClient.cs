@@ -7,6 +7,9 @@ using IdmNet.SoapModels;
 
 namespace IdmNet
 {
+    /// <summary>
+    /// Interface primarily for mocking IdmNetClient when testing apps that use the IdmNetClient.
+    /// </summary>
     public interface IIdmNetClient
     {
         /// <summary>
