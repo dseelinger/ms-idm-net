@@ -17,7 +17,7 @@ namespace IdmNet
     /// This is the primary class in the IdmNet assembly.  It is the .NET client used to perform CRUD operations on
     /// objects/resources in the Identity Manager Service database.
     /// </summary>
-    public class IdmNetClient
+    public class IdmNetClient : IIdmNetClient
     {
         private readonly SearchClient _searchClient;
         private readonly ResourceFactoryClient _factoryClient;

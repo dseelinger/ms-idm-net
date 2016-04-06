@@ -53,6 +53,7 @@
     <Compile Include="IdmConnectionInfo.cs" />
     <Compile Include="IdmNetClientFactory.cs" />
     <Compile Include="IdmNetUtils.cs" />
+    <Compile Include="IIdmNetClient.cs" />
     <Compile Include="Models\ActivityInformationConfiguration.cs" />
     <Compile Include="Models\Approval.cs" />
     <Compile Include="Models\ApprovalResponse.cs" />
