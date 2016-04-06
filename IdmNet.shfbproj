@@ -19,11 +19,12 @@
     <Language>en-US</Language>
     <DocumentationSources>
       <DocumentationSource sourceFile="IdmNet\IdmNet\bin\Debug\IdmNet.dll" />
-<DocumentationSource sourceFile="IdmNet\IdmNet\bin\Debug\IdmNet.xml" /></DocumentationSources>
+      <DocumentationSource sourceFile="IdmNet\IdmNet\bin\Debug\IdmNet.xml" />
+    </DocumentationSources>
     <NamespaceSummaries>
-      <NamespaceSummaryItem name="IdmNet" isDocumented="True" xmlns="">Primary namespace for the IdmNet client.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IdmNet.Models" isDocumented="True" xmlns="">Namespace for strongly-typed classes that represent the various Object Type definitions in MIM.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="IdmNet.SoapModels" isDocumented="False" xmlns="">Namespace for classes required for MIM SOAP webservices serialization.  You should be able to ignore classes in this</NamespaceSummaryItem></NamespaceSummaries>
+      <NamespaceSummaryItem name="IdmNet" isDocumented="True">Primary namespace for the IdmNet assembly.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="IdmNet.Models" isDocumented="True">Namespace for strongly-typed classes that represent the various Object Type definitions in MIM.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="IdmNet.SoapModels" isDocumented="True">Namespace for classes required for MIM SOAP webservices serialization.  You should be able to ignore classes in this</NamespaceSummaryItem></NamespaceSummaries>
     <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
     <HelpFileFormat>Website</HelpFileFormat>
     <IndentHtml>False</IndentHtml>
