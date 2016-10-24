@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("IdmNet.Tests")]
+[assembly: AssemblyTitle("IdmNet.E2ETests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft Corporation")]
-[assembly: AssemblyProduct("IdmNet.Tests")]
+[assembly: AssemblyProduct("IdmNet.E2ETests")]
 [assembly: AssemblyCopyright("Copyright © Microsoft Corporation 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("fe98a441-0aff-4800-acd1-7c91146eb508")]
+[assembly: Guid("5304fea1-7507-4e82-a76f-70131082e4b7")]
 
 // Version information for an assembly consists of the following four values:
 //
