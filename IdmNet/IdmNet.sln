@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdmNet.Tests", "IdmNet.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdmNet.E2ETests", "IdmNet.E2ETests\IdmNet.E2ETests.csproj", "{5304FEA1-7507-4E82-A76F-70131082E4B7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdmService", "IdmService\IdmService.csproj", "{40340646-2A83-487A-9856-C7D35C75D4D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{5304FEA1-7507-4E82-A76F-70131082E4B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5304FEA1-7507-4E82-A76F-70131082E4B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5304FEA1-7507-4E82-A76F-70131082E4B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40340646-2A83-487A-9856-C7D35C75D4D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40340646-2A83-487A-9856-C7D35C75D4D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40340646-2A83-487A-9856-C7D35C75D4D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40340646-2A83-487A-9856-C7D35C75D4D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
