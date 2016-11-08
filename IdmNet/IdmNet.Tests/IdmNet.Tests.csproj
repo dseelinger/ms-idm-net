@@ -63,7 +63,53 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Models\ActivityInformationConfigurationTests.cs" />
+    <Compile Include="Models\ApprovalResponseTests.cs" />
+    <Compile Include="Models\ApprovalTests.cs" />
+    <Compile Include="Models\AttributeTypeDescriptionTests.cs" />
+    <Compile Include="Models\BindingDescriptionTests.cs" />
+    <Compile Include="Models\ConfigurationTests.cs" />
+    <Compile Include="Models\ConstantSpecifierTests.cs" />
+    <Compile Include="Models\DetectedRuleEntryTests.cs" />
+    <Compile Include="Models\DomainConfigurationTests.cs" />
+    <Compile Include="Models\EmailTemplateTests.cs" />
+    <Compile Include="Models\ExpectedRuleEntryTests.cs" />
+    <Compile Include="Models\FilterScopeTests.cs" />
+    <Compile Include="Models\ForestConfigurationTests.cs" />
+    <Compile Include="Models\FunctionTests.cs" />
+    <Compile Include="Models\GateRegistrationTests.cs" />
+    <Compile Include="Models\GroupTests.cs" />
+    <Compile Include="Models\HomepageConfigurationTests.cs" />
+    <Compile Include="Models\IdmAttributeTests.cs" />
+    <Compile Include="Models\IdmResourceTests.cs" />
+    <Compile Include="Models\ma-dataTests.cs" />
+    <Compile Include="Models\ManagementPolicyRuleTests.cs" />
+    <Compile Include="Models\msidmCompositeTypeTests.cs" />
+    <Compile Include="Models\msidmDataWarehouseBindingTests.cs" />
+    <Compile Include="Models\msidmPamConfigurationTests.cs" />
+    <Compile Include="Models\msidmPamRequestTests.cs" />
+    <Compile Include="Models\msidmPamRoleTests.cs" />
+    <Compile Include="Models\msidmReportingJobTests.cs" />
+    <Compile Include="Models\msidmRequestContextTests.cs" />
+    <Compile Include="Models\msidmRequestTargetDetailTests.cs" />
+    <Compile Include="Models\msidmSystemConfigurationTests.cs" />
+    <Compile Include="Models\mv-dataTests.cs" />
+    <Compile Include="Models\NavigationBarConfigurationTests.cs" />
+    <Compile Include="Models\ObjectTypeDescriptionTests.cs" />
+    <Compile Include="Models\ObjectVisualizationConfigurationTests.cs" />
+    <Compile Include="Models\PersonTests.cs" />
+    <Compile Include="Models\PortalUIConfigurationTests.cs" />
+    <Compile Include="Models\RequestTests.cs" />
+    <Compile Include="Models\ResourceTests.cs" />
+    <Compile Include="Models\SearchScopeConfigurationTests.cs" />
+    <Compile Include="Models\SetTests.cs" />
+    <Compile Include="Models\SupportedLocaleConfigurationTests.cs" />
+    <Compile Include="Models\SynchronizationFilterTests.cs" />
+    <Compile Include="Models\SynchronizationRuleTests.cs" />
+    <Compile Include="Models\SystemResourceRetentionConfigurationTests.cs" />
+    <Compile Include="Models\TimeZoneConfigurationTests.cs" />
+    <Compile Include="Models\WorkflowDefinitionTests.cs" />
+    <Compile Include="Models\WorkflowInstanceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -71,6 +117,12 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IdmNet\IdmNet.csproj">
+      <Project>{2309c19b-0a43-4a48-9cf1-f434526eb47b}</Project>
+      <Name>IdmNet</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

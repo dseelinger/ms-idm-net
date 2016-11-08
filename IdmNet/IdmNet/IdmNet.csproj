@@ -31,7 +31,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,7 +44,77 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IdmConnectionInfo.cs" />
+    <Compile Include="IdmNetClient.cs" />
+    <Compile Include="IdmNetClientFactory.cs" />
+    <Compile Include="IdmNetUtils.cs" />
+    <Compile Include="IIdmNetClient.cs" />
+    <Compile Include="Models\ActivityInformationConfiguration.cs" />
+    <Compile Include="Models\Approval.cs" />
+    <Compile Include="Models\ApprovalResponse.cs" />
+    <Compile Include="Models\AttributeTypeDescription.cs" />
+    <Compile Include="Models\BindingDescription.cs" />
+    <Compile Include="Models\Configuration.cs" />
+    <Compile Include="Models\ConstantSpecifier.cs" />
+    <Compile Include="Models\DetectedRuleEntry.cs" />
+    <Compile Include="Models\DomainConfiguration.cs" />
+    <Compile Include="Models\EmailTemplate.cs" />
+    <Compile Include="Models\ExpectedRuleEntry.cs" />
+    <Compile Include="Models\FilterScope.cs" />
+    <Compile Include="Models\ForestConfiguration.cs" />
+    <Compile Include="Models\Function.cs" />
+    <Compile Include="Models\GateRegistration.cs" />
+    <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\HomepageConfiguration.cs" />
+    <Compile Include="Models\IdmAttribute.cs" />
+    <Compile Include="Models\IdmResource.cs" />
+    <Compile Include="Models\ma-data.cs" />
+    <Compile Include="Models\ManagementPolicyRule.cs" />
+    <Compile Include="Models\msidmCompositeType.cs" />
+    <Compile Include="Models\msidmDataWarehouseBinding.cs" />
+    <Compile Include="Models\msidmPamConfiguration.cs" />
+    <Compile Include="Models\msidmPamRequest.cs" />
+    <Compile Include="Models\msidmPamRole.cs" />
+    <Compile Include="Models\msidmReportingJob.cs" />
+    <Compile Include="Models\msidmRequestContext.cs" />
+    <Compile Include="Models\msidmRequestTargetDetail.cs" />
+    <Compile Include="Models\msidmSystemConfiguration.cs" />
+    <Compile Include="Models\mv-data.cs" />
+    <Compile Include="Models\NavigationBarConfiguration.cs" />
+    <Compile Include="Models\ObjectTypeDescription.cs" />
+    <Compile Include="Models\ObjectVisualizationConfiguration.cs" />
+    <Compile Include="Models\Person.cs" />
+    <Compile Include="Models\PortalUIConfiguration.cs" />
+    <Compile Include="Models\Request.cs" />
+    <Compile Include="Models\Resource.cs" />
+    <Compile Include="Models\Schema.cs" />
+    <Compile Include="Models\SearchScopeConfiguration.cs" />
+    <Compile Include="Models\Set.cs" />
+    <Compile Include="Models\SupportedLocaleConfiguration.cs" />
+    <Compile Include="Models\SynchronizationFilter.cs" />
+    <Compile Include="Models\SynchronizationRule.cs" />
+    <Compile Include="Models\SystemResourceRetentionConfiguration.cs" />
+    <Compile Include="Models\TimeZoneConfiguration.cs" />
+    <Compile Include="Models\WorkflowDefinition.cs" />
+    <Compile Include="Models\WorkflowInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SoapConstants.cs" />
+    <Compile Include="SoapFaultException.cs" />
+    <Compile Include="SoapModels\IdmSoapBinding.cs" />
+    <Compile Include="SoapModels\SoapEnumerationModels.cs" />
+    <Compile Include="SoapModels\SoapFactoryModels.cs" />
+    <Compile Include="SoapModels\SoapResourceClientModels.cs" />
+    <Compile Include="SoapXmlSerializer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Models\packages.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IdmService\IdmService.csproj">
+      <Project>{40340646-2a83-487a-9856-c7d35c75d4d0}</Project>
+      <Name>IdmService</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
