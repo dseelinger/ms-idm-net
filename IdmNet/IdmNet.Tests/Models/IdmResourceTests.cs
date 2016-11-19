@@ -287,327 +287,327 @@ namespace IdmNet.Tests
             result.DisplayName.Should().Be("Joe User");
         }
 
-        //[Fact]
-        //public void
-        //    It_can_get_Creator_when_the_attribute_has_a_refId_value()
-        //{
-        //    var creatorObjectID = Guid.NewGuid().ToString("D");
+        [Fact]
+        public void
+            It_can_get_Creator_when_the_attribute_has_a_refId_value()
+        {
+            var creatorObjectID = Guid.NewGuid().ToString("D");
 
-        //    var it = new IdmResource { Attributes = new List<IdmAttribute> { new IdmAttribute { Name = "Creator", Value = creatorObjectID } } };
+            var it = new IdmResource { Attributes = new List<IdmAttribute> { new IdmAttribute { Name = "Creator", Value = creatorObjectID } } };
 
-        //    Assert.AreEqual(creatorObjectID, it.Creator.ObjectID);
-        //}
+            Assert.Equal(creatorObjectID, it.Creator.ObjectID);
+        }
 
-        //[Fact]
-        //public void
-        //    It_can_GetMultiValuedAttrAsComplexObjects_when_the_attribute_has_values_and_matches_backing_field()
-        //{
-        //    var subObjectID1 = Guid.NewGuid().ToString("D");
-        //    var subObjectID2 = Guid.NewGuid().ToString("D");
+        [Fact]
+        public void
+            It_can_GetMultiValuedAttrAsComplexObjects_when_the_attribute_has_values_and_matches_backing_field()
+        {
+            var subObjectID1 = Guid.NewGuid().ToString("D");
+            var subObjectID2 = Guid.NewGuid().ToString("D");
 
-        //    var resources = new List<IdmResource>
-        //    {
-        //        new IdmResource
-        //        {
-        //            CreatedTime = DateTime.Now,
-        //            Description = "Test resource",
-        //            DisplayName = "sub resource 1",
-        //            ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
-        //            MVObjectID = Guid.NewGuid().ToString("D"),
-        //            ObjectID = subObjectID1,
-        //            ObjectType = "Resource",
-        //            ResourceTime = DateTime.Now
-        //        },
-        //        new IdmResource
-        //        {
-        //            CreatedTime = DateTime.Now,
-        //            Description = "Test resource",
-        //            DisplayName = "sub resource 2",
-        //            ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
-        //            MVObjectID = Guid.NewGuid().ToString("D"),
-        //            ObjectID = subObjectID2,
-        //            ObjectType = "Resource",
-        //            ResourceTime = DateTime.Now
-        //        }
+            var resources = new List<IdmResource>
+            {
+                new IdmResource
+                {
+                    CreatedTime = DateTime.Now,
+                    Description = "Test resource",
+                    DisplayName = "sub resource 1",
+                    ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
+                    MVObjectID = Guid.NewGuid().ToString("D"),
+                    ObjectID = subObjectID1,
+                    ObjectType = "Resource",
+                    ResourceTime = DateTime.Now
+                },
+                new IdmResource
+                {
+                    CreatedTime = DateTime.Now,
+                    Description = "Test resource",
+                    DisplayName = "sub resource 2",
+                    ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
+                    MVObjectID = Guid.NewGuid().ToString("D"),
+                    ObjectID = subObjectID2,
+                    ObjectType = "Resource",
+                    ResourceTime = DateTime.Now
+                }
 
-        //    };
+            };
 
-        //    var it = new IdmResource
-        //    {
-        //        Attributes =
-        //            new List<IdmAttribute> { new IdmAttribute { Name = "MultiValuedReferenceIDs", Values = new List<string> { subObjectID1, subObjectID2 } } }
-        //    };
+            var it = new IdmResource
+            {
+                Attributes =
+                    new List<IdmAttribute> { new IdmAttribute { Name = "MultiValuedReferenceIDs", Values = new List<string> { subObjectID1, subObjectID2 } } }
+            };
 
-        //    var result = it.GetMultiValuedAttr("MultiValuedReferenceIDs", resources);
+            var result = it.GetMultiValuedAttr("MultiValuedReferenceIDs", resources);
 
-        //    Assert.AreEqual("sub resource 1", result[0].DisplayName);
-        //    Assert.AreEqual("sub resource 2", result[1].DisplayName);
-        //}
+            Assert.Equal("sub resource 1", result[0].DisplayName);
+            Assert.Equal("sub resource 2", result[1].DisplayName);
+        }
 
-        //[Fact]
-        //public void
-        //    It_can_GetMultiValuedAttrAsComplexObjects_when_only_some_of_the_items_are_in_the_backing_field()
-        //{
-        //    var subObjectID1 = Guid.NewGuid().ToString("D");
-        //    var subObjectID2 = Guid.NewGuid().ToString("D");
-        //    var subObjectID3 = Guid.NewGuid().ToString("D");
+        [Fact]
+        public void
+            It_can_GetMultiValuedAttrAsComplexObjects_when_only_some_of_the_items_are_in_the_backing_field()
+        {
+            var subObjectID1 = Guid.NewGuid().ToString("D");
+            var subObjectID2 = Guid.NewGuid().ToString("D");
+            var subObjectID3 = Guid.NewGuid().ToString("D");
 
-        //    var resources = new List<IdmResource>
-        //    {
-        //        new IdmResource
-        //        {
-        //            CreatedTime = DateTime.Now,
-        //            Description = "Test resource",
-        //            DisplayName = "sub resource 1",
-        //            ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
-        //            MVObjectID = Guid.NewGuid().ToString("D"),
-        //            ObjectID = subObjectID1,
-        //            ObjectType = "Resource",
-        //            ResourceTime = DateTime.Now
-        //        },
-        //        new IdmResource
-        //        {
-        //            CreatedTime = DateTime.Now,
-        //            Description = "Test resource",
-        //            DisplayName = "sub resource 2",
-        //            ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
-        //            MVObjectID = Guid.NewGuid().ToString("D"),
-        //            ObjectID = subObjectID2,
-        //            ObjectType = "Resource",
-        //            ResourceTime = DateTime.Now
-        //        }
+            var resources = new List<IdmResource>
+            {
+                new IdmResource
+                {
+                    CreatedTime = DateTime.Now,
+                    Description = "Test resource",
+                    DisplayName = "sub resource 1",
+                    ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
+                    MVObjectID = Guid.NewGuid().ToString("D"),
+                    ObjectID = subObjectID1,
+                    ObjectType = "Resource",
+                    ResourceTime = DateTime.Now
+                },
+                new IdmResource
+                {
+                    CreatedTime = DateTime.Now,
+                    Description = "Test resource",
+                    DisplayName = "sub resource 2",
+                    ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
+                    MVObjectID = Guid.NewGuid().ToString("D"),
+                    ObjectID = subObjectID2,
+                    ObjectType = "Resource",
+                    ResourceTime = DateTime.Now
+                }
 
-        //    };
+            };
 
-        //    var it = new IdmResource
-        //    {
-        //        Attributes =
-        //            new List<IdmAttribute> { new IdmAttribute { Name = "MultiValuedReferenceIDs", Values = new List<string> { subObjectID1, subObjectID2, subObjectID3 } } }
-        //    };
+            var it = new IdmResource
+            {
+                Attributes =
+                    new List<IdmAttribute> { new IdmAttribute { Name = "MultiValuedReferenceIDs", Values = new List<string> { subObjectID1, subObjectID2, subObjectID3 } } }
+            };
 
-        //    var result = it.GetMultiValuedAttr("MultiValuedReferenceIDs", resources);
+            var result = it.GetMultiValuedAttr("MultiValuedReferenceIDs", resources);
 
-        //    Assert.AreEqual("sub resource 1", result[0].DisplayName);
-        //    Assert.AreEqual("sub resource 2", result[1].DisplayName);
-        //    Assert.AreEqual(subObjectID3, result[2].ObjectID);
-        //}
+            Assert.Equal("sub resource 1", result[0].DisplayName);
+            Assert.Equal("sub resource 2", result[1].DisplayName);
+            Assert.Equal(subObjectID3, result[2].ObjectID);
+        }
 
-        //[Fact]
-        //public void
-        //    It_can_GetMultiValuedAttrAsComplexObjects_when_the_backing_field_is_null()
-        //{
-        //    var subObjectID1 = Guid.NewGuid().ToString("D");
-        //    var subObjectID2 = Guid.NewGuid().ToString("D");
-        //    var subObjectID3 = Guid.NewGuid().ToString("D");
+        [Fact]
+        public void
+            It_can_GetMultiValuedAttrAsComplexObjects_when_the_backing_field_is_null()
+        {
+            var subObjectID1 = Guid.NewGuid().ToString("D");
+            var subObjectID2 = Guid.NewGuid().ToString("D");
+            var subObjectID3 = Guid.NewGuid().ToString("D");
 
-        //    List<IdmResource> resources = null;
+            List<IdmResource> resources = null;
 
-        //    var it = new IdmResource
-        //    {
-        //        Attributes =
-        //            new List<IdmAttribute> { new IdmAttribute { Name = "MultiValuedReferenceIDs", Values = new List<string> { subObjectID1, subObjectID2, subObjectID3 } } }
-        //    };
+            var it = new IdmResource
+            {
+                Attributes =
+                    new List<IdmAttribute> { new IdmAttribute { Name = "MultiValuedReferenceIDs", Values = new List<string> { subObjectID1, subObjectID2, subObjectID3 } } }
+            };
 
-        //    // ReSharper disable once ExpressionIsAlwaysNull
-        //    var result = it.GetMultiValuedAttr("MultiValuedReferenceIDs", resources);
+            // ReSharper disable once ExpressionIsAlwaysNull
+            var result = it.GetMultiValuedAttr("MultiValuedReferenceIDs", resources);
 
-        //    Assert.AreEqual(subObjectID1, result[0].ObjectID);
-        //    Assert.AreEqual(subObjectID2, result[1].ObjectID);
-        //    Assert.AreEqual(subObjectID3, result[2].ObjectID);
-        //}
-
-
-        //[Fact]
-        //public void
-        //    It_can_SetMultiValuedAttrAsComplexObjects_when_only_some_of_the_items_are_in_the_backing_field()
-        //{
-        //    var subObjectID1 = Guid.NewGuid().ToString("D");
-        //    var subObjectID2 = Guid.NewGuid().ToString("D");
-
-        //    List<IdmResource> backingField;
-        //    var resources = new List<IdmResource>
-        //    {
-        //        new IdmResource
-        //        {
-        //            CreatedTime = DateTime.Now,
-        //            Description = "Test resource",
-        //            DisplayName = "sub resource 1",
-        //            ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
-        //            MVObjectID = Guid.NewGuid().ToString("D"),
-        //            ObjectID = subObjectID1,
-        //            ObjectType = "Resource",
-        //            ResourceTime = DateTime.Now
-        //        },
-        //        new IdmResource
-        //        {
-        //            CreatedTime = DateTime.Now,
-        //            Description = "Test resource",
-        //            DisplayName = "sub resource 2",
-        //            ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
-        //            MVObjectID = Guid.NewGuid().ToString("D"),
-        //            ObjectID = subObjectID2,
-        //            ObjectType = "Resource",
-        //            ResourceTime = DateTime.Now
-        //        }
-
-        //    };
-
-        //    var it = new IdmResource();
-
-        //    it.SetMultiValuedAttr("MultiValuedReferenceIDs", out backingField, resources);
-
-        //    Assert.AreEqual("sub resource 1", backingField[0].DisplayName);
-        //    Assert.AreEqual("sub resource 2", backingField[1].DisplayName);
-        //}
+            Assert.Equal(subObjectID1, result[0].ObjectID);
+            Assert.Equal(subObjectID2, result[1].ObjectID);
+            Assert.Equal(subObjectID3, result[2].ObjectID);
+        }
 
 
-        //[Fact]
-        //public void It_can_GettAttr_that_then_allows_modification_of_the_attr()
-        //{
-        //    var it = new IdmResource
-        //    {
-        //        Attributes =
-        //            new List<IdmAttribute> { new IdmAttribute { Name = "foo", Values = new List<string> { "foo", "bar" } } }
-        //    };
+        [Fact]
+        public void
+            It_can_SetMultiValuedAttrAsComplexObjects_when_only_some_of_the_items_are_in_the_backing_field()
+        {
+            var subObjectID1 = Guid.NewGuid().ToString("D");
+            var subObjectID2 = Guid.NewGuid().ToString("D");
 
-        //    var attr = it.GetAttr("foo");
+            List<IdmResource> backingField;
+            var resources = new List<IdmResource>
+            {
+                new IdmResource
+                {
+                    CreatedTime = DateTime.Now,
+                    Description = "Test resource",
+                    DisplayName = "sub resource 1",
+                    ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
+                    MVObjectID = Guid.NewGuid().ToString("D"),
+                    ObjectID = subObjectID1,
+                    ObjectType = "Resource",
+                    ResourceTime = DateTime.Now
+                },
+                new IdmResource
+                {
+                    CreatedTime = DateTime.Now,
+                    Description = "Test resource",
+                    DisplayName = "sub resource 2",
+                    ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
+                    MVObjectID = Guid.NewGuid().ToString("D"),
+                    ObjectID = subObjectID2,
+                    ObjectType = "Resource",
+                    ResourceTime = DateTime.Now
+                }
 
-        //    attr.Values.Add("bat");
+            };
 
-        //    var result = it.GetAttrValues("foo");
+            var it = new IdmResource();
 
-        //    Assert.AreEqual("foo", result[0]);
-        //    Assert.AreEqual("bar", result[1]);
-        //    Assert.AreEqual("bat", result[2]);
-        //}
+            it.SetMultiValuedAttr("MultiValuedReferenceIDs", out backingField, resources);
 
-        //[Fact]
-        //public void It_can_retrieve_attributes_with_an_indexer()
-        //{
-        //    var it = new IdmResource
-        //    {
-        //        Attributes =
-        //            new List<IdmAttribute>
-        //            {
-        //                new IdmAttribute { Name = "foo1", Values = new List<string> { "foo1", "bar1" } },
-        //                new IdmAttribute { Name = "foo2", Values = new List<string> { "foo2", "bar2" } },
-        //                new IdmAttribute { Name = "foo3", Values = new List<string> { "foo3", "bar3" } },
-        //                new IdmAttribute { Name = "foo4", Values = new List<string> { "foo4", "bar4" } },
-        //                new IdmAttribute { Name = "foo5", Values = new List<string> { "foo5", "bar5" } }
-        //            }
-        //    };
+            Assert.Equal("sub resource 1", backingField[0].DisplayName);
+            Assert.Equal("sub resource 2", backingField[1].DisplayName);
+        }
 
-        //    var result = it["foo1"];
 
-        //    Assert.AreEqual("foo1", result.Values[0]);
-        //    Assert.AreEqual("bar1", result.Values[1]);
-        //}
+        [Fact]
+        public void It_can_GettAttr_that_then_allows_modification_of_the_attr()
+        {
+            var it = new IdmResource
+            {
+                Attributes =
+                    new List<IdmAttribute> { new IdmAttribute { Name = "foo", Values = new List<string> { "foo", "bar" } } }
+            };
 
-        //[Fact]
-        //public void It_can_SettAttrValue_nullable_null_value_and_come_back_as_null_as_either_Value_or_ToInt()
-        //{
-        //    var it = new IdmResource();
+            var attr = it.GetAttr("foo");
 
-        //    it.SetAttrValue("foo", null);
+            attr.Values.Add("bat");
 
-        //    var result1 = it.GetAttrValue("foo");
-        //    var result2 = it.GetAttr("foo").ToInteger();
-        //    var result3 = it.GetAttr("foo").ToDateTime();
-        //    var result4 = it.GetAttr("foo").ToBinary();
-        //    var result5 = it.GetAttr("foo").ToBool();
+            var result = it.GetAttrValues("foo");
 
-        //    Assert.IsNull(result1);
-        //    Assert.IsNull(result2);
-        //    Assert.IsNull(result3);
-        //    Assert.IsNull(result4);
-        //    Assert.IsNull(result5);
-        //}
+            Assert.Equal("foo", result[0]);
+            Assert.Equal("bar", result[1]);
+            Assert.Equal("bat", result[2]);
+        }
 
-        //[Fact]
-        //[ExpectedException(typeof(ArgumentException), "Complex objects must have ObjectID")]
-        //public void
-        //    It_throws_when_you_call_GetMultiValuedAttrAsComplexObjects_but_some_of_the_backing_fields_do_not_have_an_ObjectID()
-        //{
-        //    var subObjectID1 = Guid.NewGuid().ToString("D");
+        [Fact]
+        public void It_can_retrieve_attributes_with_an_indexer()
+        {
+            var it = new IdmResource
+            {
+                Attributes =
+                    new List<IdmAttribute>
+                    {
+                        new IdmAttribute { Name = "foo1", Values = new List<string> { "foo1", "bar1" } },
+                        new IdmAttribute { Name = "foo2", Values = new List<string> { "foo2", "bar2" } },
+                        new IdmAttribute { Name = "foo3", Values = new List<string> { "foo3", "bar3" } },
+                        new IdmAttribute { Name = "foo4", Values = new List<string> { "foo4", "bar4" } },
+                        new IdmAttribute { Name = "foo5", Values = new List<string> { "foo5", "bar5" } }
+                    }
+            };
 
-        //    var resources = new List<IdmResource>
-        //    {
-        //        new IdmResource
-        //        {
-        //            CreatedTime = DateTime.Now,
-        //            Description = "Test resource",
-        //            DisplayName = "sub resource 1",
-        //            ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
-        //            MVObjectID = Guid.NewGuid().ToString("D"),
-        //            ObjectID = subObjectID1,
-        //            ObjectType = "Resource",
-        //            ResourceTime = DateTime.Now
-        //        },
-        //        new IdmResource
-        //        {
-        //            CreatedTime = DateTime.Now,
-        //            Description = "Test resource",
-        //            DisplayName = "sub resource 2",
-        //            ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
-        //            MVObjectID = Guid.NewGuid().ToString("D"),
-        //            ObjectType = "Resource",
-        //            ResourceTime = DateTime.Now
-        //        }
-        //    };
+            var result = it["foo1"];
 
-        //    var it = new IdmResource();
+            Assert.Equal("foo1", result.Values[0]);
+            Assert.Equal("bar1", result.Values[1]);
+        }
 
-        //    it.SetMultiValuedAttr("foo", out resources, resources);
-        //}
+        [Fact]
+        public void It_can_SettAttrValue_nullable_null_value_and_come_back_as_null_as_either_Value_or_ToInt()
+        {
+            var it = new IdmResource();
 
-        //[Fact]
-        //public void
-        //    It_can_set_complex_properties_to_null()
-        //{
-        //    // Arrange
-        //    var it = new IdmResource
-        //    {
-        //        Creator = new Person { DisplayName = "foo" },
-        //        DetectedRulesList =
-        //            new List<IdmResource>
-        //            {
-        //                new IdmResource {DisplayName = "bar", ObjectID = "bar"},
-        //                new IdmResource {DisplayName = "bat", ObjectID = "bat"}
-        //            },
-        //        ExpectedRulesList =
-        //            new List<IdmResource>
-        //            {
-        //                new IdmResource {DisplayName = "fiz", ObjectID = "fiz"},
-        //                new IdmResource {DisplayName = "buz", ObjectID = "buz"}
-        //            },
-        //    };
+            it.SetAttrValue("foo", null);
 
-        //    // Act
-        //    it.Creator = null;
-        //    it.DetectedRulesList = null;
-        //    it.ExpectedRulesList = null;
+            var result1 = it.GetAttrValue("foo");
+            var result2 = it.GetAttr("foo").ToInteger();
+            var result3 = it.GetAttr("foo").ToDateTime();
+            var result4 = it.GetAttr("foo").ToBinary();
+            var result5 = it.GetAttr("foo").ToBool();
 
-        //    // Assert
-        //    Assert.IsNull(it.Creator);
-        //    Assert.IsNull(it.DetectedRulesList);
-        //    Assert.IsNull(it.ExpectedRulesList);
-        //}
+            Assert.Null(result1);
+            Assert.Null(result2);
+            Assert.Null(result3);
+            Assert.Null(result4);
+            Assert.Null(result5);
+        }
 
-        //[Fact]
-        //public void It_doesnt_end_up_with_superflous_attributes_by_calling_SetAttrValue()
-        //{
-        //    // Arrange
-        //    var it = new IdmResource { Description = "foo" };
-        //    var attrCountBefore = it.Attributes.Count;
+        [Fact]
+        public void
+            It_throws_when_you_call_GetMultiValuedAttrAsComplexObjects_but_some_of_the_backing_fields_do_not_have_an_ObjectID()
+        {
+            var subObjectID1 = Guid.NewGuid().ToString("D");
 
-        //    it.SetAttrValue("Description", "bar");
-        //    it.SetAttrValue("Description", "bar");
-        //    it.SetAttrValue("Description", "bar");
+            var resources = new List<IdmResource>
+            {
+                new IdmResource
+                {
+                    CreatedTime = DateTime.Now,
+                    Description = "Test resource",
+                    DisplayName = "sub resource 1",
+                    ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
+                    MVObjectID = Guid.NewGuid().ToString("D"),
+                    ObjectID = subObjectID1,
+                    ObjectType = "Resource",
+                    ResourceTime = DateTime.Now
+                },
+                new IdmResource
+                {
+                    CreatedTime = DateTime.Now,
+                    Description = "Test resource",
+                    DisplayName = "sub resource 2",
+                    ExpirationTime = DateTime.Now + TimeSpan.FromDays(1),
+                    MVObjectID = Guid.NewGuid().ToString("D"),
+                    ObjectType = "Resource",
+                    ResourceTime = DateTime.Now
+                }
+            };
 
-        //    var attrCountAfter = it.Attributes.Count;
+            var it = new IdmResource();
+            
+            Action action = () => it.SetMultiValuedAttr("foo", out resources, resources);
+            action.ShouldThrow<ArgumentException>().WithMessage("Complex objects must have ObjectID");
+        }
 
-        //    Assert.AreEqual(attrCountBefore, attrCountAfter);
-        //}
+        [Fact]
+        public void
+            It_can_set_complex_properties_to_null()
+        {
+            // Arrange
+            var it = new IdmResource
+            {
+                Creator = new Person { DisplayName = "foo" },
+                DetectedRulesList =
+                    new List<IdmResource>
+                    {
+                        new IdmResource {DisplayName = "bar", ObjectID = "bar"},
+                        new IdmResource {DisplayName = "bat", ObjectID = "bat"}
+                    },
+                ExpectedRulesList =
+                    new List<IdmResource>
+                    {
+                        new IdmResource {DisplayName = "fiz", ObjectID = "fiz"},
+                        new IdmResource {DisplayName = "buz", ObjectID = "buz"}
+                    },
+            };
+
+            // Act
+            it.Creator = null;
+            it.DetectedRulesList.Clear();
+            it.ExpectedRulesList.Clear();
+
+            // Assert
+            Assert.Null(it.Creator);
+            Assert.Empty(it.DetectedRulesList);
+            Assert.Empty(it.ExpectedRulesList);
+        }
+
+        [Fact]
+        public void It_doesnt_end_up_with_superflous_attributes_by_calling_SetAttrValue()
+        {
+            // Arrange
+            var it = new IdmResource { Description = "foo" };
+            var attrCountBefore = it.Attributes.Count;
+
+            it.SetAttrValue("Description", "bar");
+            it.SetAttrValue("Description", "bar");
+            it.SetAttrValue("Description", "bar");
+
+            var attrCountAfter = it.Attributes.Count;
+
+            Assert.Equal(attrCountBefore, attrCountAfter);
+        }
     }
 }
 

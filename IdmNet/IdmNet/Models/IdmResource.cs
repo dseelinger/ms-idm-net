@@ -274,24 +274,25 @@ namespace IdmNet.Models
             List<string> attrValues = GetAttrValues(attrName);
             if (attrValues != null)
             {
-                if (backingField == null)
-                    backingField = new List<T>();
-                backingField = attrValues.Select(objId => new
-                {
-                    objId,
-                    existingMember = backingField.Find(r => r.ObjectID == objId)
-                }).Select(param0 =>
-                {
-                    T existingMember = param0.existingMember;
-                    if (existingMember != null)
-                        return existingMember;
-                    T instance = Activator.CreateInstance<T>();
-                    instance.ObjectID = param0.objId;
-                    return instance;
-                }).ToList();
-                list = backingField;
+                //if (backingField == null)
+                //    backingField = new List<T>();
+                //backingField = attrValues.Select(objId => new
+                //{
+                //    objId,
+                //    existingMember = backingField.Find(r => r.ObjectID == objId)
+                //}).Select(param0 =>
+                //{
+                //    T existingMember = param0.existingMember;
+                //    if (existingMember != null)
+                //        return existingMember;
+                //    T instance = Activator.CreateInstance<T>();
+                //    instance.ObjectID = param0.objId;
+                //    return instance;
+                //}).ToList();
+                //list = backingField;
             }
-            return list;
+            //return list;
+            return backingField;
         }
 
         /// <summary>
