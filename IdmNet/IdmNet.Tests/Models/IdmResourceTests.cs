@@ -382,10 +382,15 @@ namespace IdmNet.Tests
             var it = new IdmResource
             {
                 Attributes =
-                    new List<IdmAttribute> { new IdmAttribute { Name = "MultiValuedReferenceIDs", Values = new List<string> { subObjectID1, subObjectID2, subObjectID3 } } }
+                    new List<IdmAttribute> {
+                        new IdmAttribute {
+                            Name = "MultiValuedReferenceIDs",
+                            Values = new List<string> { subObjectID1, subObjectID2, subObjectID3 }
+                        }
+                    }
             };
 
-            var result = it.GetMultiValuedAttr("MultiValuedReferenceIDs", resources);
+            var result = it.GetComplexMultiValuedAttr("MultiValuedReferenceIDs", resources);
 
             Assert.Equal("sub resource 1", result[0].DisplayName);
             Assert.Equal("sub resource 2", result[1].DisplayName);
@@ -409,7 +414,7 @@ namespace IdmNet.Tests
             };
 
             // ReSharper disable once ExpressionIsAlwaysNull
-            var result = it.GetMultiValuedAttr("MultiValuedReferenceIDs", resources);
+            var result = it.GetComplexMultiValuedAttr("MultiValuedReferenceIDs", resources);
 
             Assert.Equal(subObjectID1, result[0].ObjectID);
             Assert.Equal(subObjectID2, result[1].ObjectID);

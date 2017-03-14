@@ -270,29 +270,43 @@ namespace IdmNet.Models
         {
             if (backingField == null)
                 backingField = new List<T>();
+            return backingField;
+        }
+
+        /// <summary>
+        /// Get the list of complex objects that is backing a multi-valued reference attribute in IdmNet.
+        /// </summary>
+        /// <typeparam name="T">Complex Object's type, such as "Person" for a Group object's Owners</typeparam>
+        /// <param name="attrName">Name of the multi-valued attribute to retrieve</param>
+        /// <param name="backingField">List of objects that contains the available representations for the references</param>
+        /// <returns>Strongly-typed list of values for the Attribute</returns>
+        public List<T> GetComplexMultiValuedAttr<T>(string attrName, List<T> backingField) where T : IdmResource, new()
+        {
+            if (backingField == null)
+                backingField = new List<T>();
             List<T> list = backingField;
             List<string> attrValues = GetAttrValues(attrName);
             if (attrValues != null)
             {
-                //if (backingField == null)
-                //    backingField = new List<T>();
-                //backingField = attrValues.Select(objId => new
-                //{
-                //    objId,
-                //    existingMember = backingField.Find(r => r.ObjectID == objId)
-                //}).Select(param0 =>
-                //{
-                //    T existingMember = param0.existingMember;
-                //    if (existingMember != null)
-                //        return existingMember;
-                //    T instance = Activator.CreateInstance<T>();
-                //    instance.ObjectID = param0.objId;
-                //    return instance;
-                //}).ToList();
-                //list = backingField;
+                if (backingField == null)
+                    backingField = new List<T>();
+                backingField = attrValues.Select(objId => new
+                {
+                    objId,
+                    existingMember = backingField.Find(r => r.ObjectID == objId)
+                }).Select(param0 =>
+                {
+                    T existingMember = param0.existingMember;
+                    if (existingMember != null)
+                        return existingMember;
+                    T instance = Activator.CreateInstance<T>();
+                    instance.ObjectID = param0.objId;
+                    return instance;
+                }).ToList();
+                list = backingField;
             }
-            //return list;
-            return backingField;
+            return list;
+            //return backingField;
         }
 
         /// <summary>
