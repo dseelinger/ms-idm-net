@@ -260,12 +260,12 @@ namespace IdmNet.Models
         }
 
         /// <summary>
-        /// Get the list of complex objects that is backing a multi-valued reference attribute in IdmNet.
+        /// Get the list of objects that is backing a multi-valued reference attribute in IdmNet.
         /// </summary>
-        /// <typeparam name="T">Complex Object's type, such as "Person" for a Group object's Owners</typeparam>
+        /// <typeparam name="T">Object's type, such as "Person" for a Group object's Owners</typeparam>
         /// <param name="attrName">Name of the multi-valued attribute to retrieve</param>
         /// <param name="backingField">List of objects that contains the available representations for the references</param>
-        /// <returns>Strongly-typed list of values for the Attribute</returns>
+        /// <returns>List of values for the Attribute</returns>
         public List<T> GetMultiValuedAttr<T>(string attrName, List<T> backingField) where T : IdmResource, new()
         {
             if (backingField == null)
@@ -284,12 +284,9 @@ namespace IdmNet.Models
         {
             if (backingField == null)
                 backingField = new List<T>();
-            List<T> list = backingField;
             List<string> attrValues = GetAttrValues(attrName);
             if (attrValues != null)
             {
-                if (backingField == null)
-                    backingField = new List<T>();
                 backingField = attrValues.Select(objId => new
                 {
                     objId,
@@ -303,10 +300,8 @@ namespace IdmNet.Models
                     instance.ObjectID = param0.objId;
                     return instance;
                 }).ToList();
-                list = backingField;
             }
-            return list;
-            //return backingField;
+            return backingField;
         }
 
         /// <summary>
