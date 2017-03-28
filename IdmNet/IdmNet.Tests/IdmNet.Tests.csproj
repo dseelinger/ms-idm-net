@@ -41,6 +41,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -61,6 +63,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IdmNetClientFactoryTests.cs" />
+    <Compile Include="IdmSoapBindingTests.cs" />
     <Compile Include="Models\ActivityInformationConfigurationTests.cs" />
     <Compile Include="Models\ApprovalResponseTests.cs" />
     <Compile Include="Models\ApprovalTests.cs" />
@@ -109,6 +113,8 @@
     <Compile Include="Models\WorkflowDefinitionTests.cs" />
     <Compile Include="Models\WorkflowInstanceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SearchCriteriaTests.cs" />
+    <Compile Include="SoapFactoryModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
