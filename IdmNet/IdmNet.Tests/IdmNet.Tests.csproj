@@ -115,6 +115,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchCriteriaTests.cs" />
     <Compile Include="SoapFactoryModelTests.cs" />
+    <Compile Include="SoapFaultExceptionTests.cs" />
+    <Compile Include="SoapResourceModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
